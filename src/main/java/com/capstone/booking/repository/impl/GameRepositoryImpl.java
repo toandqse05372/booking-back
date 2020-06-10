@@ -39,11 +39,10 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
 
         Map<String, Object> params = new HashMap<>();
         if(parkId !=null && parkId != 0){
-            queryStr += "INNER join t_park_game park_game0_ on game0_.id = park_game0_.game_id";
             if(stack > 1){
                 where +=" and ";
             }
-            where +=" park_game0_.park_id = :id ";
+            where +=" game0_.park_id = :id ";
             addedWhere = true;
             params.put("id", parkId);
             stack++;

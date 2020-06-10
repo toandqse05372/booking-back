@@ -61,11 +61,6 @@ public class ParkServiceImpl implements ParkService {
         City cityName = cityRepository.findByName(parkDTO.getCity().getName());
         park.setCity(cityName);
 
-        Set<Game> gameSet = new HashSet<>();
-        for(GameDTO gameDTO: parkDTO.getGame()){
-            gameSet.add(gameRepository.findOneByGameName(gameDTO.getGameName()));
-        }
-        park.setGames(gameSet);
 
         Set<ParkType> parkTypeSet = new HashSet<>();
         for(ParkTypeDTO parkTypeDTO: parkDTO.getParkType()){
@@ -86,12 +81,6 @@ public class ParkServiceImpl implements ParkService {
 
         City cityName = cityRepository.findByName(parkDTO.getCity().getName());
         park.setCity(cityName);
-
-        Set<Game> gameSet = new HashSet<>();
-        for(GameDTO gameDTO: parkDTO.getGame()){
-            gameSet.add(gameRepository.findOneByGameName(gameDTO.getGameName()));
-        }
-        park.setGames(gameSet);
 
         Set<ParkType> parkTypeSet = new HashSet<>();
         for(ParkTypeDTO parkTypeDTO: parkDTO.getParkType()){

@@ -17,7 +17,7 @@ public class ParkDTO extends BaseDTO{
     private String phoneNumber;
     private Set<ImageDTO> parkImage;
     private CityDTO city;
-    private Set<GameDTO> game;
+    //private Set<GameDTO> game;
     private Set<ParkTypeDTO> parkType;
     private Set<OpeningHoursDTO> openingHours;
 }

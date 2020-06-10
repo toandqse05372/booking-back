@@ -45,11 +45,15 @@ public class Park extends BaseEntity{
     @OneToMany(mappedBy = "park", fetch = FetchType.EAGER)
     private Set<Image> image;
 
-    //Bảng Park qhe n-n với Game// SỬA================================
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinTable(name = "t_park_game",
-            joinColumns = {@JoinColumn(name = "park_id")},
-            inverseJoinColumns = {@JoinColumn(name = "game_id")})
-    private Set<Game> games = new HashSet<>();
+    //Bảng Park qhe 1-n với GAme
+    @OneToMany(mappedBy = "park", fetch = FetchType.EAGER)
+    private Set<Game> game;
+
+//    //Bảng Park qhe n-n với Game// SỬA================================
+//    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+//    @JoinTable(name = "t_park_game",
+//            joinColumns = {@JoinColumn(name = "park_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "game_id")})
+//    private Set<Game> games = new HashSet<>();
 
 }

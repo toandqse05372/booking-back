@@ -47,22 +47,6 @@ public class ParkConverter {
         cityDTO.setId(city.getId());
         cityDTO.setName(city.getName());
         dto.setCity(cityDTO);
-//        System.out.println("-----------------------------------------");
-//        for(Image image: park.getImage()) {
-//            System.out.println(image.getImageLink());
-//        }
-//
-//        List<ImageDTO> imageSet = new ArrayList<>();
-//        for (Image image : park.getImage()) {
-//            imageSet.add(imageConverter.toDTO(image));
-//        }
-//        dto.setParkImage(imageSet);
-
-        Set<GameDTO> gameSet = new HashSet<>();
-        for (Game game : park.getGames()) {
-            gameSet.add(gameConverter.toDTO(game));
-        }
-        dto.setGame(gameSet);
 
         Set<ParkTypeDTO> parkTypeSet = new HashSet<>();
         for (ParkType parkType : park.getParkTypes()) {

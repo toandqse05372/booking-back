@@ -46,6 +46,12 @@ public class GameServiceImpl implements GameService {
         }
         TicketType ticketType = ticketTypeRepository.findOneByTypeName(gameDTO.getTicketTypeName());
         game.setTicketType(ticketType);
+
+        Optional<Park> parkOptional = parkRepository.findById(gameDTO.getParkId());
+        if (parkOptional.isPresent()) {
+            game.setPark(parkOptional.get());
+        }
+
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
     }
@@ -61,6 +67,12 @@ public class GameServiceImpl implements GameService {
         }
         TicketType ticketType = ticketTypeRepository.findOneByTypeName(gameDTO.getTicketTypeName());
         game.setTicketType(ticketType);
+//        Park park = parkRepository.findById(gameDTO.getParkId()).get();
+//        game.setPark(park);
+        Optional<Park> parkOptional = parkRepository.findById(gameDTO.getParkId());
+        if (parkOptional.isPresent()) {
+            game.setPark(parkOptional.get());
+        }
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
     }
@@ -105,6 +117,7 @@ public class GameServiceImpl implements GameService {
 
         return ResponseEntity.ok(results);
     }
+
 
     //tim kiem Game theo name & parkId, & paging
     @Override

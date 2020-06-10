@@ -23,7 +23,12 @@ public class Game extends BaseEntity{
     @JoinColumn(name = "ticket_type_id")
     private TicketType ticketType;
 
-    //Bảng Park qhe n-n với Game
-    @ManyToMany(mappedBy = "games")
-    private Set<Park> parks = new HashSet<>();
+    //Bảng Park qhe 1-n với Image
+    @ManyToOne
+    @JoinColumn(name = "park_id")
+    private Park park;
+
+//    //Bảng Park qhe n-n với Game
+//    @ManyToMany(mappedBy = "games")
+//    private Set<Park> parks = new HashSet<>();
 }
