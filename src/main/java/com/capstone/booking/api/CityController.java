@@ -22,6 +22,11 @@ public class CityController {
         return cityService.getCity(id);
     }
 
-
-    //filter: park,
+    //search cityName & paging
+    @GetMapping(value = "/city/searchByName")
+    public ResponseEntity<?> searchByName(@RequestParam(value = "name", required = false) String name,
+                                       @RequestParam(value = "limit", required = false) Long limit,
+                                       @RequestParam(value = "page", required = false) Long page) {
+        return cityService.findByName(name, limit, page);
+    }
 }

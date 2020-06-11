@@ -1,11 +1,10 @@
 package com.capstone.booking.repository.impl;
 
 import com.capstone.booking.api.output.Output;
-import com.capstone.booking.common.converter.GameConverter;
-import com.capstone.booking.common.converter.ParkConverter;
-import com.capstone.booking.entity.Game;
-import com.capstone.booking.entity.dto.GameDTO;
-import com.capstone.booking.repository.customRepository.GameRepositoryCustom;
+import com.capstone.booking.common.converter.CityConverter;
+import com.capstone.booking.entity.City;
+import com.capstone.booking.entity.dto.CityDTO;
+import com.capstone.booking.repository.customRepository.CityRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -16,7 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GameRepositoryImpl implements GameRepositoryCustom {
+public class CityRepositoryImpl implements CityRepositoryCustom {
+
     private Integer totalItem;
     private long totalPage;
     private boolean searched = false;
@@ -25,36 +25,24 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
     EntityManager entityManager;
 
     @Autowired
-    private GameConverter gameConverter;
-
+    CityConverter cityConverter;
 
     @Override
-    public Output findByMulParam(String gameName, String parkName, Long limit, Long page) {
+    public Output findByName(String name, Long limit, Long page) {
         boolean addedWhere = false;
-        String queryStr = "select game0_.* from t_game game0_ ";
+        String queryStr = "select c.* from t_city c ";
         String where = "";
         Integer stack = 1;
         int pageInt = Math.toIntExact(page);
 
         Map<String, Object> params = new HashMap<>();
-        queryStr += "INNER join t_park p on p.id = game0_.park_id";
-        if (parkName != null && !parkName.equals("")) {
+        if (name != null && !name.equals("")) {
             if (stack > 1) {
                 where += " and ";
             }
-            where += " p.name like :pname ";
+            where += "c.name like :cname ";
             addedWhere = true;
-            params.put("pname", parkName);
-            stack++;
-        }
-
-        if (gameName != null && !gameName.equals("")) {
-            if (stack > 1) {
-                where += " and ";
-            }
-            where += "game0_.game_name like :gname ";
-            addedWhere = true;
-            params.put("gname", gameName);
+            params.put("cname", name);
             stack++;
         }
 
@@ -62,7 +50,7 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
             queryStr += " where ";
         }
         if (!searched) {
-            totalItem = queryGame(params, queryStr + where).size();
+            totalItem = queryCity(params, queryStr + where).size();
             totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
         }
         params.put("from", (page - 1) * limit);
@@ -72,31 +60,31 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
         where += "limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryGame(params, queryStr + where)));
+        output.setListResult(convertList(queryCity(params, queryStr + where)));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);
         return output;
     }
 
-    public List<GameDTO> convertList(List<Game> gameList) {
-        List<GameDTO> results = new ArrayList<>();
-        for (Game item : gameList) {
-            GameDTO gameDTO = gameConverter.toDTO(item);
-            results.add(gameDTO);
+    public List<CityDTO> convertList(List<City> cityList) {
+        List<CityDTO> results = new ArrayList<>();
+        for (City item : cityList) {
+            CityDTO cityDTO = cityConverter.toDTO(item);
+            results.add(cityDTO);
         }
         return results;
     }
 
-    public List<Game> queryGame(Map<String, Object> params, String sqlStr) {
-        Query query = entityManager.createNativeQuery(sqlStr, Game.class);
+    public List<City> queryCity(Map<String, Object> params, String sqlStr) {
+        Query query = entityManager.createNativeQuery(sqlStr, City.class);
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
             if (key.equals("id") || key.equals("from") || key.equals("limit")) {
                 query.setParameter(key, value);
             } else
-                query.setParameter(key, "%" + value + "%");
+                query.setParameter(key, value + "%");
         }
         return query.getResultList();
     }

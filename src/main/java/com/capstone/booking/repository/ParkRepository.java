@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ParkRepository extends JpaRepository<Park, Long>, ParkRepositoryCustom {
-    List<Park> findByGames(Game game);
+    //List<Park> findByGame(Game game);
 }

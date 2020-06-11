@@ -44,8 +44,14 @@ public class GameServiceImpl implements GameService {
         if (gameRepository.findByGameName(game.getGameName()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
         }
-        TicketType ticketType = ticketTypeRepository.findOneByTypeName(gameDTO.getTicketTypeName());
-        game.setTicketType(ticketType);
+//        TicketType ticketType = ticketTypeRepository.findOneByTypeName(gameDTO.getTicketTypeName());
+//        game.setTicketType(ticketType);
+
+        Optional<Park> parkOptional = parkRepository.findById(gameDTO.getParkId());
+        if (parkOptional.isPresent()) {
+            game.setPark(parkOptional.get());
+        }
+
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
     }
@@ -59,8 +65,15 @@ public class GameServiceImpl implements GameService {
         if (gameRepository.findByGameName(game.getGameName()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
         }
-        TicketType ticketType = ticketTypeRepository.findOneByTypeName(gameDTO.getTicketTypeName());
-        game.setTicketType(ticketType);
+//        TicketType ticketType = ticketTypeRepository.findOneByTypeName(gameDTO.getTicketTypeName());
+//        game.setTicketType(ticketType);
+
+//        Park park = parkRepository.findById(gameDTO.getParkId()).get();
+//        game.setPark(park);
+        Optional<Park> parkOptional = parkRepository.findById(gameDTO.getParkId());
+        if (parkOptional.isPresent()) {
+            game.setPark(parkOptional.get());
+        }
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
     }
@@ -106,10 +119,11 @@ public class GameServiceImpl implements GameService {
         return ResponseEntity.ok(results);
     }
 
-    //tim kiem Game theo name & parkId, & paging
+
+    //tim kiem Game theo name & parkName, & paging
     @Override
-    public ResponseEntity<?> findByMulParam(String gameName, Long parkId, Long limit, Long page) {
-        Output results = gameRepository.findByMulParam(gameName, parkId, limit, page);
+    public ResponseEntity<?> findByMulParam(String gameName, String parkName, Long limit, Long page) {
+        Output results = gameRepository.findByMulParam(gameName, parkName, limit, page);
         return ResponseEntity.ok(results);
     }
 }

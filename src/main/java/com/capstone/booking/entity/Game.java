@@ -18,12 +18,18 @@ public class Game extends BaseEntity{
     private String gameDescription;
     private boolean ticketInventoryStatus; //trang thai ve còn hay k
 
-    //Bảng TicketType qhe 1-n với Game
-    @ManyToOne
-    @JoinColumn(name = "ticket_type_id")
-    private TicketType ticketType;
 
-    //Bảng Park qhe n-n với Game
-    @ManyToMany(mappedBy = "games")
-    private Set<Park> parks = new HashSet<>();
+    //Bảng Game qhe n-n với TicketType
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinTable(name = "t_game_ticketType",
+            joinColumns = {@JoinColumn(name = "game_id")},
+            inverseJoinColumns = {@JoinColumn(name = "ticketType_id")})
+    private Set<TicketType> ticketTypes = new HashSet<>();
+
+
+    //Bảng Park qhe 1-n với Image
+    @ManyToOne
+    @JoinColumn(name = "park_id")
+    private Park park;
+
 }
