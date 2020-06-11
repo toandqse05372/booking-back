@@ -25,8 +25,8 @@ public class GameController {
     public ResponseEntity<?> searchMUL(@RequestParam(value = "gameName", required = false) String gameName,
                                        @RequestParam(value = "limit", required = false) Long limit,
                                        @RequestParam(value = "page", required = false) Long page,
-                                       @RequestParam(value = "parkId", required = false) Long parkId) {
-        return gameService.findByMulParam(gameName, parkId, limit, page);
+                                       @RequestParam(value = "parkName", required = false) String parkName) {
+        return gameService.findByMulParam(gameName, parkName, limit, page);
     }
 
     //delete Game

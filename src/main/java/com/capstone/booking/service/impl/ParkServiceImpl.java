@@ -3,16 +3,11 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.ParkConverter;
 import com.capstone.booking.entity.*;
-import com.capstone.booking.entity.dto.GameDTO;
-import com.capstone.booking.entity.dto.ImageDTO;
 import com.capstone.booking.entity.dto.ParkDTO;
 import com.capstone.booking.entity.dto.ParkTypeDTO;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.ParkService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 

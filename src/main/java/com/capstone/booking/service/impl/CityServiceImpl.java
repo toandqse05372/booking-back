@@ -1,5 +1,6 @@
 package com.capstone.booking.service.impl;
 
+import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.CityConverter;
 import com.capstone.booking.entity.City;
 import com.capstone.booking.entity.dto.CityDTO;
@@ -40,6 +41,13 @@ public class CityServiceImpl implements CityService {
         Optional<City> cities = cityRepository.findById(id);
         City city = cities.get();
         return ResponseEntity.ok(cityConverter.toDTO(city));
+    }
+
+    //search cityName & paging
+    @Override
+    public ResponseEntity<?> findByName(String name, Long limit, Long page) {
+        Output results = cityRepository.findByName(name, limit, page);
+        return ResponseEntity.ok(results);
     }
 
 }

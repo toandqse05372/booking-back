@@ -119,10 +119,10 @@ public class GameServiceImpl implements GameService {
     }
 
 
-    //tim kiem Game theo name & parkId, & paging
+    //tim kiem Game theo name & parkName, & paging
     @Override
-    public ResponseEntity<?> findByMulParam(String gameName, Long parkId, Long limit, Long page) {
-        Output results = gameRepository.findByMulParam(gameName, parkId, limit, page);
+    public ResponseEntity<?> findByMulParam(String gameName, String parkName, Long limit, Long page) {
+        Output results = gameRepository.findByMulParam(gameName, parkName, limit, page);
         return ResponseEntity.ok(results);
     }
 }
