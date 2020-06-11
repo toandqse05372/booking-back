@@ -29,8 +29,8 @@ public class User extends BaseEntity {
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles = new HashSet<>();
 
-    //Bảng User qhe 1-n với Cart
+    //Bảng User qhe 1-n với Order
     @OneToMany(mappedBy = "user")
-    private Set<Cart> cart = new HashSet<>();
+    private Set<Order> order = new HashSet<>();
 
 }

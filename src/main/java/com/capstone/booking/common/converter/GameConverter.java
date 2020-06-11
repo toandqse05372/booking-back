@@ -42,7 +42,7 @@ public class GameConverter {
         dto.setGameName(game.getGameName());
         dto.setGameDescription(game.getGameDescription());
         dto.setTicketInventoryStatus(game.isTicketInventoryStatus());
-        dto.setTicketTypeName(game.getTicketType().getTypeName());
+        //dto.setTicketTypeName(game.getTicketType().getTypeName());
         dto.setParkId(game.getPark().getId());
         dto.setParkName(game.getPark().getName());
         return dto;

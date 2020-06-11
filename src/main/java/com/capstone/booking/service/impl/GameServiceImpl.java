@@ -44,8 +44,8 @@ public class GameServiceImpl implements GameService {
         if (gameRepository.findByGameName(game.getGameName()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
         }
-        TicketType ticketType = ticketTypeRepository.findOneByTypeName(gameDTO.getTicketTypeName());
-        game.setTicketType(ticketType);
+//        TicketType ticketType = ticketTypeRepository.findOneByTypeName(gameDTO.getTicketTypeName());
+//        game.setTicketType(ticketType);
 
         Optional<Park> parkOptional = parkRepository.findById(gameDTO.getParkId());
         if (parkOptional.isPresent()) {
@@ -65,8 +65,9 @@ public class GameServiceImpl implements GameService {
         if (gameRepository.findByGameName(game.getGameName()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
         }
-        TicketType ticketType = ticketTypeRepository.findOneByTypeName(gameDTO.getTicketTypeName());
-        game.setTicketType(ticketType);
+//        TicketType ticketType = ticketTypeRepository.findOneByTypeName(gameDTO.getTicketTypeName());
+//        game.setTicketType(ticketType);
+
 //        Park park = parkRepository.findById(gameDTO.getParkId()).get();
 //        game.setPark(park);
         Optional<Park> parkOptional = parkRepository.findById(gameDTO.getParkId());

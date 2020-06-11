@@ -12,7 +12,7 @@ import java.util.Set;
 @Table(name = "t_park")
 @Getter
 @Setter
-//xóa park image
+
 public class Park extends BaseEntity{
     private String name;
     private String address;
@@ -21,15 +21,11 @@ public class Park extends BaseEntity{
     private String phoneNumber;
 
 
-    //Bảng Park qhe 1-n với Ticket
-    @OneToMany(mappedBy = "park")
-    private Set<Ticket> ticket = new HashSet<>();
-
     //Bảng Park qhe 1-n với OpeningHours
     @OneToMany(mappedBy = "park")
     private Set<OpeningHours> openingHours = new HashSet<>();
 
-    //Bảng Park qhe n-n với tickType
+    //Bảng Park qhe n-n với parkType
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinTable(name = "t_park_parkType",
             joinColumns = {@JoinColumn(name = "park_id")},
@@ -48,12 +44,5 @@ public class Park extends BaseEntity{
     //Bảng Park qhe 1-n với GAme
     @OneToMany(mappedBy = "park", fetch = FetchType.EAGER)
     private Set<Game> game;
-
-//    //Bảng Park qhe n-n với Game// SỬA================================
-//    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-//    @JoinTable(name = "t_park_game",
-//            joinColumns = {@JoinColumn(name = "park_id")},
-//            inverseJoinColumns = {@JoinColumn(name = "game_id")})
-//    private Set<Game> games = new HashSet<>();
 
 }

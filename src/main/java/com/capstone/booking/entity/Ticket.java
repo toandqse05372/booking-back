@@ -13,18 +13,14 @@ public class Ticket extends BaseEntity{
     private String form;
     private String code;
 
-    //Bảng Park qhe 1-n với Ticket
+    //Bảng Order qhe 1-n với Ticket
     @ManyToOne
-    @JoinColumn(name = "park_id")
-    private Park park;
+    @JoinColumn(name = "order_id")
+    private Order order;
 
-    //Bảng Cart qhe 1-n với Ticket
+
+    //Bảng TicketType qhe 1-n với Ticket
     @ManyToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
-
-    //Bảng Ticket qhe 1-1 với TicketType
-    @OneToOne
     @JoinColumn(name = "ticket_type_id")
     private TicketType ticketType;
 
