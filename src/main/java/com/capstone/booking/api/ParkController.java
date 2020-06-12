@@ -17,13 +17,13 @@ public class ParkController {
     private ParkService parkService;
 
     //thêm Park
-    @PostMapping(value = "/park")
+    @PostMapping("/park")
     public ResponseEntity<?> createPark(@RequestBody ParkDTO model) {
         return parkService.create(model);
     }
 
     //sửa Park
-    @PutMapping(value = "/park/{id}")
+    @PutMapping("/park/{id}")
     public ResponseEntity<?> updatePark(@RequestBody ParkDTO model, @PathVariable("id") long id) {
         model.setId(id);
         return parkService.update(model);
@@ -37,7 +37,7 @@ public class ParkController {
 
 
     //tim kiem Park theo ten & address, description, cityId, parkTypeId, & paging
-    @GetMapping(value = "/park/searchMUL")
+    @GetMapping("/park/searchMUL")
     @PreAuthorize("hasAnyAuthority('READ_PARK')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "name", required = false) String name,
                                        @RequestParam(value = "address", required = false) String address,
@@ -49,16 +49,10 @@ public class ParkController {
     }
 
     //xoa Park
-    @DeleteMapping(value = "/park/{id}")
+    @DeleteMapping("/park/{id}")
     public ResponseEntity<?> deletePark(@PathVariable("id") long id) {
         parkService.delete(id);
         return new ResponseEntity("Delete Successful", HttpStatus.OK);
     }
-
-    @GetMapping("/park/parktypes")
-    public ResponseEntity<?> getParkType() {
-        return parkService.getAllParkType();
-    }
-
 
 }

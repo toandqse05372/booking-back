@@ -19,5 +19,4 @@ public interface ParkService {
     //xóa
     void delete(long id);
 
-    ResponseEntity<?> getAllParkType();
 }

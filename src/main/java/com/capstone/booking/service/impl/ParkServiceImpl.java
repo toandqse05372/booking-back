@@ -94,17 +94,4 @@ public class ParkServiceImpl implements ParkService {
         parkRepository.deleteById(id);
     }
 
-    @Override
-    public ResponseEntity<?> getAllParkType() {
-        List<ParkTypeDTO> result = new ArrayList<>();
-        for(ParkType parkType : parkTypeRepository.findAll()){
-            ParkTypeDTO dto = new ParkTypeDTO();
-            dto.setId(parkType.getId());
-            dto.setParkTypeName(parkType.getTypeName());
-            result.add(dto);
-        }
-        return ResponseEntity.ok(result);
-    }
-
-
 }
