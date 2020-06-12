@@ -96,7 +96,14 @@ public class ParkServiceImpl implements ParkService {
 
     @Override
     public ResponseEntity<?> getAllParkType() {
-        return null;
+        List<ParkTypeDTO> result = new ArrayList<>();
+        for(ParkType parkType : parkTypeRepository.findAll()){
+            ParkTypeDTO dto = new ParkTypeDTO();
+            dto.setId(parkType.getId());
+            dto.setParkTypeName(parkType.getTypeName());
+            result.add(dto);
+        }
+        return ResponseEntity.ok(result);
     }
 
 
