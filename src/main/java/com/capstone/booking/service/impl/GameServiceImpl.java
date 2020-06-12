@@ -6,6 +6,7 @@ import com.capstone.booking.common.converter.ParkConverter;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.GameDTO;
 import com.capstone.booking.entity.dto.ParkDTO;
+import com.capstone.booking.entity.dto.ParkTypeDTO;
 import com.capstone.booking.repository.GameRepository;
 import com.capstone.booking.repository.ParkRepository;
 import com.capstone.booking.repository.TicketTypeRepository;
@@ -33,8 +34,6 @@ public class GameServiceImpl implements GameService {
     @Autowired
     private ParkRepository parkRepository;
 
-    @Autowired
-    private ParkConverter parkConverter;
 
     //create
     @Override
@@ -46,6 +45,13 @@ public class GameServiceImpl implements GameService {
         }
 //        TicketType ticketType = ticketTypeRepository.findOneByTypeName(gameDTO.getTicketTypeName());
 //        game.setTicketType(ticketType);
+
+        Set<TicketType> typeSet = new HashSet<>();
+        for (String type : gameDTO.getTicketTypeName()) {
+            typeSet.add(ticketTypeRepository.findOneByTypeName(type));
+        }
+        game.setTicketTypes(typeSet);
+
 
         Optional<Park> parkOptional = parkRepository.findById(gameDTO.getParkId());
         if (parkOptional.isPresent()) {
@@ -65,8 +71,11 @@ public class GameServiceImpl implements GameService {
         if (gameRepository.findByGameName(game.getGameName()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
         }
-//        TicketType ticketType = ticketTypeRepository.findOneByTypeName(gameDTO.getTicketTypeName());
-//        game.setTicketType(ticketType);
+        Set<TicketType> typeSet = new HashSet<>();
+        for (String type : gameDTO.getTicketTypeName()) {
+            typeSet.add(ticketTypeRepository.findOneByTypeName(type));
+        }
+        game.setTicketTypes(typeSet);
 
 //        Park park = parkRepository.findById(gameDTO.getParkId()).get();
 //        game.setPark(park);
@@ -101,18 +110,6 @@ public class GameServiceImpl implements GameService {
         List<Game> games = gameRepository.findAll();
         for (Game item : games) {
             GameDTO gameDTO = gameConverter.toDTO(item);
-
-//            //lấy Park tư db List<Park>
-//            List<Park> parkList = parkRepository.findByGames(item);
-//
-//            //từ park convert sang parkdto
-//            Set<ParkDTO> parkSet = new HashSet<>();
-//            for (Park park: parkList) {
-//                ParkDTO parkDTO = parkConverter.toDTO(park);
-//                parkSet.add(parkDTO); //add parkDTO vào set
-//            }
-//            gameDTO.setPark(parkSet); //add set vào parkdto
-
             results.add(gameDTO);
         }
 
