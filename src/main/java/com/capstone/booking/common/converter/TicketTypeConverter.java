@@ -16,7 +16,6 @@ public class TicketTypeConverter {
         ticketType.setTypeName(dto.getTypeName());
         ticketType.setEffectiveTime(dto.getEffectiveTime());
         ticketType.setTicketDescription(dto.getTicketDescription());
-        ticketType.setRedemptionDate(dto.getRedemptionDate());
         ticketType.setReservationInfo(dto.getReservationInfo());
         ticketType.setCancelPolicy(dto.getCancelPolicy());
         ticketType.setConversionMethod(dto.getConversionMethod());
@@ -29,7 +28,6 @@ public class TicketTypeConverter {
         ticketType.setTypeName(dto.getTypeName());
         ticketType.setEffectiveTime(dto.getEffectiveTime());
         ticketType.setTicketDescription(dto.getTicketDescription());
-        ticketType.setRedemptionDate(dto.getRedemptionDate());
         ticketType.setReservationInfo(dto.getReservationInfo());
         ticketType.setCancelPolicy(dto.getCancelPolicy());
         ticketType.setConversionMethod(dto.getConversionMethod());
@@ -43,10 +41,9 @@ public class TicketTypeConverter {
         if (ticketType.getId() != null) {
             dto.setId(ticketType.getId());
         }
-        dto.setTypeName(dto.getTypeName());
+        dto.setTypeName(ticketType.getTypeName());
         dto.setEffectiveTime(ticketType.getEffectiveTime());
         dto.setTicketDescription(ticketType.getTicketDescription());
-        dto.setRedemptionDate(ticketType.getRedemptionDate());
         dto.setReservationInfo(ticketType.getReservationInfo());
         dto.setCancelPolicy(ticketType.getCancelPolicy());
         dto.setConversionMethod(ticketType.getConversionMethod());
