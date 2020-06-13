@@ -12,7 +12,6 @@ public class TicketTypeDTO extends BaseDTO{
     private String typeName;
     private String effectiveTime;
     private String ticketDescription;
-    private String redemptionDate;
     private String reservationInfo;
     private String cancelPolicy;
     private String conversionMethod;

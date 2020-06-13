@@ -21,7 +21,7 @@ public class GameController {
     }
 
     //tim kiem Game theo name & parkId, & paging
-    @GetMapping(value = "/game/searchMul")
+    @GetMapping("/game/searchMul")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "gameName", required = false) String gameName,
                                        @RequestParam(value = "limit", required = false) Long limit,
                                        @RequestParam(value = "page", required = false) Long page,
@@ -37,12 +37,12 @@ public class GameController {
     }
 
     //add Game
-    @PostMapping(value = "/game")
+    @PostMapping("/game")
     public ResponseEntity<?> createGame(@RequestBody GameDTO model) {
         return gameService.create(model);
     }
     //edit Game
-    @PutMapping(value = "/game/{id}")
+    @PutMapping("/game/{id}")
     public ResponseEntity<?> updateGame(@RequestBody GameDTO model, @PathVariable("id") long id) {
         model.setId(id);
         return gameService.update(model);

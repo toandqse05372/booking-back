@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 public class Ticket extends BaseEntity{
+    private String redemptionDate;
     private String form;
     private String code;
 
