@@ -14,6 +14,10 @@ import java.util.Set;
 public class City extends BaseEntity{
     private String name;
 
+    private String shortDescription;
+
+    private String detailDescription;
+
     //Bảng City qhe 1-n với Park
     @OneToMany(mappedBy = "city")
     private Set<Park> park = new HashSet<>();

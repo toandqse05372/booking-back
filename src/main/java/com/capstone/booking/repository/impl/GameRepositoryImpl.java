@@ -37,8 +37,9 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
         int pageInt = Math.toIntExact(page);
 
         Map<String, Object> params = new HashMap<>();
-        queryStr += "INNER join t_park p on p.id = game0_.park_id";
+
         if (parkName != null && !parkName.equals("")) {
+            queryStr += "INNER join t_park p on p.id = game0_.park_id";
             if (stack > 1) {
                 where += " and ";
             }
@@ -69,7 +70,7 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
         stack++;
         params.put("limit", limit);
         stack++;
-        where += "limit :from, :limit";
+        where += " limit :from, :limit";
 
         Output output = new Output();
         output.setListResult(convertList(queryGame(params, queryStr + where)));
