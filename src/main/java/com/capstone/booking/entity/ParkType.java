@@ -17,6 +17,7 @@ import java.util.Set;
 @Data
 public class ParkType extends BaseEntity{
     private String typeName;
+    private String typeKey;
 
     //Bảng Park qhe n-n với ParkType
     @ManyToMany(mappedBy = "parkTypes")

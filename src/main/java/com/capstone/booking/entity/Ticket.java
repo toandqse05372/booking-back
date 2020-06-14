@@ -4,14 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "t_ticket")
 @Getter
 @Setter
 public class Ticket extends BaseEntity{
-    private String redemptionDate;
-    private String form;
+    private Date redemptionDate;
     private String code;
 
     //Bảng Order qhe 1-n với Ticket

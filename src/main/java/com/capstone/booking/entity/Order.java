@@ -18,6 +18,7 @@ public class Order extends BaseEntity{
     private String lastName;
     private String mail;
     private String phoneNumber;
+    private String status;
 
 
     //Bảng User qhe 1-n với Order

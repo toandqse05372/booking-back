@@ -12,6 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class TicketType extends BaseEntity{
+    private String typeKey;
     private String typeName;
     private String effectiveTime;
     private String ticketDescription;
@@ -26,6 +27,9 @@ public class TicketType extends BaseEntity{
     @OneToMany(mappedBy = "ticketType", fetch = FetchType.EAGER)
     private Set<Ticket> ticket;
 
+    //Bảng ticketType qhe 1-n với Code
+    @OneToMany(mappedBy = "ticketType")
+    private Set<Code> code;
 
     //Bảng GAme qhe n-n với ticketType
     @ManyToMany(mappedBy = "ticketTypes")

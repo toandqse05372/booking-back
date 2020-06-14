@@ -43,8 +43,6 @@ public class GameServiceImpl implements GameService {
         if (gameRepository.findByGameName(game.getGameName()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
         }
-//        TicketType ticketType = ticketTypeRepository.findOneByTypeName(gameDTO.getTicketTypeName());
-//        game.setTicketType(ticketType);
 
         Set<TicketType> typeSet = new HashSet<>();
         for (String type : gameDTO.getTicketTypeName()) {

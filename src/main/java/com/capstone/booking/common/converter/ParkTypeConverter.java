@@ -16,7 +16,7 @@ public class ParkTypeConverter {
             dto.setId(parkType.getId());
         }
         dto.setParkTypeName(parkType.getTypeName());
-
+        dto.setTypeKey(parkType.getTypeKey());
 //        Set<Park> parkSet = parkType.getParks();
 //        Set<String> parkString = new HashSet<>();
 //        for (Park park : parkSet) {
@@ -29,11 +29,13 @@ public class ParkTypeConverter {
     public ParkType toParkType(ParkTypeDTO dto) {
         ParkType parkType = new ParkType();
         parkType.setTypeName(dto.getParkTypeName());
+        parkType.setTypeKey(dto.getTypeKey());
         return parkType;
     }
 
     public ParkType toParkType(ParkTypeDTO dto, ParkType parkType) {
         parkType.setTypeName(dto.getParkTypeName());
+        parkType.setTypeKey(dto.getTypeKey());
         return parkType;
     }
 

@@ -9,5 +9,6 @@ import java.util.Set;
 @EqualsAndHashCode
 public class ParkTypeDTO extends BaseDTO{
     private String parkTypeName;
+    private String typeKey;
     //private Set<String> parkName;
 }

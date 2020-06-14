@@ -7,6 +7,7 @@ import com.capstone.booking.entity.dto.CityDTO;
 import com.capstone.booking.repository.CityRepository;
 import com.capstone.booking.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class CityServiceImpl implements CityService {
     public ResponseEntity<?> findAllCity() {
         List<CityDTO> results = new ArrayList<>();
         List<City> city = cityRepository.findAll();
-        for(City item : city) {
+        for (City item : city) {
             CityDTO cityDTO = cityConverter.toDTO(item);
             results.add(cityDTO);
         }
@@ -37,7 +38,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public ResponseEntity<?>  getCity(Long id) {
+    public ResponseEntity<?> getCity(Long id) {
         Optional<City> cities = cityRepository.findById(id);
         City city = cities.get();
         return ResponseEntity.ok(cityConverter.toDTO(city));
@@ -48,6 +49,36 @@ public class CityServiceImpl implements CityService {
     public ResponseEntity<?> findByName(String name, Long limit, Long page) {
         Output results = cityRepository.findByName(name, limit, page);
         return ResponseEntity.ok(results);
+    }
+
+    //thêm
+    @Override
+    public ResponseEntity<?> create(CityDTO cityDTO) {
+        City city = cityConverter.toCity(cityDTO);
+        if (cityRepository.findByName(city.getName()) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CITY_EXISTED");
+        }
+        cityRepository.save(city);
+        return ResponseEntity.ok(cityConverter.toDTO(city));
+    }
+
+    //sửa
+    @Override
+    public ResponseEntity<?> update(CityDTO cityDTO) {
+        City city = new City();
+        City oldCity = cityRepository.findById(cityDTO.getId()).get();
+        city = cityConverter.toCity(cityDTO, oldCity);
+        if (cityRepository.findByName(city.getName()) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CITY_EXISTED");
+        }
+        cityRepository.save(city);
+        return ResponseEntity.ok(cityConverter.toDTO(city));
+    }
+
+    //xóa
+    @Override
+    public void delete(long id) {
+        cityRepository.deleteById(id);
     }
 
 }

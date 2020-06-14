@@ -14,6 +14,7 @@ import javax.persistence.Table;
 @Setter
 public class PaymentMethods extends BaseEntity{
     private String methodKey;
+    private String status;
 
     //Bảng Payment qhe 1-n với PaymentMethods
     @ManyToOne
