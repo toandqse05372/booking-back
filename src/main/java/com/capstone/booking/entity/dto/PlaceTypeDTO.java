@@ -7,8 +7,7 @@ import java.util.Set;
 
 @Data
 @EqualsAndHashCode
-public class ParkTypeDTO extends BaseDTO{
-    private String parkTypeName;
-    private String typeKey;
-    //private Set<String> parkName;
+public class PlaceTypeDTO extends BaseDTO{
+    private String placeTypeName;
+    //private Set<String> placeName;
 }

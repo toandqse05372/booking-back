@@ -2,7 +2,6 @@ package com.capstone.booking.repository.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.GameConverter;
-import com.capstone.booking.common.converter.ParkConverter;
 import com.capstone.booking.entity.Game;
 import com.capstone.booking.entity.dto.GameDTO;
 import com.capstone.booking.repository.customRepository.GameRepositoryCustom;
@@ -29,7 +28,7 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
 
 
     @Override
-    public Output findByMulParam(String gameName, String parkName, Long limit, Long page) {
+    public Output findByMulParam(String gameName, String placeName, Long limit, Long page) {
         boolean addedWhere = false;
         String queryStr = "select game0_.* from t_game game0_ ";
         String where = "";
@@ -38,14 +37,14 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
 
         Map<String, Object> params = new HashMap<>();
 
-        if (parkName != null && !parkName.equals("")) {
-            queryStr += "INNER join t_park p on p.id = game0_.park_id";
+        if (placeName != null && !placeName.equals("")) {
+            queryStr += "INNER join t_place p on p.id = game0_.place_id";
             if (stack > 1) {
                 where += " and ";
             }
             where += " p.name like :pname ";
             addedWhere = true;
-            params.put("pname", parkName);
+            params.put("pname", placeName);
             stack++;
         }
 

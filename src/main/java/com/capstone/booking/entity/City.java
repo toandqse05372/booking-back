@@ -18,7 +18,7 @@ public class City extends BaseEntity{
 
     private String detailDescription;
 
-    //Bảng City qhe 1-n với Park
+    //Bảng City qhe 1-n với Place
     @OneToMany(mappedBy = "city")
-    private Set<Park> park = new HashSet<>();
+    private Set<Place> places = new HashSet<>();
 }

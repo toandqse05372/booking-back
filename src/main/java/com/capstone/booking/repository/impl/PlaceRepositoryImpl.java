@@ -2,12 +2,11 @@
 package com.capstone.booking.repository.impl;
 
 import com.capstone.booking.api.output.Output;
-import com.capstone.booking.common.converter.ParkConverter;
-import com.capstone.booking.entity.Park;
-import com.capstone.booking.entity.dto.ImageDTO;
-import com.capstone.booking.entity.dto.ParkDTO;
-import com.capstone.booking.repository.ImageRepository;
-import com.capstone.booking.repository.customRepository.ParkRepositoryCustom;
+import com.capstone.booking.common.converter.PlaceConverter;
+import com.capstone.booking.entity.Place;
+import com.capstone.booking.entity.dto.PlaceDTO;
+import com.capstone.booking.repository.ImagePlaceRepository;
+import com.capstone.booking.repository.customRepository.PlaceRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -18,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ParkRepositoryImpl implements ParkRepositoryCustom {
+public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     private Integer totalItem;
     private long totalPage;
     private boolean searched = false;
@@ -27,29 +26,29 @@ public class ParkRepositoryImpl implements ParkRepositoryCustom {
     EntityManager entityManager;
 
     @Autowired
-    private ParkConverter parkConverter;
+    private PlaceConverter placeConverter;
 
     @Autowired
-    private ImageRepository imageRepository;
+    private ImagePlaceRepository imageRepository;
 
     @Override
     public Output findByMultiParam(String name, String address, Long cityId,
-                                   Long parkTypeId, Long limit, Long page) {
+                                   Long placeTypeId, Long limit, Long page) {
         boolean addedWhere = false;
-        String queryStr = "select park0_.* from t_park park0_ ";
+        String queryStr = "select place0_.* from t_place place0_ ";
         String where = "";
         Integer stack = 1;
         int pageInt = Math.toIntExact(page);
 
         Map<String, Object> params = new HashMap<>();
-        if(parkTypeId !=null && parkTypeId != 0){
-            queryStr += "INNER join t_park_park_type ppt on park0_.id = ppt.park_id";
+        if(placeTypeId !=null && placeTypeId != 0){
+            queryStr += "INNER join t_place_place_type ppt on place0_.id = ppt.place_id";
             if(stack > 1){
                 where +=" and ";
             }
-            where +=" ppt.park_type_id = :ptid ";
+            where +=" ppt.place_type_id = :ptid ";
             addedWhere = true;
-            params.put("ptid", parkTypeId);
+            params.put("ptid", placeTypeId);
             stack++;
         }
 
@@ -57,7 +56,7 @@ public class ParkRepositoryImpl implements ParkRepositoryCustom {
             if(stack > 1){
                 where +=" and ";
             }
-            where +="park0_.name like :name ";
+            where +="place0_.name like :name ";
             addedWhere = true;
             params.put("name", name);
             stack++;
@@ -66,7 +65,7 @@ public class ParkRepositoryImpl implements ParkRepositoryCustom {
             if(stack > 1){
                 where +=" and ";
             }
-            where +="park0_.address like :address ";
+            where +="place0_.address like :address ";
             addedWhere = true;
             params.put("address", address);
             stack++;
@@ -76,7 +75,7 @@ public class ParkRepositoryImpl implements ParkRepositoryCustom {
             if(stack > 1){
                 where +=" and ";
             }
-            where +="park0_.city_id = :cid ";
+            where +="place0_.city_id = :cid ";
             addedWhere = true;
             params.put("cid", cityId);
             stack++;
@@ -87,7 +86,7 @@ public class ParkRepositoryImpl implements ParkRepositoryCustom {
         }
         //String between ="";
         if(!searched){
-            totalItem = queryPark(params, queryStr +where).size();
+            totalItem = queryplace(params, queryStr +where).size();
             totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit )+1;
         }
         params.put("from", (page - 1)*limit);
@@ -97,26 +96,26 @@ public class ParkRepositoryImpl implements ParkRepositoryCustom {
         where += "limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryPark(params, queryStr +where)));
+        output.setListResult(convertList(queryplace(params, queryStr +where)));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);
         return output;
     }
 
-    public List<ParkDTO> convertList (List<Park> parkList){
-        List<ParkDTO> results = new ArrayList<>();
-        for (Park item : parkList) {
-            ParkDTO parkDTO = parkConverter.toDTO(item);
+    public List<PlaceDTO> convertList (List<Place> placeList){
+        List<PlaceDTO> results = new ArrayList<>();
+        for (Place item : placeList) {
+            PlaceDTO placeDTO = placeConverter.toDTO(item);
             //
 
-            results.add(parkDTO);
+            results.add(placeDTO);
         }
         return  results;
     }
 
-    public List<Park> queryPark(Map<String, Object> params ,String sqlStr){
-        Query query = entityManager.createNativeQuery(sqlStr, Park.class);
+    public List<Place> queryplace(Map<String, Object> params , String sqlStr){
+        Query query = entityManager.createNativeQuery(sqlStr, Place.class);
         for(Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();

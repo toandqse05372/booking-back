@@ -2,17 +2,11 @@ package com.capstone.booking.api;
 
 import com.capstone.booking.common.StripeToken;
 import com.capstone.booking.service.impl.StripeService;
-import com.stripe.model.Coupon;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.Response;
-import java.util.Objects;
 
 @Controller
 public class PaymentController {

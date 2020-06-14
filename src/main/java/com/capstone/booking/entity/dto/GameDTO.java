@@ -12,6 +12,6 @@ public class GameDTO extends BaseDTO{
     private String gameDescription;
     private boolean ticketInventoryStatus;
     private Set<String> ticketTypeName;
-    private Long parkId;
-    private String parkName;
+    private Long placeId;
+    private String placeName;
 }

@@ -14,19 +14,19 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
-    //find all // search by Park & gameName
+    //find all // search by Place & gameName
     @GetMapping("/game")
     public ResponseEntity<?> searchAll() {
         return gameService.findAll();
     }
 
-    //tim kiem Game theo name & parkId, & paging
+    //tim kiem Game theo name & placeId, & paging
     @GetMapping("/game/searchMul")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "gameName", required = false) String gameName,
                                        @RequestParam(value = "limit", required = false) Long limit,
                                        @RequestParam(value = "page", required = false) Long page,
-                                       @RequestParam(value = "parkName", required = false) String parkName) {
-        return gameService.findByMulParam(gameName, parkName, limit, page);
+                                       @RequestParam(value = "placeName", required = false) String placeName) {
+        return gameService.findByMulParam(gameName, placeName, limit, page);
     }
 
     //delete Game

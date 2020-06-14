@@ -1,0 +1,58 @@
+package com.capstone.booking.api;
+
+import com.capstone.booking.entity.dto.PlaceDTO;
+import com.capstone.booking.service.PlaceService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+
+
+@RestController
+public class PlaceController {
+
+    @Autowired
+    private PlaceService placeService;
+
+    //thêm place
+    @PostMapping("/place")
+    public ResponseEntity<?> createplace(@RequestBody PlaceDTO model) {
+        return placeService.create(model);
+    }
+
+    //sửa place
+    @PutMapping("/place/{id}")
+    public ResponseEntity<?> updateplace(@RequestBody PlaceDTO model, @PathVariable("id") long id) {
+        model.setId(id);
+        return placeService.update(model);
+    }
+
+    //search By Id
+    @GetMapping("/place/{id}")
+    public ResponseEntity<?> getplace(@PathVariable Long id) {
+        return placeService.getPlace(id);
+    }
+
+
+    //tim kiem place theo ten & address, description, cityId, placeTypeId, & paging
+    @GetMapping("/place/searchMUL")
+    @PreAuthorize("hasAnyAuthority('READ_PLACE')")
+    public ResponseEntity<?> searchMUL(@RequestParam(value = "name", required = false) String name,
+                                       @RequestParam(value = "address", required = false) String address,
+                                       @RequestParam(value = "limit", required = false) Long limit,
+                                       @RequestParam(value = "page", required = false) Long page,
+                                       @RequestParam(value = "cityId", required = false) Long cityId,
+                                       @RequestParam(value = "placeTypeId", required = false) Long placeTypeId) {
+        return placeService.findByMultipleParam(name, address, cityId, placeTypeId, limit, page);
+    }
+
+    //xoa place
+    @DeleteMapping("/place/{id}")
+    public ResponseEntity<?> deleteplace(@PathVariable("id") long id) {
+        placeService.delete(id);
+        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+    }
+
+}

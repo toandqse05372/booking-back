@@ -4,7 +4,7 @@ public interface PermissionKey {
     enum AdminPermissionKey{
         ADD_USER, UPDATE_USER, DELETE_USER, READ_USER,
 
-        ADD_PARK, UPDATE_PARK, DELETE_PARK, READ_PARK,
+        ADD_PLACE, UPDATE_PLACE, DELETE_PLACE, READ_PLACE,
     }
 
     enum UserPermission{

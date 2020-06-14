@@ -20,7 +20,7 @@ public interface GameService {
     //GetAllGame
     ResponseEntity<?> findAll();
 
-    //tim kiem Game theo name & parkName, & paging ============================
-    ResponseEntity<?> findByMulParam(String gameName, String parkName, Long limit, Long page);
+    //tim kiem Game theo name & placeName, & paging ============================
+    ResponseEntity<?> findByMulParam(String gameName, String placeName, Long limit, Long page);
 
 }

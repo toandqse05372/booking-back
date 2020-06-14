@@ -1,8 +1,6 @@
 package com.capstone.booking.entity;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -11,15 +9,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "t_park_type")
-@Getter
-@Setter
+@Table(name = "t_place_type")
 @Data
-public class ParkType extends BaseEntity{
+public class PlaceType extends BaseEntity{
     private String typeName;
     private String typeKey;
 
-    //Bảng Park qhe n-n với ParkType
-    @ManyToMany(mappedBy = "parkTypes")
-    private Set<Park> parks = new HashSet<>();
+    //Bảng Place qhe n-n với PlaceType
+    @ManyToMany(mappedBy = "placeTypes")
+    private Set<Place> places = new HashSet<>();
 }

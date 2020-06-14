@@ -17,8 +17,8 @@ public class OpeningHours extends BaseEntity{
     private String openHours;
     private String closeHours;
 
-    //Bảng Park qhe 1-n với OpeningHours
+    //Bảng PLace qhe 1-n với OpeningHours
     @ManyToOne
-    @JoinColumn(name = "park_id")
-    private Park park;
+    @JoinColumn(name = "place_id")
+    private Place place;
 }

@@ -2,13 +2,10 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.GameConverter;
-import com.capstone.booking.common.converter.ParkConverter;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.GameDTO;
-import com.capstone.booking.entity.dto.ParkDTO;
-import com.capstone.booking.entity.dto.ParkTypeDTO;
 import com.capstone.booking.repository.GameRepository;
-import com.capstone.booking.repository.ParkRepository;
+import com.capstone.booking.repository.PlaceRepository;
 import com.capstone.booking.repository.TicketTypeRepository;
 import com.capstone.booking.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +29,7 @@ public class GameServiceImpl implements GameService {
     private TicketTypeRepository ticketTypeRepository;
 
     @Autowired
-    private ParkRepository parkRepository;
+    private PlaceRepository placeRepository;
 
 
     //create
@@ -51,9 +48,9 @@ public class GameServiceImpl implements GameService {
         game.setTicketTypes(typeSet);
 
 
-        Optional<Park> parkOptional = parkRepository.findById(gameDTO.getParkId());
-        if (parkOptional.isPresent()) {
-            game.setPark(parkOptional.get());
+        Optional<Place> placeOptional = placeRepository.findById(gameDTO.getPlaceId());
+        if (placeOptional.isPresent()) {
+            game.setPlace(placeOptional.get());
         }
 
         game = gameRepository.save(game);
@@ -75,11 +72,11 @@ public class GameServiceImpl implements GameService {
         }
         game.setTicketTypes(typeSet);
 
-//        Park park = parkRepository.findById(gameDTO.getParkId()).get();
-//        game.setPark(park);
-        Optional<Park> parkOptional = parkRepository.findById(gameDTO.getParkId());
-        if (parkOptional.isPresent()) {
-            game.setPark(parkOptional.get());
+//        place place = placeRepository.findById(gameDTO.getplaceId()).get();
+//        game.setplace(place);
+        Optional<Place> placeOptional = placeRepository.findById(gameDTO.getPlaceId());
+        if (placeOptional.isPresent()) {
+            game.setPlace(placeOptional.get());
         }
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
@@ -115,10 +112,10 @@ public class GameServiceImpl implements GameService {
     }
 
 
-    //tim kiem Game theo name & parkName, & paging
+    //tim kiem Game theo name & placeName, & paging
     @Override
-    public ResponseEntity<?> findByMulParam(String gameName, String parkName, Long limit, Long page) {
-        Output results = gameRepository.findByMulParam(gameName, parkName, limit, page);
+    public ResponseEntity<?> findByMulParam(String gameName, String placeName, Long limit, Long page) {
+        Output results = gameRepository.findByMulParam(gameName, placeName, limit, page);
         return ResponseEntity.ok(results);
     }
 }

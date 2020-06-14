@@ -43,8 +43,8 @@ public class GameConverter {
         }
         dto.setTicketTypeName(typeString);
 
-        dto.setParkId(game.getPark().getId());
-        dto.setParkName(game.getPark().getName());
+//        dto.setPlaceId(game.getPlace().getId());
+ //       dto.setPlaceName(game.getPlace().getName());
         return dto;
     }
 }

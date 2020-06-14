@@ -9,14 +9,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "t_image")
+@Table(name = "t_image_place")
 @Getter
 @Setter
-public class Image extends BaseEntity{
+public class ImagePlace extends BaseEntity{
     private String imageLink;
 
-    //Bảng Park qhe 1-n với Image
+    //Bảng Place qhe 1-n với Image
     @ManyToOne
-    @JoinColumn(name = "park_id")
-    private Park park;
+    @JoinColumn(name = "place_id")
+    private Place place;
 }

@@ -10,8 +10,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "t_game")
-@Getter
-@Setter
 @Data
 public class Game extends BaseEntity{
     private String gameName;
@@ -27,9 +25,9 @@ public class Game extends BaseEntity{
     private Set<TicketType> ticketTypes = new HashSet<>();
 
 
-    //Bảng Park qhe 1-n với Image
+    //Bảng Place qhe 1-n với Image
     @ManyToOne
-    @JoinColumn(name = "park_id")
-    private Park park;
+    @JoinColumn(name = "place_id")
+    private Place place;
 
 }
