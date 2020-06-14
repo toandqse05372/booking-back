@@ -17,15 +17,4 @@ public class ImageConverter {
         return dto;
     }
 
-
-    public OpeningHoursDTO toDTO(OpeningHours hours){
-        OpeningHoursDTO dto = new OpeningHoursDTO();
-        if (hours.getId() != null) {
-            dto.setId(hours.getId());
-        }
-        dto.setOpenHours(hours.getOpenHours());
-        dto.setCloseHours(hours.getCloseHours());
-        dto.setWeekDay(hours.getWeekDay());
-        return dto;
-    }
 }

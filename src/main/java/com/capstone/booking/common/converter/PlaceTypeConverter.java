@@ -12,7 +12,7 @@ public class PlaceTypeConverter {
             dto.setId(placeType.getId());
         }
         dto.setPlaceTypeName(placeType.getTypeName());
-
+        dto.setTypeKey(placeType.getTypeKey());
 //        Set<Place> placeSet = placeType.getplaces();
 //        Set<String> placeString = new HashSet<>();
 //        for (Place place : placeSet) {
@@ -25,11 +25,13 @@ public class PlaceTypeConverter {
     public PlaceType toPlaceType(PlaceTypeDTO dto) {
         PlaceType placeType = new PlaceType();
         placeType.setTypeName(dto.getPlaceTypeName());
+        placeType.setTypeKey(dto.getTypeKey());
         return placeType;
     }
 
     public PlaceType toPlaceType(PlaceTypeDTO dto, PlaceType placeType) {
         placeType.setTypeName(dto.getPlaceTypeName());
+        placeType.setTypeKey(dto.getTypeKey());
         return placeType;
     }
 

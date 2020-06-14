@@ -9,5 +9,6 @@ import java.util.Set;
 @EqualsAndHashCode
 public class PlaceTypeDTO extends BaseDTO{
     private String placeTypeName;
+    private String typeKey;
     //private Set<String> placeName;
 }

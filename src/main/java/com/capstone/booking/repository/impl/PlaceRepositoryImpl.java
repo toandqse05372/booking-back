@@ -86,7 +86,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         }
         //String between ="";
         if(!searched){
-            totalItem = queryplace(params, queryStr +where).size();
+            totalItem = queryPlace(params, queryStr +where).size();
             totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit )+1;
         }
         params.put("from", (page - 1)*limit);
@@ -96,7 +96,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         where += "limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryplace(params, queryStr +where)));
+        output.setListResult(convertList(queryPlace(params, queryStr +where)));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);
@@ -114,7 +114,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         return  results;
     }
 
-    public List<Place> queryplace(Map<String, Object> params , String sqlStr){
+    public List<Place> queryPlace(Map<String, Object> params , String sqlStr){
         Query query = entityManager.createNativeQuery(sqlStr, Place.class);
         for(Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
