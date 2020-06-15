@@ -1,6 +1,7 @@
 package com.capstone.booking.api;
 
 import com.capstone.booking.common.StripeToken;
+import com.capstone.booking.entity.dto.PaymentDTO;
 import com.capstone.booking.service.impl.StripeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +23,10 @@ public class PaymentController {
         model.addAttribute("stripePublicKey", stripePublicKey);
         return ResponseEntity.ok().body("ok");
     }
-    @RequestMapping(value = "/charge", method = RequestMethod.POST)
-    public ResponseEntity<?> chargeCard(@RequestBody StripeToken token) throws Exception {
+    @RequestMapping(value = "/payment", method = RequestMethod.POST)
+    public ResponseEntity<?> chargeCard(@RequestBody PaymentDTO paymentRequest) throws Exception {
    //     Double amount = Double.parseDouble(request.getParameter("amount"));
-        stripeService.chargeNewCard(token.getToken(), 120);
+        stripeService.chargeNewCard(paymentRequest.getStripeToken(), paymentRequest.getTotalPayment());
         return ResponseEntity.ok().body("ok");
     }
 

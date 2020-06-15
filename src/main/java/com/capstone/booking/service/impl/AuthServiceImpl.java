@@ -2,6 +2,7 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.common.RestFB;
 import com.capstone.booking.common.converter.UserConverter;
+import com.capstone.booking.common.key.CMSRoles;
 import com.capstone.booking.common.key.RoleKey;
 import com.capstone.booking.config.security.JwtUtil;
 import com.capstone.booking.config.security.UserPrincipal;
@@ -22,7 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -48,10 +51,25 @@ public class AuthServiceImpl implements AuthService {
 
     //tìm user theo mail
     @Override
-    public ResponseEntity<?> findByEmail(UserDTO userDTO) {
+    public ResponseEntity<?> findByEmail(UserDTO userDTO, String page) {
         User user = userRepository.findByMail(userDTO.getMail());
         if (null == user || !new BCryptPasswordEncoder().matches(userDTO.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("WRONG_USERNAME_PASSWORD");
+        }
+        if(page.equals("CMS")){
+            boolean cmsAble = false;
+            Set<Role> userRoles = user.getRoles();
+            List<CMSRoles> cmsRoles = Arrays.asList(CMSRoles.values());
+            for(Role role: userRoles){
+                for (CMSRoles cmsRole : cmsRoles){
+                    if (cmsRole.toString().equals(role.getRoleKey())){
+                        cmsAble = true;
+                    }
+                }
+            }
+            if (!cmsAble){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NO_PERMISSION_HERE");
+            }
         }
         return ResponseEntity.ok(returnToken(setPermission(user)).getToken());
     }
@@ -83,8 +101,26 @@ public class AuthServiceImpl implements AuthService {
         userPrincipal.setLastName(user.getLastName());
         userPrincipal.setPassword(user.getPassword());
         userPrincipal.setAuthorities(authorities);
+     //   userPrincipal.setPermissions(getUserPermission(user.getRoles()));
         return userPrincipal;
     }
+
+//    public List<String> getUserPermission(Set<Role> rolesSet){
+//        List<String> result = new ArrayList<>();
+//        for(Role role : rolesSet){
+//            if(role.getRoleKey().equals(RoleKey.ADMIN)){
+//                for(PermissionKey.AdminPermissionKey permission: PermissionKey.AdminPermissionKey.values()){
+//                    result.add(permission.toString());
+//                }
+//            }
+//            if(role.getRoleKey().equals(RoleKey.USER)){
+//                for(PermissionKey.UserPermission permission: PermissionKey.UserPermission.values()){
+//                    result.add(permission.toString());
+//                }
+//            }
+//        }
+//        return result;
+//    }
 
     //trả token để remember tk
     private Token returnToken(UserPrincipal userPrincipal){
