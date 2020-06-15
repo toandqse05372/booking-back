@@ -56,20 +56,23 @@ public class AuthServiceImpl implements AuthService {
         if (null == user || !new BCryptPasswordEncoder().matches(userDTO.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("WRONG_USERNAME_PASSWORD");
         }
-        if(page.equals("CMS")){
-            boolean cmsAble = false;
-            Set<Role> userRoles = user.getRoles();
-            List<CMSRoles> cmsRoles = Arrays.asList(CMSRoles.values());
-            for(Role role: userRoles){
-                for (CMSRoles cmsRole : cmsRoles){
-                    if (cmsRole.toString().equals(role.getRoleKey())){
-                        cmsAble = true;
+        if(page != null){
+            if(page.equals("CMS")){
+                boolean cmsAble = false;
+                Set<Role> userRoles = user.getRoles();
+                List<CMSRoles> cmsRoles = Arrays.asList(CMSRoles.values());
+                for(Role role: userRoles){
+                    for (CMSRoles cmsRole : cmsRoles){
+                        if (cmsRole.toString().equals(role.getRoleKey())){
+                            cmsAble = true;
+                        }
                     }
                 }
-            }
-            if (!cmsAble){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NO_PERMISSION_HERE");
-            }
+                if (!cmsAble){
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NO_PERMISSION_HERE");
+                }
+        }
+
         }
         return ResponseEntity.ok(returnToken(setPermission(user)).getToken());
     }
