@@ -37,7 +37,7 @@ public class PlaceController {
 
 
     //tim kiem place theo ten & address, description, cityId, placeTypeId, & paging
-    @GetMapping("/place/searchMUL")
+    @GetMapping("/place/searchMul")
     @PreAuthorize("hasAnyAuthority('READ_PLACE')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "name", required = false) String name,
                                        @RequestParam(value = "address", required = false) String address,
