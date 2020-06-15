@@ -17,8 +17,9 @@ public class AuthController {
 
     //login tk bt
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDTO user) {
-        return authService.findByEmail(user);
+    public ResponseEntity<?> login(@RequestBody UserDTO user,
+                                   @RequestParam(value = "page", required = false) String page) {
+        return authService.findByEmail(user, page);
     }
 
     //login tk fb

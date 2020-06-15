@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.io.IOException;
 
 public interface AuthService {
-    ResponseEntity<?> findByEmail(UserDTO userDTO);
+    ResponseEntity<?> findByEmail(UserDTO userDTO, String page);
 
     ResponseEntity<?> loginFb(@RequestBody FBLoginDTO fbForm) throws IOException;
 }
