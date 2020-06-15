@@ -25,7 +25,7 @@ public class UserController {
         return userService.register(user);
     }
 
-    //đăng kí tài khoản bt
+    //admin thêm người dùng
     @PostMapping("/user/createUserCMS")
     @PreAuthorize("hasAnyAuthority('ADD_USER')")
     public ResponseEntity<?> createUserCMS(@RequestBody UserDTO user) {
