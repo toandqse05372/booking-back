@@ -1,4 +1,5 @@
 package com.capstone.booking.service;
+import com.capstone.booking.entity.User;
 import com.capstone.booking.entity.dto.UserDTO;
 import org.springframework.http.ResponseEntity;
 
@@ -7,6 +8,9 @@ public interface UserService {
 
     //tạo customer mới
     ResponseEntity<?> register(UserDTO userDTO);
+
+    ResponseEntity<?> verifyEmail(String verificationToken);
+
     //sửa
     ResponseEntity<?> update(UserDTO userDTO);
     //createUserCMS

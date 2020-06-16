@@ -6,10 +6,12 @@ import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.UserDTO;
 import com.capstone.booking.repository.RoleRepository;
 import com.capstone.booking.repository.UserRepository;
+import com.capstone.booking.repository.VerificationTokenRepository;
 import com.capstone.booking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,6 +29,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserConverter userConverter;
 
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
+
+    @Autowired
+    private  AuthServiceImpl authService;
 
     //tạo customer mới
     @Override
@@ -38,8 +48,43 @@ public class UserServiceImpl implements UserService {
         Set<Role> roleSet = new HashSet<>();
         roleSet.add(roleRepository.findByRoleKey(RoleKey.USER.toString()));
         user.setRoles(roleSet);
+        user.setStatus("NOT");
         userRepository.save(user);
+
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setUser(user);
+        verificationToken.setConfirmationToken(UUID.randomUUID().toString());
+
+        tokenRepository.save(verificationToken);
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo("quangtoandao123@gmail.com");
+        mailMessage.setSubject("Complete Registration!");
+        mailMessage.setFrom("toandqse08372@fpt.edu.vn");
+        mailMessage.setText("To confirm your account, please click here : "
+                +"http://localhost:8090/user/active?token="+verificationToken.getConfirmationToken());
+
+        emailSenderService.sendEmail(mailMessage);
+
         return ResponseEntity.ok(user);
+    }
+
+    @Override
+    public ResponseEntity<?> verifyEmail(String verificationToken) {
+        VerificationToken token = tokenRepository.findByConfirmationToken(verificationToken);
+
+        if(token != null)
+        {
+            User user = userRepository.findByMail(token.getUser().getMail());
+            user.setStatus("ACTIVATED");
+            userRepository.save(user);
+            return ResponseEntity.ok(authService.returnToken(authService.setPermission(user)));
+        }
+        else
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("WTF");
+        }
+
     }
 
     //sửa user

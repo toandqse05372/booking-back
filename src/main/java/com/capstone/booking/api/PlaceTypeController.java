@@ -26,7 +26,6 @@ public class PlaceTypeController {
         return new ResponseEntity("Delete Successful", HttpStatus.OK);
     }
 
-
     //them
     @PostMapping("/placeType")
     public ResponseEntity<?> create(@RequestBody PlaceTypeDTO model) {

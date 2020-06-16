@@ -39,7 +39,7 @@ public class JwtUtil {
     }
 
     public Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + 864000000);
+        return new Date(System.currentTimeMillis() + 172800000);
     }
 
     private JWTClaimsSet getClaimsFromToken(String token) {

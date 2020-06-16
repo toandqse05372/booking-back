@@ -25,7 +25,12 @@ public class UserController {
         return userService.register(user);
     }
 
-    //admin thêm người dùng
+    @GetMapping("/user/active")
+    public ResponseEntity<?> active(@RequestParam("token")String verificationToken) {
+        return userService.verifyEmail(verificationToken);
+    }
+
+    //đăng kí tài khoản bt
     @PostMapping("/user/createUserCMS")
     @PreAuthorize("hasAnyAuthority('ADD_USER')")
     public ResponseEntity<?> createUserCMS(@RequestBody UserDTO user) {
