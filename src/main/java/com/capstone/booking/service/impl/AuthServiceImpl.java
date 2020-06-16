@@ -126,7 +126,7 @@ public class AuthServiceImpl implements AuthService {
 //    }
 
     //trả token để remember tk
-    private Token returnToken(UserPrincipal userPrincipal){
+    public Token returnToken(UserPrincipal userPrincipal){
         Token token = new Token();
         token.setToken(jwtUtil.generateToken(userPrincipal));
         token.setTokenExpDate(jwtUtil.generateExpirationDate());
