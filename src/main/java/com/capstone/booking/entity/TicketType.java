@@ -15,6 +15,7 @@ public class TicketType extends BaseEntity{
     private String typeKey;
     private String typeName;
     private String effectiveTime;
+    @Column(length = 10000)
     private String ticketDescription;
     private String reservationInfo;
     private String cancelPolicy;

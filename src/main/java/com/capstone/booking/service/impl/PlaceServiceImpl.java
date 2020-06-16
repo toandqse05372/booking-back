@@ -56,7 +56,6 @@ public class PlaceServiceImpl implements PlaceService {
         City cityName = cityRepository.findByName(placeDTO.getCity().getName());
         place.setCity(cityName);
 
-
         Set<PlaceType> placeTypeSet = new HashSet<>();
         for(PlaceTypeDTO placeTypeDTO : placeDTO.getPlaceType()){
             placeTypeSet.add(placeTypeRepository.findOneByTypeName(placeTypeDTO.getPlaceTypeName()));

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -18,6 +19,12 @@ public class PlaceConverter {
 
     @Autowired
     private ImageConverter imageConverter;
+
+    @Autowired
+    private CityConverter cityConverter;
+
+    @Autowired
+    private OpeningHoursConverter hoursConverter;
 
     public Place toPlace(PlaceDTO dto) {
         Place place = new Place();
@@ -40,10 +47,17 @@ public class PlaceConverter {
         dto.setMail(place.getMail());
         dto.setPhoneNumber(place.getPhoneNumber());
 
+        Set<ImageDTO> imageSet = new HashSet<>();
+        for (ImagePlace image : place.getImagePlace()) {
+            imageSet.add(imageConverter.toDTO(image));
+        }
+        dto.setPlaceImage(imageSet);
+
         CityDTO cityDTO = new CityDTO();
         City city = place.getCity();
-        cityDTO.setId(city.getId());
-        cityDTO.setName(city.getName());
+        cityDTO = cityConverter.toDTO(city);
+        //cityDTO.setId(city.getId());
+        //cityDTO.setName(city.getName());
         dto.setCity(cityDTO);
 
         Set<PlaceTypeDTO> placeTypeSet = new HashSet<>();
@@ -51,6 +65,12 @@ public class PlaceConverter {
             placeTypeSet.add(placeTypeConverter.toDTO(placeType));
         }
         dto.setPlaceType(placeTypeSet);
+
+        Set<OpeningHoursDTO> openingHoursSet = new HashSet<>();
+        for (OpeningHours hours : place.getOpeningHours()) {
+            openingHoursSet.add(hoursConverter.toDTO(hours));
+        }
+        dto.setOpeningHours(openingHoursSet);
 
         return dto;
     }

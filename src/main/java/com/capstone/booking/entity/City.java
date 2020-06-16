@@ -2,6 +2,7 @@ package com.capstone.booking.entity;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -16,6 +17,7 @@ public class City extends BaseEntity{
 
     private String shortDescription;
 
+    @Column(length = 10000)
     private String detailDescription;
 
     //Bảng City qhe 1-n với Place

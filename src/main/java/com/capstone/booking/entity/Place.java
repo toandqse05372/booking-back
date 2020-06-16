@@ -12,13 +12,14 @@ import java.util.Set;
 @Getter
 @Setter
 
-public class Place extends BaseEntity{
+public class Place extends BaseEntity {
     private String name;
     private String address;
+    @Column(length = 10000)
     private String description;
     private String mail;
     private String phoneNumber;
-
+    private String status;
 
     //Bảng Place qhe 1-n với OpeningHours
     @OneToMany(mappedBy = "place")
