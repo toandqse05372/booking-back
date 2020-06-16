@@ -38,13 +38,13 @@ public class GameConverter {
 
         Set<TicketType> typeSet = game.getTicketTypes();
         Set<String> typeString = new HashSet<>();
-        for (TicketType ticketType: typeSet) {
+        for (TicketType ticketType : typeSet) {
             typeString.add(ticketType.getTypeName());
         }
         dto.setTicketTypeName(typeString);
 
-//        dto.setPlaceId(game.getPlace().getId());
- //       dto.setPlaceName(game.getPlace().getName());
+        dto.setPlaceId(game.getPlace().getId());
+        dto.setPlaceName(game.getPlace().getName());
         return dto;
     }
 }

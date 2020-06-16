@@ -37,7 +37,8 @@ public class GameServiceImpl implements GameService {
     public ResponseEntity<?> create(GameDTO gameDTO) {
         Game game = gameConverter.toGame(gameDTO);
         //ntn thì trung nhau ???
-        if (gameRepository.findByGameName(game.getGameName()) != null) {
+        if (gameRepository.findByGameName(game.getGameName()) != null
+                && gameRepository.findByPlaceId(game.getPlace().getId()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
         }
 
