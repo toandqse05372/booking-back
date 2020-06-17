@@ -14,4 +14,5 @@ public class GameDTO extends BaseDTO{
     private Set<String> ticketTypeName;
     private Long placeId;
     private String placeName;
+    private String status;
 }

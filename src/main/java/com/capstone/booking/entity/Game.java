@@ -15,7 +15,7 @@ public class Game extends BaseEntity{
     private String gameName;
     private String gameDescription;
     private boolean ticketInventoryStatus; //trang thai ve còn hay k
-
+    private String status;
 
     //Bảng Game qhe n-n với TicketType
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)

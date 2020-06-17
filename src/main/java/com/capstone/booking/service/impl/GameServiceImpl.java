@@ -2,6 +2,7 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.GameConverter;
+import com.capstone.booking.common.key.Status;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.GameDTO;
 import com.capstone.booking.repository.GameRepository;
@@ -53,6 +54,8 @@ public class GameServiceImpl implements GameService {
         if (placeOptional.isPresent()) {
             game.setPlace(placeOptional.get());
         }
+
+        game.setStatus(Status.ACTIVE.toString());
 
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));

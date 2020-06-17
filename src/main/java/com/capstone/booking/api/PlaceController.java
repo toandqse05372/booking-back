@@ -18,20 +18,20 @@ public class PlaceController {
 
     //thêm place
     @PostMapping("/place")
-    public ResponseEntity<?> createplace(@RequestBody PlaceDTO model) {
+    public ResponseEntity<?> createPlace(@RequestBody PlaceDTO model) {
         return placeService.create(model);
     }
 
     //sửa place
     @PutMapping("/place/{id}")
-    public ResponseEntity<?> updateplace(@RequestBody PlaceDTO model, @PathVariable("id") long id) {
+    public ResponseEntity<?> updatePlace(@RequestBody PlaceDTO model, @PathVariable("id") long id) {
         model.setId(id);
         return placeService.update(model);
     }
 
     //search By Id
     @GetMapping("/place/{id}")
-    public ResponseEntity<?> getplace(@PathVariable Long id) {
+    public ResponseEntity<?> getPlace(@PathVariable Long id) {
         return placeService.getPlace(id);
     }
 
@@ -50,7 +50,7 @@ public class PlaceController {
 
     //xoa place
     @DeleteMapping("/place/{id}")
-    public ResponseEntity<?> deleteplace(@PathVariable("id") long id) {
+    public ResponseEntity<?> deletePlace(@PathVariable("id") long id) {
         placeService.delete(id);
         return new ResponseEntity("Delete Successful", HttpStatus.OK);
     }
