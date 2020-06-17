@@ -9,6 +9,8 @@ public interface UserService {
     //tạo customer mới
     ResponseEntity<?> register(UserDTO userDTO);
 
+    ResponseEntity<?> resendEmailVerify(String mail);
+
     ResponseEntity<?> verifyEmail(String verificationToken);
 
     //sửa

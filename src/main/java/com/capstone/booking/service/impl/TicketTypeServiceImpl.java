@@ -2,16 +2,22 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.TicketTypeConverter;
+import com.capstone.booking.common.helper.ExcelHelper;
+import com.capstone.booking.entity.Code;
 import com.capstone.booking.entity.Game;
 import com.capstone.booking.entity.TicketType;
 import com.capstone.booking.entity.dto.TicketTypeDTO;
+import com.capstone.booking.repository.CodeRepository;
 import com.capstone.booking.repository.GameRepository;
 import com.capstone.booking.repository.TicketTypeRepository;
 import com.capstone.booking.service.TicketTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -26,6 +32,9 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 
     @Autowired
     GameRepository gameRepository;
+
+    @Autowired
+    CodeRepository codeRepository;
 
     @Override
     public ResponseEntity<?> findAll() {
@@ -81,5 +90,20 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     public ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page) {
         Output results = ticketTypeRepository.findByTypeName(typeName, limit, page);
         return ResponseEntity.ok(results);
+    }
+
+    @Override
+    public ResponseEntity<?> addCodeForTicketType(MultipartFile file, String codeType){
+        if (ExcelHelper.hasExcelFormat(file)) {
+            try {
+                List<Code> tutorials = ExcelHelper.excelToTutorials(file.getInputStream());
+                codeRepository.saveAll(tutorials);
+                return ResponseEntity.ok("SUCCESS");
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("COULD_NOT_UPLOAD_FILE");
+            }
+        }else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT_EXCEL_FILE");
+
     }
 }
