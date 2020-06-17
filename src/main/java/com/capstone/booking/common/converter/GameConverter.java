@@ -43,10 +43,8 @@ public class GameConverter {
         }
         dto.setTicketTypeName(typeString);
 
-        if (game.getPlace() != null) {
-            dto.setPlaceId(game.getPlace().getId());
-            dto.setPlaceName(game.getPlace().getName());
-        }
+        dto.setPlaceId(game.getPlace().getId());
+        dto.setPlaceName(game.getPlace().getName());
         dto.setStatus(game.getStatus());
 
         return dto;

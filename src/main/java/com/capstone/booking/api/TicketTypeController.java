@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class TicketTypeController {
+
     @Autowired
     private TicketTypeService ticketTypeService;
 
@@ -45,4 +47,10 @@ public class TicketTypeController {
         model.setId(id);
         return ticketTypeService.update(model);
     }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("codeType") String codeType) {
+        return ticketTypeService.addCodeForTicketType(file, codeType);
+    }
+
 }

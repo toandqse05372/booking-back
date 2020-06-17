@@ -25,6 +25,11 @@ public class UserController {
         return userService.register(user);
     }
 
+    @PostMapping("/user/resent-email")
+    public ResponseEntity<?> resendEmail(@RequestBody String mail) {
+        return userService.resendEmailVerify(mail);
+    }
+
     @GetMapping("/user/active")
     public ResponseEntity<?> active(@RequestParam("token")String verificationToken) {
         return userService.verifyEmail(verificationToken);

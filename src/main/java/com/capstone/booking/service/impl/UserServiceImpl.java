@@ -51,6 +51,19 @@ public class UserServiceImpl implements UserService {
         user.setStatus("NOT");
         userRepository.save(user);
 
+        sendEmailVerify(user);
+
+        return ResponseEntity.ok(user);
+    }
+
+    @Override
+    public ResponseEntity<?> resendEmailVerify(String mail){
+        User user = userRepository.findByMail(mail);
+        sendEmailVerify(user);
+        return ResponseEntity.ok(user);
+    }
+
+    public void sendEmailVerify(User user){
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setUser(user);
         verificationToken.setConfirmationToken(UUID.randomUUID().toString());
@@ -58,15 +71,13 @@ public class UserServiceImpl implements UserService {
         tokenRepository.save(verificationToken);
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo("quangtoandao123@gmail.com");
+        mailMessage.setTo("quangtoandao123@gmail.com"); //user email
         mailMessage.setSubject("Complete Registration!");
         mailMessage.setFrom("toandqse08372@fpt.edu.vn");
         mailMessage.setText("To confirm your account, please click here : "
                 +"http://localhost:8090/user/active?token="+verificationToken.getConfirmationToken());
 
         emailSenderService.sendEmail(mailMessage);
-
-        return ResponseEntity.ok(user);
     }
 
     @Override
