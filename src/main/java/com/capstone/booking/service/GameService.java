@@ -23,4 +23,7 @@ public interface GameService {
     //tim kiem Game theo name & placeName, & paging ============================
     ResponseEntity<?> findByMulParam(String gameName, String placeName, Long limit, Long page);
 
+    //change status
+    ResponseEntity<?> changeStatus(Long id);
+
 }

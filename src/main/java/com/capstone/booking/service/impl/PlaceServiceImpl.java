@@ -96,4 +96,17 @@ public class PlaceServiceImpl implements PlaceService {
         placeRepository.deleteById(id);
     }
 
+    //change status
+    @Override
+    public ResponseEntity<?> changeStatus(Long id) {
+        Place place = placeRepository.findById(id).get();
+        if (place.getStatus().equals(Status.ACTIVE.toString())) {
+            place.setStatus(Status.DEACTIVATE.toString());
+        } else {
+            place.setStatus(Status.ACTIVE.toString());
+        }
+        place = placeRepository.save(place);
+        return ResponseEntity.ok(placeConverter.toDTO(place));
+    }
+
 }

@@ -13,6 +13,15 @@ public class PlaceTypeController {
     @Autowired
     private PlaceTypeService placeTypeService;
 
+    //tim kiem placeType theo name & paging
+    @GetMapping("/placeType/searchMul")
+    public ResponseEntity<?> searchMUL(@RequestParam(value = "typeName", required = false) String typeName,
+                                       @RequestParam(value = "limit", required = false) Long limit,
+                                       @RequestParam(value = "page", required = false) Long page) {
+        return placeTypeService.findByMulParam(typeName, limit, page);
+    }
+
+
     //get All
     @GetMapping("/placeTypes")
     public ResponseEntity<?> findAllPlaceTypes() {

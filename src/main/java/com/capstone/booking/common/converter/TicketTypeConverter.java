@@ -13,7 +13,6 @@ public class TicketTypeConverter {
 
     public TicketType toTicketType(TicketTypeDTO dto) {
         TicketType ticketType = new TicketType();
-        ticketType.setTypeKey(dto.getTypeKey());
         ticketType.setTypeName(dto.getTypeName());
         ticketType.setEffectiveTime(dto.getEffectiveTime());
         ticketType.setTicketDescription(dto.getTicketDescription());
@@ -26,7 +25,6 @@ public class TicketTypeConverter {
     }
 
     public TicketType toTicketType(TicketTypeDTO dto, TicketType ticketType) {
-        ticketType.setTypeKey(dto.getTypeKey());
         ticketType.setTypeName(dto.getTypeName());
         ticketType.setEffectiveTime(dto.getEffectiveTime());
         ticketType.setTicketDescription(dto.getTicketDescription());
@@ -43,7 +41,6 @@ public class TicketTypeConverter {
         if (ticketType.getId() != null) {
             dto.setId(ticketType.getId());
         }
-        dto.setTypeKey(ticketType.getTypeKey());
         dto.setTypeName(ticketType.getTypeName());
         dto.setEffectiveTime(ticketType.getEffectiveTime());
         dto.setTicketDescription(ticketType.getTicketDescription());

@@ -1,5 +1,6 @@
 package com.capstone.booking.service.impl;
 
+import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.PlaceTypeConverter;
 import com.capstone.booking.entity.PlaceType;
 import com.capstone.booking.entity.dto.PlaceTypeDTO;
@@ -63,6 +64,12 @@ public class PlaceTypeServiceImpl implements PlaceTypeService {
         }
         placeTypeRepository.save(placeType);
         return ResponseEntity.ok(placeTypeConverter.toDTO(placeType));
+    }
+
+    @Override
+    public ResponseEntity<?> findByMulParam(String typeName, Long limit, Long page) {
+        Output results = placeTypeRepository.findByMulParam(typeName, limit, page);
+        return ResponseEntity.ok(results);
     }
 
 

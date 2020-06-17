@@ -29,6 +29,13 @@ public class PlaceController {
         return placeService.update(model);
     }
 
+    //change status Place
+    @PutMapping("/changePlace/{id}")
+    public ResponseEntity<?> changeStatusGame(@PathVariable("id") long id) {
+        placeService.changeStatus(id);
+        return new ResponseEntity("Change Successful", HttpStatus.OK);
+    }
+
     //search By Id
     @GetMapping("/place/{id}")
     public ResponseEntity<?> getPlace(@PathVariable Long id) {

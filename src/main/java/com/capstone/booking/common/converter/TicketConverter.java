@@ -1,12 +1,20 @@
 package com.capstone.booking.common.converter;
 
 import com.capstone.booking.entity.Ticket;
+import com.capstone.booking.entity.TicketType;
 import com.capstone.booking.entity.dto.TicketDTO;
+import com.capstone.booking.entity.dto.TicketTypeDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class TicketConverter {
+
+    @Autowired
+    private TicketTypeConverter typeConverter;
+
+
     public Ticket toTicket(TicketDTO dto) {
         Ticket ticket = new Ticket();
         ticket.setCode(dto.getCode());
@@ -29,7 +37,11 @@ public class TicketConverter {
         dto.setRedemptionDate(ticket.getRedemptionDate());
 
         //dto.setOrderId(ticket.getOrder().getId());
-        dto.setTicketTypeId(ticket.getTicketType().getId());
+
+        TicketTypeDTO typeDTO = new TicketTypeDTO();
+        TicketType type = ticket.getTicketType();
+        typeDTO = typeConverter.toDTO(type);
+        dto.setTicketType(typeDTO);
         return dto;
     }
 }

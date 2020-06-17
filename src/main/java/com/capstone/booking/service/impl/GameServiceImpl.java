@@ -5,6 +5,8 @@ import com.capstone.booking.common.converter.GameConverter;
 import com.capstone.booking.common.key.Status;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.GameDTO;
+import com.capstone.booking.entity.dto.ImageDTO;
+import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.repository.GameRepository;
 import com.capstone.booking.repository.PlaceRepository;
 import com.capstone.booking.repository.TicketTypeRepository;
@@ -55,7 +57,7 @@ public class GameServiceImpl implements GameService {
             game.setPlace(placeOptional.get());
         }
 
-        game.setStatus(Status.ACTIVE.toString());
+        //game.setStatus(Status.ACTIVE.toString());
 
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
@@ -122,4 +124,18 @@ public class GameServiceImpl implements GameService {
         Output results = gameRepository.findByMulParam(gameName, placeName, limit, page);
         return ResponseEntity.ok(results);
     }
+
+    //change status
+    @Override
+    public ResponseEntity<?> changeStatus(Long id) {
+        Game game = gameRepository.findById(id).get();
+        if (game.getStatus().equals(Status.ACTIVE.toString())) {
+            game.setStatus(Status.DEACTIVATE.toString());
+        } else {
+            game.setStatus(Status.ACTIVE.toString());
+        }
+        game = gameRepository.save(game);
+        return ResponseEntity.ok(gameConverter.toDTO(game));
+    }
+
 }

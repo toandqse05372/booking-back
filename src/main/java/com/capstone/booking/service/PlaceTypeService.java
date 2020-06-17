@@ -16,4 +16,7 @@ public interface PlaceTypeService {
     //sưa
     ResponseEntity<?> update(PlaceTypeDTO placeTypeDTO);
 
+    //tim kiem PlaceTypeS theo name  & paging
+    ResponseEntity<?> findByMulParam(String typeName, Long limit, Long page);
+
 }

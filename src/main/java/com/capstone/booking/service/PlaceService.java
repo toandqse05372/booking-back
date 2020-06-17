@@ -19,4 +19,7 @@ public interface PlaceService {
     //xóa
     void delete(long id);
 
+    //change status
+    ResponseEntity<?> changeStatus(Long id);
+
 }

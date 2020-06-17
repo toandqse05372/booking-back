@@ -36,6 +36,13 @@ public class GameController {
         return new ResponseEntity("Delete Successful", HttpStatus.OK);
     }
 
+    //change status Game
+    @PutMapping("/changeGame/{id}")
+    public ResponseEntity<?> changeStatusGame(@PathVariable("id") long id) {
+        gameService.changeStatus(id);
+        return new ResponseEntity("Change Successful", HttpStatus.OK);
+    }
+
     //add Game
     @PostMapping("/game")
     public ResponseEntity<?> createGame(@RequestBody GameDTO model) {

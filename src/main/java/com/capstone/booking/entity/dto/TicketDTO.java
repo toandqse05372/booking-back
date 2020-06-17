@@ -10,6 +10,6 @@ import java.util.Date;
 public class TicketDTO extends BaseDTO{
     private Date redemptionDate;
     private String code;
-    private Long ticketTypeId;
+    private TicketTypeDTO ticketType;
     //private Long orderId;
 }

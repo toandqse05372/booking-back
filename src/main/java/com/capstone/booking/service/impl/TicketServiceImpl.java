@@ -31,7 +31,7 @@ public class TicketServiceImpl implements TicketService {
     public ResponseEntity<?> create(TicketDTO ticketDTO) {
         Ticket ticket = ticketConverter.toTicket(ticketDTO);
 
-        TicketType ticketType = ticketTypeRepository.findById(ticketDTO.getTicketTypeId()).get();
+        TicketType ticketType = ticketTypeRepository.findById(ticketDTO.getTicketType().getId()).get();
         ticket.setTicketType(ticketType);
 
         ticketRepository.save(ticket);
@@ -45,7 +45,7 @@ public class TicketServiceImpl implements TicketService {
         ticket = ticketConverter.toTicket(ticketDTO, oldTicket);
 
 
-        TicketType ticketType = ticketTypeRepository.findById(ticketDTO.getTicketTypeId()).get();
+        TicketType ticketType = ticketTypeRepository.findById(ticketDTO.getTicketType().getId()).get();
         ticket.setTicketType(ticketType);
 
         ticketRepository.save(ticket);

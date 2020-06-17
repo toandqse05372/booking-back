@@ -9,7 +9,6 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode
 public class TicketTypeDTO extends BaseDTO{
-    private String typeKey;
     private String typeName;
     private String effectiveTime;
     private String ticketDescription;
