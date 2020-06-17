@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PlaceRepository extends JpaRepository<Place, Long>, PlaceRepositoryCustom {
     //List<Place> findByGame(Game game);
+    Place findByStatus(String status);
 }

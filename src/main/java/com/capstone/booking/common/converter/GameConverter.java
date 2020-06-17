@@ -45,6 +45,8 @@ public class GameConverter {
 
         dto.setPlaceId(game.getPlace().getId());
         dto.setPlaceName(game.getPlace().getName());
+        dto.setStatus(game.getStatus());
+
         return dto;
     }
 }

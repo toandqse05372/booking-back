@@ -18,4 +18,5 @@ public class PlaceDTO extends BaseDTO{
     //private Set<GameDTO> game;
     private Set<PlaceTypeDTO> placeType;
     private Set<OpeningHoursDTO> openingHours;
+    private String status;
 }

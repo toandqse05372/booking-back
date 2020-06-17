@@ -2,6 +2,7 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.PlaceConverter;
+import com.capstone.booking.common.key.Status;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.entity.dto.PlaceTypeDTO;
@@ -61,6 +62,8 @@ public class PlaceServiceImpl implements PlaceService {
             placeTypeSet.add(placeTypeRepository.findOneByTypeName(placeTypeDTO.getPlaceTypeName()));
         }
         place.setPlaceTypes(placeTypeSet);
+
+        place.setStatus(Status.ACTIVE.toString());
 
         placeRepository.save(place);
         return ResponseEntity.ok(placeConverter.toDTO(place));

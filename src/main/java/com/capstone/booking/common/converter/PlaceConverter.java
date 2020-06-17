@@ -72,6 +72,7 @@ public class PlaceConverter {
         }
         dto.setOpeningHours(openingHoursSet);
 
+        dto.setStatus(place.getStatus());
         return dto;
     }
 
