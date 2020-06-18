@@ -4,9 +4,9 @@ import org.springframework.http.ResponseEntity;
 
 public interface PlaceService {
 
-    //tim kiem Place theo ten & address, description, cityId, placeTypeId, & paging
+    //tim kiem Place theo ten & address, description, cityId, categoryId, & paging
     ResponseEntity<?> findByMultipleParam(String name, String address, Long cityId,
-                                          Long placeTypeId, Long limit, Long page);
+                                          Long categoryId, Long limit, Long page);
 
     //search ById
     ResponseEntity<?> getPlace(Long id);

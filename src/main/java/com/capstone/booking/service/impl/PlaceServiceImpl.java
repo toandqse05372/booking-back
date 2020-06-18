@@ -5,7 +5,7 @@ import com.capstone.booking.common.converter.PlaceConverter;
 import com.capstone.booking.common.key.Status;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.PlaceDTO;
-import com.capstone.booking.entity.dto.PlaceTypeDTO;
+import com.capstone.booking.entity.dto.CategoryDTO;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +30,15 @@ public class PlaceServiceImpl implements PlaceService {
     private GameRepository gameRepository;
 
     @Autowired
-    private PlaceTypeRepository placeTypeRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private ImagePlaceRepository imageRepository;
-    //tim kiem place theo ten & address, description, cityId, placeTypeId, & paging
+    //tim kiem place theo ten & address, description, cityId, categoryId, & paging
     @Override
     public ResponseEntity<?> findByMultipleParam(String name, String address, Long cityId,
-                                                 Long placeTypeId, Long limit, Long page) {
-        Output results = placeRepository.findByMultiParam(name, address, cityId, placeTypeId, limit, page);
+                                                 Long categoryId, Long limit, Long page) {
+        Output results = placeRepository.findByMultiParam(name, address, cityId, categoryId, limit, page);
         return ResponseEntity.ok(results);
     }
 
@@ -57,11 +57,11 @@ public class PlaceServiceImpl implements PlaceService {
         City cityName = cityRepository.findByName(placeDTO.getCity().getName());
         place.setCity(cityName);
 
-        Set<PlaceType> placeTypeSet = new HashSet<>();
-        for(PlaceTypeDTO placeTypeDTO : placeDTO.getPlaceType()){
-            placeTypeSet.add(placeTypeRepository.findOneByTypeName(placeTypeDTO.getPlaceTypeName()));
+        Set<Category> categorySet = new HashSet<>();
+        for(CategoryDTO categoryDTO : placeDTO.getCategory()){
+            categorySet.add(categoryRepository.findOneByTypeName(categoryDTO.getCategoryName()));
         }
-        place.setPlaceTypes(placeTypeSet);
+        place.setCategories(categorySet);
 
         place.setStatus(Status.ACTIVE.toString());
 
@@ -79,11 +79,11 @@ public class PlaceServiceImpl implements PlaceService {
         City cityName = cityRepository.findByName(placeDTO.getCity().getName());
         place.setCity(cityName);
 
-        Set<PlaceType> placeTypeSet = new HashSet<>();
-        for(PlaceTypeDTO placeTypeDTO : placeDTO.getPlaceType()){
-            placeTypeSet.add(placeTypeRepository.findOneByTypeName(placeTypeDTO.getPlaceTypeName()));
+        Set<Category> categorySet = new HashSet<>();
+        for(CategoryDTO categoryDTO : placeDTO.getCategory()){
+            categorySet.add(categoryRepository.findOneByTypeName(categoryDTO.getCategoryName()));
         }
-        place.setPlaceTypes(placeTypeSet);
+        place.setCategories(categorySet);
 
         placeRepository.save(place);
         return ResponseEntity.ok(placeConverter.toDTO(place));

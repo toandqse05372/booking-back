@@ -33,7 +33,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
 
     @Override
     public Output findByMultiParam(String name, String address, Long cityId,
-                                   Long placeTypeId, Long limit, Long page) {
+                                   Long categoryId, Long limit, Long page) {
         boolean addedWhere = false;
         String queryStr = "select place0_.* from t_place place0_ ";
         String where = "";
@@ -41,14 +41,14 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         int pageInt = Math.toIntExact(page);
 
         Map<String, Object> params = new HashMap<>();
-        if(placeTypeId !=null && placeTypeId != 0){
+        if(categoryId !=null && categoryId != 0){
             queryStr += "INNER join t_place_place_type ppt on place0_.id = ppt.place_id";
             if(stack > 1){
                 where +=" and ";
             }
             where +=" ppt.place_type_id = :ptid ";
             addedWhere = true;
-            params.put("ptid", placeTypeId);
+            params.put("ptid", categoryId);
             stack++;
         }
 

@@ -4,6 +4,6 @@ import com.capstone.booking.api.output.Output;
 
 public interface PlaceRepositoryCustom {
     Output findByMultiParam(String name, String address, Long cityId,
-                            Long placeTypeId, Long limit, Long page);
+                            Long categoryId, Long limit, Long page);
 
 }
