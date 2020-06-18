@@ -14,7 +14,7 @@ public class PlaceTypeController {
     private PlaceTypeService placeTypeService;
 
     //tim kiem placeType theo name & paging
-    @GetMapping("/placeType/searchMul")
+    @GetMapping("/placeType/searchByName")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "typeName", required = false) String typeName,
                                        @RequestParam(value = "limit", required = false) Long limit,
                                        @RequestParam(value = "page", required = false) Long page) {

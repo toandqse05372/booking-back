@@ -13,6 +13,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 public class PaymentMethods extends BaseEntity{
+    private String methodName;
     private String methodKey;
     private String status;
 

@@ -12,4 +12,7 @@ public interface PaymentMethodsService {
 
     //delete
     void delete(long id);
+
+    //tim kiem PaymentMethods theo name  & paging
+    ResponseEntity<?> findByMulParam(String methodName, Long limit, Long page);
 }

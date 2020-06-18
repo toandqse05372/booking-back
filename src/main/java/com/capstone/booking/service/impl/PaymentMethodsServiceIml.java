@@ -1,5 +1,6 @@
 package com.capstone.booking.service.impl;
 
+import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.PaymentMethodsConverter;
 import com.capstone.booking.entity.Payment;
 import com.capstone.booking.entity.PaymentMethods;
@@ -54,5 +55,11 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
     @Override
     public void delete(long id) {
         methodsRepository.deleteById(id);
+    }
+
+    @Override
+    public ResponseEntity<?> findByMulParam(String methodName, Long limit, Long page) {
+        Output results = methodsRepository.findByMulParam(methodName, limit, page);
+        return ResponseEntity.ok(results);
     }
 }

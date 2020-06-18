@@ -9,12 +9,14 @@ import org.springframework.stereotype.Component;
 public class PaymentMethodsConverter {
     public PaymentMethods toMethod(PaymentMethodsDTO dto) {
         PaymentMethods methods = new PaymentMethods();
+        methods.setMethodName(dto.getMethodName());
         methods.setMethodKey(dto.getMethodKey());
         methods.setStatus(dto.getStatus());
         return methods;
     }
 
     public PaymentMethods toMethod(PaymentMethodsDTO dto, PaymentMethods methods) {
+        methods.setMethodName(dto.getMethodName());
         methods.setMethodKey(dto.getMethodKey());
         methods.setStatus(dto.getStatus());
         return methods;
@@ -25,10 +27,14 @@ public class PaymentMethodsConverter {
         if (methods.getId() != null) {
             dto.setId(methods.getId());
         }
+        dto.setMethodName(methods.getMethodName());
         dto.setMethodKey(methods.getMethodKey());
         dto.setStatus(methods.getStatus());
 
-        dto.setPaymentId(methods.getPayment().getId());
+        if (methods.getPayment() != null) {
+            dto.setPaymentId(methods.getPayment().getId());
+        }
+
         return dto;
     }
 }

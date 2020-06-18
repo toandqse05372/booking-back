@@ -26,7 +26,7 @@ public class CityController {
     }
 
     //search cityName & paging
-    @GetMapping(value = "/city/searchByName")
+    @GetMapping("/city/searchByName")
     public ResponseEntity<?> searchByName(@RequestParam(value = "name", required = false) String name,
                                           @RequestParam(value = "limit", required = false) Long limit,
                                           @RequestParam(value = "page", required = false) Long page) {

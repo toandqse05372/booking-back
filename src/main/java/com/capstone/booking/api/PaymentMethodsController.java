@@ -13,6 +13,14 @@ public class PaymentMethodsController {
     @Autowired
     private PaymentMethodsService methodService;
 
+    //tim kiem PaymentMethods theo name & paging
+    @GetMapping("/method/searchByName")
+    public ResponseEntity<?> searchMUL(@RequestParam(value = "methodName", required = false) String methodName,
+                                       @RequestParam(value = "limit", required = false) Long limit,
+                                       @RequestParam(value = "page", required = false) Long page) {
+        return methodService.findByMulParam(methodName, limit, page);
+    }
+
     //delete
     @DeleteMapping("/method/{id}")
     public ResponseEntity<?> deleteMethod(@PathVariable("id") long id) {

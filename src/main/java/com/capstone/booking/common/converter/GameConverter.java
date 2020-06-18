@@ -2,7 +2,6 @@ package com.capstone.booking.common.converter;
 
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.GameDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -43,8 +42,11 @@ public class GameConverter {
         }
         dto.setTicketTypeName(typeString);
 
-        dto.setPlaceId(game.getPlace().getId());
-        dto.setPlaceName(game.getPlace().getName());
+        if (game.getPlace() != null) {
+            dto.setPlaceId(game.getPlace().getId());
+            dto.setPlaceName(game.getPlace().getName());
+        }
+
         dto.setStatus(game.getStatus());
 
         return dto;

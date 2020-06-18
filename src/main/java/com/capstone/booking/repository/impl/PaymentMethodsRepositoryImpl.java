@@ -1,10 +1,10 @@
 package com.capstone.booking.repository.impl;
 
 import com.capstone.booking.api.output.Output;
-import com.capstone.booking.common.converter.PlaceTypeConverter;
-import com.capstone.booking.entity.PlaceType;
-import com.capstone.booking.entity.dto.PlaceTypeDTO;
-import com.capstone.booking.repository.customRepository.PlaceTypeCustom;
+import com.capstone.booking.common.converter.PaymentMethodsConverter;
+import com.capstone.booking.entity.PaymentMethods;
+import com.capstone.booking.entity.dto.PaymentMethodsDTO;
+import com.capstone.booking.repository.customRepository.PaymentMethodsCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlaceTypeRepositoryImpl implements PlaceTypeCustom {
+public class PaymentMethodsRepositoryImpl implements PaymentMethodsCustom {
 
     private Integer totalItem;
     private long totalPage;
@@ -25,25 +25,25 @@ public class PlaceTypeRepositoryImpl implements PlaceTypeCustom {
     EntityManager entityManager;
 
     @Autowired
-    private PlaceTypeConverter placeTypeConverter;
+    private PaymentMethodsConverter methodsConverter;
 
     @Override
-    public Output findByMulParam(String typeName, Long limit, Long page) {
+    public Output findByMulParam(String methodName, Long limit, Long page) {
         boolean addedWhere = false;
-        String queryStr = "select pt.* from t_place_type pt ";
+        String queryStr = "select pm.* from t_payment_methods pm ";
         String where = "";
         Integer stack = 1;
         int pageInt = Math.toIntExact(page);
 
         Map<String, Object> params = new HashMap<>();
 
-        if (typeName != null && !typeName.equals("")) {
+        if (methodName != null && !methodName.equals("")) {
             if (stack > 1) {
                 where += " and ";
             }
-            where += "pt.type_name like :tname ";
+            where += "pm.method_name like :mname ";
             addedWhere = true;
-            params.put("tname", typeName);
+            params.put("mname", methodName);
             stack++;
         }
 
@@ -51,7 +51,7 @@ public class PlaceTypeRepositoryImpl implements PlaceTypeCustom {
             queryStr += " where ";
         }
         if (!searched) {
-            totalItem = queryPlaceType(params, queryStr + where).size();
+            totalItem = queryPaymentMethods(params, queryStr + where).size();
             totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
         }
         params.put("from", (page - 1) * limit);
@@ -61,31 +61,31 @@ public class PlaceTypeRepositoryImpl implements PlaceTypeCustom {
         where += " limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryPlaceType(params, queryStr + where)));
+        output.setListResult(convertList(queryPaymentMethods(params, queryStr + where)));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);
         return output;
     }
 
-    public List<PlaceTypeDTO> convertList(List<PlaceType> placeTypes) {
-        List<PlaceTypeDTO> results = new ArrayList<>();
-        for (PlaceType item : placeTypes) {
-            PlaceTypeDTO typeDTO = placeTypeConverter.toDTO(item);
-            results.add(typeDTO);
+    public List<PaymentMethodsDTO> convertList(List<PaymentMethods> paymentMethods) {
+        List<PaymentMethodsDTO> results = new ArrayList<>();
+        for (PaymentMethods item : paymentMethods) {
+            PaymentMethodsDTO methodsDTO = methodsConverter.toDTO(item);
+            results.add(methodsDTO);
         }
         return results;
     }
 
-    public List<PlaceType> queryPlaceType(Map<String, Object> params, String sqlStr) {
-        Query query = entityManager.createNativeQuery(sqlStr, PlaceType.class);
+    public List<PaymentMethods> queryPaymentMethods(Map<String, Object> params, String sqlStr) {
+        Query query = entityManager.createNativeQuery(sqlStr, PaymentMethods.class);
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
             if (key.equals("id") || key.equals("from") || key.equals("limit")) {
                 query.setParameter(key, value);
             } else
-                query.setParameter(key, value + "%");
+                query.setParameter(key, "%" + value + "%");
         }
         return query.getResultList();
     }
