@@ -78,8 +78,6 @@ public class GameServiceImpl implements GameService {
         }
         game.setTicketTypes(typeSet);
 
-//        place place = placeRepository.findById(gameDTO.getplaceId()).get();
-//        game.setplace(place);
         Optional<Place> placeOptional = placeRepository.findById(gameDTO.getPlaceId());
         if (placeOptional.isPresent()) {
             game.setPlace(placeOptional.get());
@@ -104,7 +102,15 @@ public class GameServiceImpl implements GameService {
         return ResponseEntity.ok(gameConverter.toDTO(game));
     }
 
-    //getAllGame
+
+    //tim kiem Game theo name & placeName, & paging
+    @Override
+    public ResponseEntity<?> findByMulParam(String gameName, String placeName, Long limit, Long page) {
+        Output results = gameRepository.findByMulParam(gameName, placeName, limit, page);
+        return ResponseEntity.ok(results);
+    }
+
+    //getAllGame  //game nào mà place còn active thì mới select
     @Override
     public ResponseEntity<?> findAll() {
         List<GameDTO> results = new ArrayList<>();
@@ -114,14 +120,6 @@ public class GameServiceImpl implements GameService {
             results.add(gameDTO);
         }
 
-        return ResponseEntity.ok(results);
-    }
-
-
-    //tim kiem Game theo name & placeName, & paging
-    @Override
-    public ResponseEntity<?> findByMulParam(String gameName, String placeName, Long limit, Long page) {
-        Output results = gameRepository.findByMulParam(gameName, placeName, limit, page);
         return ResponseEntity.ok(results);
     }
 
