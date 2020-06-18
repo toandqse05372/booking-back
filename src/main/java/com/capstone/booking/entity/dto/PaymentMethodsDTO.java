@@ -9,5 +9,5 @@ public class PaymentMethodsDTO extends BaseDTO{
     private String methodName;
     private String methodKey;
     private String status;
-    private Long paymentId;
+    private Long orderId;
 }

@@ -19,19 +19,13 @@ public class TicketType extends BaseEntity{
     private String reservationInfo;
     private String cancelPolicy;
     private String conversionMethod;
-    private int price;
-    private String userObject;
 
 
     //Bảng ticketType qhe 1-n với Ticket
     @OneToMany(mappedBy = "ticketType", fetch = FetchType.EAGER)
     private Set<Ticket> ticket;
 
-    //Bảng ticketType qhe 1-n với Code
-    @OneToMany(mappedBy = "ticketType")
-    private Set<Code> code;
-
-    //Bảng ticketType qhe 1-n với Age
+    //Bảng ticketType qhe 1-n với VisitorType
     @OneToMany(mappedBy = "ticketType")
     private Set<VisitorType> visitorType;
 

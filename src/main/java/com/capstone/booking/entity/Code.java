@@ -13,9 +13,9 @@ import javax.persistence.Table;
 public class Code extends BaseEntity{
     private String code;
 
-    //Bảng TicketType qhe 1-n với Code
-    @ManyToOne
-    @JoinColumn(name = "ticket_type_id")
-    private TicketType ticketType;
 
+    //Bảng VisitorType qhe 1-n với Code
+    @ManyToOne
+    @JoinColumn(name = "visitor_type_id")
+    private VisitorType visitorType;
 }

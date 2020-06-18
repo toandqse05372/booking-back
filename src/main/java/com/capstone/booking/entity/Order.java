@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +20,8 @@ public class Order extends BaseEntity{
     private String mail;
     private String phoneNumber;
     private String status;
+    private int totalPayment;
+    private Date purchaseDay;
 
 
     //Bảng User qhe 1-n với Order
@@ -30,7 +33,8 @@ public class Order extends BaseEntity{
     @OneToMany(mappedBy = "order")
     Set<Ticket> ticket = new HashSet<>();
 
-    //Bảng Payment qhe 1-1 với Order
-    @OneToOne(mappedBy = "order")
-    private Payment payment;
+
+    //Bảng Order qhe 1-n với PaymentMethods
+    @OneToMany(mappedBy = "order")
+    private Set<PaymentMethods> paymentMethods = new HashSet<>();
 }

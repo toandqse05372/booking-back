@@ -3,10 +3,8 @@ package com.capstone.booking.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "t_payment_methods")
@@ -17,8 +15,9 @@ public class PaymentMethods extends BaseEntity{
     private String methodKey;
     private String status;
 
-    //Bảng Payment qhe 1-n với PaymentMethods
+    //Bảng Order qhe 1-n với PaymentMethods
     @ManyToOne
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
+    @JoinColumn(name = "order_id")
+    private Order order;
+
 }
