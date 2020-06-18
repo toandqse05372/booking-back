@@ -9,9 +9,9 @@ import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "t_age")
-public class Age extends BaseEntity{
-    private String age;
+@Table(name = "t_visitor_type")
+public class VisitorType extends BaseEntity{
+    private String type;
     private int price;
     private String typeKey;
 

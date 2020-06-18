@@ -33,7 +33,7 @@ public class TicketType extends BaseEntity{
 
     //Bảng ticketType qhe 1-n với Age
     @OneToMany(mappedBy = "ticketType")
-    private Set<Age> age;
+    private Set<VisitorType> visitorType;
 
     //Bảng GAme qhe n-n với ticketType
     @ManyToMany(mappedBy = "ticketTypes")
