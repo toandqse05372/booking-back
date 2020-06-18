@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -15,7 +14,7 @@ public class PlaceConverter {
     @Autowired
     private GameConverter gameConverter;
     @Autowired
-    private PlaceTypeConverter placeTypeConverter;
+    private CategoryConverter categoryConverter;
 
     @Autowired
     private ImageConverter imageConverter;
@@ -60,11 +59,11 @@ public class PlaceConverter {
         //cityDTO.setName(city.getName());
         dto.setCity(cityDTO);
 
-        Set<PlaceTypeDTO> placeTypeSet = new HashSet<>();
-        for (PlaceType placeType : place.getPlaceTypes()) {
-            placeTypeSet.add(placeTypeConverter.toDTO(placeType));
+        Set<CategoryDTO> categorySet = new HashSet<>();
+        for (Category category : place.getCategories()) {
+            categorySet.add(categoryConverter.toDTO(category));
         }
-        dto.setPlaceType(placeTypeSet);
+        dto.setCategory(categorySet);
 
         Set<OpeningHoursDTO> openingHoursSet = new HashSet<>();
         for (OpeningHours hours : place.getOpeningHours()) {

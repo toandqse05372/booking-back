@@ -43,7 +43,7 @@ public class PlaceController {
     }
 
 
-    //tim kiem place theo ten & address, description, cityId, placeTypeId, & paging
+    //tim kiem place theo ten & address, description, cityId, categoryId, & paging
     @GetMapping("/place/searchMul")
     @PreAuthorize("hasAnyAuthority('READ_PLACE')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "name", required = false) String name,
@@ -51,8 +51,8 @@ public class PlaceController {
                                        @RequestParam(value = "limit", required = false) Long limit,
                                        @RequestParam(value = "page", required = false) Long page,
                                        @RequestParam(value = "cityId", required = false) Long cityId,
-                                       @RequestParam(value = "placeTypeId", required = false) Long placeTypeId) {
-        return placeService.findByMultipleParam(name, address, cityId, placeTypeId, limit, page);
+                                       @RequestParam(value = "categoryId", required = false) Long categoryId) {
+        return placeService.findByMultipleParam(name, address, cityId, categoryId, limit, page);
     }
 
     //xoa place

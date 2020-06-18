@@ -16,7 +16,7 @@ public class PlaceDTO extends BaseDTO{
     private Set<ImageDTO> placeImage;
     private CityDTO city;
     //private Set<GameDTO> game;
-    private Set<PlaceTypeDTO> placeType;
+    private Set<CategoryDTO> category;
     private Set<OpeningHoursDTO> openingHours;
     private String status;
 }

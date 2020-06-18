@@ -11,11 +11,11 @@ import java.util.Set;
 @Entity
 @Table(name = "t_place_type")
 @Data
-public class PlaceType extends BaseEntity{
+public class Category extends BaseEntity{
     private String typeName;
     private String typeKey;
 
-    //Bảng Place qhe n-n với PlaceType
-    @ManyToMany(mappedBy = "placeTypes")
+    //Bảng Place qhe n-n với Category
+    @ManyToMany(mappedBy = "categories")
     private Set<Place> places = new HashSet<>();
 }

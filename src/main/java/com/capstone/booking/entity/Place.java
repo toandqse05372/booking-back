@@ -25,12 +25,12 @@ public class Place extends BaseEntity {
     @OneToMany(mappedBy = "place")
     private Set<OpeningHours> openingHours = new HashSet<>();
 
-    //Bảng Place qhe n-n với placeType
+    //Bảng Place qhe n-n với category
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinTable(name = "t_place_placeType",
+    @JoinTable(name = "t_place_category",
             joinColumns = {@JoinColumn(name = "place_id")},
-            inverseJoinColumns = {@JoinColumn(name = "placeType_id")})
-    private Set<PlaceType> placeTypes = new HashSet<>();
+            inverseJoinColumns = {@JoinColumn(name = "category_id")})
+    private Set<Category> categories = new HashSet<>();
 
     //Bảng City qhe 1-n với Place
     @ManyToOne
