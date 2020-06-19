@@ -2,11 +2,11 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.PaymentMethodsConverter;
-import com.capstone.booking.entity.Payment;
+import com.capstone.booking.entity.Order;
 import com.capstone.booking.entity.PaymentMethods;
 import com.capstone.booking.entity.dto.PaymentMethodsDTO;
+import com.capstone.booking.repository.OrderRepository;
 import com.capstone.booking.repository.PaymentMethodsRepository;
-import com.capstone.booking.repository.PaymentRepository;
 import com.capstone.booking.service.PaymentMethodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
     private PaymentMethodsRepository methodsRepository;
 
     @Autowired
-    private PaymentRepository paymentRepository;
+    private OrderRepository orderRepository;
 
     @Autowired
     private PaymentMethodsConverter methodsConverter;
@@ -29,8 +29,8 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
     public ResponseEntity<?> create(PaymentMethodsDTO methodDTO) {
         PaymentMethods methods = methodsConverter.toMethod(methodDTO);
 
-        Payment payment = paymentRepository.findById(methodDTO.getPaymentId()).get();
-        methods.setPayment(payment);
+        Order order = orderRepository.findById(methodDTO.getOrderId()).get();
+        methods.setOrder(order);
 
         methodsRepository.save(methods);
         return ResponseEntity.ok(methodsConverter.toDTO(methods));
@@ -44,8 +44,8 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
         PaymentMethods oldMethod = methodsRepository.findById(methodDTO.getId()).get();
         methods = methodsConverter.toMethod(methodDTO, oldMethod);
 
-        Payment payment = paymentRepository.findById(methodDTO.getPaymentId()).get();
-        methods.setPayment(payment);
+        Order order = orderRepository.findById(methodDTO.getOrderId()).get();
+        methods.setOrder(order);
 
         methodsRepository.save(methods);
         return ResponseEntity.ok(methodsConverter.toDTO(methods));
