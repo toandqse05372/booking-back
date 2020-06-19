@@ -42,11 +42,11 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
 
         Map<String, Object> params = new HashMap<>();
         if(categoryId !=null && categoryId != 0){
-            queryStr += "INNER join t_place_place_type ppt on place0_.id = ppt.place_id";
+            queryStr += "INNER join t_place_category ppt on place0_.id = ppt.place_id";
             if(stack > 1){
                 where +=" and ";
             }
-            where +=" ppt.place_type_id = :ptid ";
+            where +=" ppt.category_id = :ptid ";
             addedWhere = true;
             params.put("ptid", categoryId);
             stack++;

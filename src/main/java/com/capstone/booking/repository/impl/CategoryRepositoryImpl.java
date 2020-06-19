@@ -30,7 +30,7 @@ public class CategoryRepositoryImpl implements CategoryCustom {
     @Override
     public Output findByMulParam(String typeName, Long limit, Long page) {
         boolean addedWhere = false;
-        String queryStr = "select pt.* from t_place_type pt ";
+        String queryStr = "select pt.* from t_category pt ";
         String where = "";
         Integer stack = 1;
         int pageInt = Math.toIntExact(page);

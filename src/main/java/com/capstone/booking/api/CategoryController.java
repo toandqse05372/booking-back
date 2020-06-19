@@ -48,5 +48,11 @@ public class CategoryController {
         return categoryService.update(model);
     }
 
+    //search By Id
+    @GetMapping("/category/{id}")
+    public ResponseEntity<?> getPlace(@PathVariable Long id) {
+        return categoryService.getCategory(id);
+    }
+
 
 }

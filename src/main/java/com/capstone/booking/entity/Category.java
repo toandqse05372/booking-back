@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "t_place_type")
+@Table(name = "t_category")
 @Data
 public class Category extends BaseEntity{
     private String typeName;

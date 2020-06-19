@@ -54,12 +54,12 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public ResponseEntity<?> create(PlaceDTO placeDTO) {
         Place place = placeConverter.toPlace(placeDTO);
-        City cityName = cityRepository.findByName(placeDTO.getCity().getName());
-        place.setCity(cityName);
+        City city= cityRepository.findById(placeDTO.getCityId()).get();
+        place.setCity(city);
 
         Set<Category> categorySet = new HashSet<>();
-        for(CategoryDTO categoryDTO : placeDTO.getCategory()){
-            categorySet.add(categoryRepository.findOneByTypeName(categoryDTO.getCategoryName()));
+        for(Long categoryId: placeDTO.getCategoryId()){
+            categorySet.add(categoryRepository.findById(categoryId).get());
         }
         place.setCategories(categorySet);
 
@@ -76,12 +76,12 @@ public class PlaceServiceImpl implements PlaceService {
         Place oldplace = placeRepository.findById(placeDTO.getId()).get();
         place = placeConverter.toPlace(placeDTO, oldplace);
 
-        City cityName = cityRepository.findByName(placeDTO.getCity().getName());
-        place.setCity(cityName);
+        City city= cityRepository.findById(placeDTO.getCityId()).get();
+        place.setCity(city);
 
         Set<Category> categorySet = new HashSet<>();
-        for(CategoryDTO categoryDTO : placeDTO.getCategory()){
-            categorySet.add(categoryRepository.findOneByTypeName(categoryDTO.getCategoryName()));
+        for(Long categoryId: placeDTO.getCategoryId()){
+            categorySet.add(categoryRepository.findById(categoryId).get());
         }
         place.setCategories(categorySet);
 

@@ -3,6 +3,7 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.CategoryConverter;
 import com.capstone.booking.entity.Category;
+import com.capstone.booking.entity.Place;
 import com.capstone.booking.entity.dto.CategoryDTO;
 import com.capstone.booking.repository.CategoryRepository;
 import com.capstone.booking.service.CategoryService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -47,7 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<?> create(CategoryDTO categoryDTO) {
         Category category = categoryConverter.toCategory(categoryDTO);
         if (categoryRepository.findOneByTypeName(category.getTypeName()) != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PLACE_TYPE_EXISTED");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
         }
         categoryRepository.save(category);
         return ResponseEntity.ok(categoryConverter.toDTO(category));
@@ -60,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category categoryOld = categoryRepository.findById(categoryDTO.getId()).get();
         category = categoryConverter.toCategory(categoryDTO, categoryOld);
         if (categoryRepository.findOneByTypeName(category.getTypeName()) != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PLACE_TYPE_EXISTED");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
         }
         categoryRepository.save(category);
         return ResponseEntity.ok(categoryConverter.toDTO(category));
@@ -70,6 +72,12 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<?> findByMulParam(String typeName, Long limit, Long page) {
         Output results = categoryRepository.findByMulParam(typeName, limit, page);
         return ResponseEntity.ok(results);
+    }
+
+    @Override
+    public ResponseEntity<?> getCategory(Long id) {
+        Category category = categoryRepository.findById(id).get();
+        return ResponseEntity.ok(categoryConverter.toDTO(category));
     }
 
 

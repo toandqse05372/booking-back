@@ -2,6 +2,7 @@ package com.capstone.booking.common.converter;
 
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.*;
+import com.capstone.booking.repository.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,15 +24,22 @@ public class PlaceConverter {
     private CityConverter cityConverter;
 
     @Autowired
+    private CityRepository cityRepository;
+
+    @Autowired
     private OpeningHoursConverter hoursConverter;
 
     public Place toPlace(PlaceDTO dto) {
         Place place = new Place();
         place.setName(dto.getName());
         place.setAddress(dto.getAddress());
-        place.setDescription(dto.getDescription());
+        place.setShortDescription(dto.getShortDescription());
+        place.setDetailDescription(dto.getDetailDescription());
         place.setMail(dto.getMail());
         place.setPhoneNumber(dto.getPhoneNumber());
+        if(dto.getCityId() != null){
+            place.setCity(cityRepository.findById(dto.getCityId()).get());
+        }
         return place;
     }
 
@@ -42,28 +50,28 @@ public class PlaceConverter {
         }
         dto.setName(place.getName());
         dto.setAddress(place.getAddress());
-        dto.setDescription(place.getDescription());
+        dto.setDetailDescription(place.getDetailDescription());
         dto.setMail(place.getMail());
         dto.setPhoneNumber(place.getPhoneNumber());
 
-        Set<ImageDTO> imageSet = new HashSet<>();
-        for (ImagePlace image : place.getImagePlace()) {
-            imageSet.add(imageConverter.toDTO(image));
+        if(place.getImagePlace() != null){
+            Set<ImageDTO> imageSet = new HashSet<>();
+            for (ImagePlace image : place.getImagePlace()) {
+                imageSet.add(imageConverter.toDTO(image));
+            }
         }
-        dto.setPlaceImage(imageSet);
 
-        CityDTO cityDTO = new CityDTO();
+//        dto.setPlaceImage(imageSet);
+
         City city = place.getCity();
-        cityDTO = cityConverter.toDTO(city);
-        //cityDTO.setId(city.getId());
-        //cityDTO.setName(city.getName());
-        dto.setCity(cityDTO);
+        dto.setCityId(city.getId());
+        dto.setCityName(city.getName());
 
-        Set<CategoryDTO> categorySet = new HashSet<>();
+        Set<Long> categorySet = new HashSet<>();
         for (Category category : place.getCategories()) {
-            categorySet.add(categoryConverter.toDTO(category));
+            categorySet.add(category.getId());
         }
-        dto.setCategory(categorySet);
+        dto.setCategoryId(categorySet);
 
         Set<OpeningHoursDTO> openingHoursSet = new HashSet<>();
         for (OpeningHours hours : place.getOpeningHours()) {
@@ -78,9 +86,13 @@ public class PlaceConverter {
     public Place toPlace(PlaceDTO dto, Place place) {
         place.setName(dto.getName());
         place.setAddress(dto.getAddress());
-        place.setDescription(dto.getDescription());
+        place.setShortDescription(dto.getShortDescription());
+        place.setDetailDescription(dto.getDetailDescription());
         place.setMail(dto.getMail());
         place.setPhoneNumber(dto.getPhoneNumber());
+        if(dto.getCityId() != null){
+            place.setCity(cityRepository.findById(dto.getCityId()).get());
+        }
         return place;
     }
 }

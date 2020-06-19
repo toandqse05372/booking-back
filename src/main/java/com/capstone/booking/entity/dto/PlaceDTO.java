@@ -2,6 +2,7 @@ package com.capstone.booking.entity.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
@@ -10,13 +11,15 @@ import java.util.Set;
 public class PlaceDTO extends BaseDTO{
     private String name;
     private String address;
-    private String description;
+    private String shortDescription;
+    private String detailDescription;
     private String mail;
     private String phoneNumber;
-    private Set<ImageDTO> placeImage;
-    private CityDTO city;
-    //private Set<GameDTO> game;
-    private Set<CategoryDTO> category;
+    private Set<MultipartFile> placeImage;
+    private Set<String> placeImageLink;
+    private Long cityId;
+    private String cityName;
+    private Set<Long> categoryId;
     private Set<OpeningHoursDTO> openingHours;
     private String status;
 }

@@ -16,7 +16,8 @@ public class Place extends BaseEntity {
     private String name;
     private String address;
     @Column(length = 10000)
-    private String description;
+    private String detailDescription;
+    private String shortDescription;
     private String mail;
     private String phoneNumber;
     private String status;
