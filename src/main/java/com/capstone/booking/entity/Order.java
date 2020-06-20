@@ -15,10 +15,15 @@ import java.util.Set;
 public class Order extends BaseEntity{
     private int totalTicket;
     private int ticketTypeId;
+    @Column(length = 50)
     private String firstName;
+    @Column(length = 50)
     private String lastName;
+    @Column(length = 50)
     private String mail;
+    @Column(length = 20)
     private String phoneNumber;
+    @Column(length = 20)
     private String status;
     private int totalPayment;
     private Date purchaseDay;

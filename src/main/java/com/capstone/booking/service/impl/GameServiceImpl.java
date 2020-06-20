@@ -5,8 +5,6 @@ import com.capstone.booking.common.converter.GameConverter;
 import com.capstone.booking.common.key.Status;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.GameDTO;
-import com.capstone.booking.entity.dto.ImageDTO;
-import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.repository.GameRepository;
 import com.capstone.booking.repository.PlaceRepository;
 import com.capstone.booking.repository.TicketTypeRepository;
@@ -39,7 +37,6 @@ public class GameServiceImpl implements GameService {
     @Override
     public ResponseEntity<?> create(GameDTO gameDTO) {
         Game game = gameConverter.toGame(gameDTO);
-        //ntn thì trung nhau ???
         if (gameRepository.findByGameName(game.getGameName()) != null
                 && gameRepository.findByPlaceId(game.getPlace().getId()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");

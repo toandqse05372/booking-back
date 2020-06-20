@@ -11,8 +11,10 @@ import java.util.Date;
 @Getter
 @Setter
 public class Ticket extends BaseEntity{
-    private Date redemptionDate;
+    @Column(length = 50)
     private String code;
+    private Date redemptionDate;
+
 
     //Bảng Order qhe 1-n với Ticket
     @ManyToOne
