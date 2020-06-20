@@ -45,19 +45,12 @@ public class GameServiceImpl implements GameService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
         }
 
-        Set<TicketType> typeSet = new HashSet<>();
-        for (String type : gameDTO.getTicketTypeName()) {
-            typeSet.add(ticketTypeRepository.findOneByTypeName(type));
-        }
-        game.setTicketTypes(typeSet);
-
-
         Optional<Place> placeOptional = placeRepository.findById(gameDTO.getPlaceId());
         if (placeOptional.isPresent()) {
             game.setPlace(placeOptional.get());
         }
 
-        //game.setStatus(Status.ACTIVE.toString());
+        game.setStatus(Status.ACTIVE.toString());
 
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
@@ -69,13 +62,10 @@ public class GameServiceImpl implements GameService {
         Game game = new Game();
         Game oldGame = gameRepository.findById(gameDTO.getId()).get();
         game = gameConverter.toGame(gameDTO, oldGame);
-        if (gameRepository.findByGameName(game.getGameName()) != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
-        }
+//        if (gameRepository.findByGameName(game.getGameName()) != null) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
+//        }
         Set<TicketType> typeSet = new HashSet<>();
-        for (String type : gameDTO.getTicketTypeName()) {
-            typeSet.add(ticketTypeRepository.findOneByTypeName(type));
-        }
         game.setTicketTypes(typeSet);
 
         Optional<Place> placeOptional = placeRepository.findById(gameDTO.getPlaceId());

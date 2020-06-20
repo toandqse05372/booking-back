@@ -2,6 +2,7 @@ package com.capstone.booking.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -11,12 +12,12 @@ import java.util.Set;
 @Table(name = "t_place")
 @Getter
 @Setter
-
 public class Place extends BaseEntity {
     private String name;
     private String address;
-    @Column(length = 10000)
+    @Length(max = 1000)
     private String detailDescription;
+    @Length(max = 1000)
     private String shortDescription;
     private String mail;
     private String phoneNumber;

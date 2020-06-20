@@ -6,6 +6,7 @@ import com.capstone.booking.common.key.Status;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.entity.dto.CategoryDTO;
+import com.capstone.booking.entity.dto.PlaceDTOLite;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,15 @@ public class PlaceServiceImpl implements PlaceService {
             categorySet.add(categoryRepository.findById(categoryId).get());
         }
         place.setCategories(categorySet);
-
+        if(placeDTO.getShortDescription() != null){
+            place.setShortDescription(placeDTO.getShortDescription());
+        }
+        if(placeDTO.getDetailDescription() != null){
+            place.setDetailDescription(placeDTO.getDetailDescription());
+        }
+        if(placeDTO.getAddress() != null){
+            place.setDetailDescription(placeDTO.getAddress());
+        }
         place.setStatus(Status.ACTIVE.toString());
 
         placeRepository.save(place);
@@ -84,6 +93,16 @@ public class PlaceServiceImpl implements PlaceService {
             categorySet.add(categoryRepository.findById(categoryId).get());
         }
         place.setCategories(categorySet);
+
+        if(placeDTO.getShortDescription() != null){
+            place.setShortDescription(placeDTO.getShortDescription());
+        }
+        if(placeDTO.getDetailDescription() != null){
+            place.setDetailDescription(placeDTO.getDetailDescription());
+        }
+        if(placeDTO.getAddress() != null){
+            place.setAddress(placeDTO.getAddress());
+        }
 
         placeRepository.save(place);
         return ResponseEntity.ok(placeConverter.toDTO(place));
@@ -109,4 +128,14 @@ public class PlaceServiceImpl implements PlaceService {
         return ResponseEntity.ok(placeConverter.toDTO(place));
     }
 
+    @Override
+    public ResponseEntity<?> getAll() {
+        List<Place> placeList = placeRepository.findAll();
+        List<PlaceDTOLite> liteList = new ArrayList<>();
+        for(Place place: placeList){
+            PlaceDTOLite lite = placeConverter.toPlaceLite(place);
+            liteList.add(lite);
+        }
+        return ResponseEntity.ok(liteList);
+    }
 }
