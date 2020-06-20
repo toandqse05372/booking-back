@@ -40,7 +40,7 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
         if (placeName != null && !placeName.equals("")) {
             queryStr += "INNER join t_place p on p.id = game0_.place_id";
             if (stack > 1) {
-                where += " and ";
+                where += " where p.status like 'ACTIVE' and ";
             }
             where += " p.name like :pname ";
             addedWhere = true;
@@ -137,7 +137,7 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
             if (key.equals("id") || key.equals("from") || key.equals("limit")) {
                 query.setParameter(key, value);
             } else
-                query.setParameter(key, "%" + value + "%");
+                query.setParameter(key, value + "%");
         }
         return query.getResultList();
     }
