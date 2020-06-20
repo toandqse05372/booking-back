@@ -19,5 +19,6 @@ public interface CategoryService {
     //tim kiem Category theo name  & paging
     ResponseEntity<?> findByMulParam(String typeName, Long limit, Long page);
 
+    //search by Id
     ResponseEntity<?> getCategory(Long id);
 }

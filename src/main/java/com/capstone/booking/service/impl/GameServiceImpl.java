@@ -136,4 +136,11 @@ public class GameServiceImpl implements GameService {
         return ResponseEntity.ok(gameConverter.toDTO(game));
     }
 
+    //tim kiem Game theo placeId & paging
+    @Override
+    public ResponseEntity<?> findByPlaceId(Long placeId, Long limit, Long page) {
+        Output results = gameRepository.findByPlaceId(placeId, limit, page);
+        return ResponseEntity.ok(results);
+    }
+
 }

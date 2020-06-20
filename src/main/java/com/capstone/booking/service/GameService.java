@@ -26,4 +26,7 @@ public interface GameService {
     //change status
     ResponseEntity<?> changeStatus(Long id);
 
+    //tim kiem Game theo placeId & paging
+    ResponseEntity<?> findByPlaceId(Long placeId, Long limit, Long page);
+
 }
