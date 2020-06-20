@@ -13,13 +13,18 @@ import java.util.Set;
 @Getter
 @Setter
 public class User extends BaseEntity {
-
+    @Column(length = 30)
     private String password;
+    @Column(length = 15)
     private String firstName;
+    @Column(length = 15)
     private String lastName;
+    @Column(length = 50)
     private String mail;
     private Date dob;
+    @Column(length = 20)
     private String phoneNumber;
+    @Column(length = 20)
     private String status;
 
     //nhiều user có nhiều trường, nhiều trường thuộc về nhiều user

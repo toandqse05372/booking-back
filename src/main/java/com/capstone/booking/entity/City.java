@@ -1,6 +1,7 @@
 package com.capstone.booking.entity;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,11 +14,11 @@ import java.util.Set;
 @Entity
 @Table(name = "t_city")
 public class City extends BaseEntity{
+    @Column(length = 50)
     private String name;
-
+    @Length(max = 1000)
     private String shortDescription;
-
-    @Column(length = 10000)
+    @Length(max = 1000)
     private String detailDescription;
 
     //Bảng City qhe 1-n với Place

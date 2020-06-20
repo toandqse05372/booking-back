@@ -12,8 +12,9 @@ import java.util.Set;
 @Getter
 @Setter
 public class Role extends BaseEntity {
-
+    @Column(length = 30)
     private String roleKey;
+    @Column(length = 30)
     private String roleName;
 
     //gán quyền cho role

@@ -12,6 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class TicketType extends BaseEntity{
+    @Column(length = 50)
     private String typeName;
     private String effectiveTime;
     @Column(length = 10000)

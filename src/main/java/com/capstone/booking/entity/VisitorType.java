@@ -9,7 +9,9 @@ import java.util.Set;
 @Entity
 @Table(name = "t_visitor_type")
 public class VisitorType extends BaseEntity{
+    @Column(length = 50)
     private String typeName;
+    @Column(length = 50)
     private String typeKey;
     private int price;
 

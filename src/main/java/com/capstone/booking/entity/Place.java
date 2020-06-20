@@ -19,8 +19,11 @@ public class Place extends BaseEntity {
     private String detailDescription;
     @Length(max = 1000)
     private String shortDescription;
+    @Column(length = 50)
     private String mail;
+    @Column(length = 50)
     private String phoneNumber;
+    @Column(length = 20)
     private String status;
 
     //Bảng Place qhe 1-n với OpeningHours

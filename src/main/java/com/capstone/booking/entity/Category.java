@@ -2,6 +2,7 @@ package com.capstone.booking.entity;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -12,7 +13,9 @@ import java.util.Set;
 @Table(name = "t_category")
 @Data
 public class Category extends BaseEntity{
+    @Column(length = 50)
     private String typeName;
+    @Column(length = 50)
     private String typeKey;
 
     //Bảng Place qhe n-n với Category

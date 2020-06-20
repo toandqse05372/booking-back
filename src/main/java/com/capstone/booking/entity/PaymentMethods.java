@@ -11,8 +11,11 @@ import java.util.Set;
 @Getter
 @Setter
 public class PaymentMethods extends BaseEntity{
+    @Column(length = 100)
     private String methodName;
+    @Column(length = 50)
     private String methodKey;
+    @Column(length = 20)
     private String status;
 
     //Bảng Order qhe 1-n với PaymentMethods

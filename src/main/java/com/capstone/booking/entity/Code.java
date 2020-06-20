@@ -2,15 +2,13 @@ package com.capstone.booking.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @Entity
 @Table(name = "t_code")
 public class Code extends BaseEntity{
+    @Column(length = 50)
     private String code;
 
 
