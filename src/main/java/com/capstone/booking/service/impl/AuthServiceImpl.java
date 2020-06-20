@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<?> findByEmail(UserDTO userDTO, String page) {
         User user = userRepository.findByMail(userDTO.getMail());
         if (null == user || !new BCryptPasswordEncoder().matches(userDTO.getPassword(), user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("WRONG_USERNAME_PASSWORD");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("WRONG_USERNAME_PASSWORD");
         }
         if(page != null){
             if(page.equals("CMS")){
@@ -69,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
                     }
                 }
                 if (!cmsAble){
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NO_PERMISSION_HERE");
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("NO_PERMISSION_HERE");
                 }
         }
 
