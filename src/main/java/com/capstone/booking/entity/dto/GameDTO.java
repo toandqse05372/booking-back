@@ -10,7 +10,6 @@ import java.util.Set;
 public class GameDTO extends BaseDTO{
     private String gameName;
     private String gameDescription;
-    private boolean ticketInventoryStatus;
     private Set<String> ticketTypeName;
     private Long placeId;
     private String placeName;

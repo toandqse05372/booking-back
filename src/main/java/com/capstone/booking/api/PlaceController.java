@@ -16,6 +16,11 @@ public class PlaceController {
     @Autowired
     private PlaceService placeService;
 
+    @GetMapping("/places")
+    public ResponseEntity<?> getAllPlace() {
+        return placeService.getAll();
+    }
+
     //thêm place
     @PostMapping("/place")
     public ResponseEntity<?> createPlace(@RequestBody PlaceDTO model) {

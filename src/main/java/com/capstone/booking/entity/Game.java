@@ -14,7 +14,6 @@ import java.util.Set;
 public class Game extends BaseEntity{
     private String gameName;
     private String gameDescription;
-    private boolean ticketInventoryStatus; //trang thai ve còn hay k
     private String status;
 
     //Bảng Game qhe n-n với TicketType

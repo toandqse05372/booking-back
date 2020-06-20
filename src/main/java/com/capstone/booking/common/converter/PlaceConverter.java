@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -53,6 +54,7 @@ public class PlaceConverter {
         dto.setDetailDescription(place.getDetailDescription());
         dto.setMail(place.getMail());
         dto.setPhoneNumber(place.getPhoneNumber());
+        dto.setShortDescription(place.getShortDescription());
 
         if(place.getImagePlace() != null){
             Set<ImageDTO> imageSet = new HashSet<>();
@@ -60,8 +62,6 @@ public class PlaceConverter {
                 imageSet.add(imageConverter.toDTO(image));
             }
         }
-
-//        dto.setPlaceImage(imageSet);
 
         City city = place.getCity();
         dto.setCityId(city.getId());
@@ -94,5 +94,12 @@ public class PlaceConverter {
             place.setCity(cityRepository.findById(dto.getCityId()).get());
         }
         return place;
+    }
+
+    public PlaceDTOLite toPlaceLite(Place place){
+        PlaceDTOLite lite = new PlaceDTOLite();
+        lite.setId(place.getId());
+        lite.setName(place.getName());
+        return lite;
     }
 }

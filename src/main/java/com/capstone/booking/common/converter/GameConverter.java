@@ -15,14 +15,12 @@ public class GameConverter {
         Game game = new Game();
         game.setGameName(dto.getGameName());
         game.setGameDescription(dto.getGameDescription());
-        game.setTicketInventoryStatus(dto.isTicketInventoryStatus());
         return game;
     }
 
     public Game toGame(GameDTO dto, Game game) {
         game.setGameName(dto.getGameName());
         game.setGameDescription(dto.getGameDescription());
-        game.setTicketInventoryStatus(dto.isTicketInventoryStatus());
         return game;
     }
 
@@ -33,7 +31,6 @@ public class GameConverter {
         }
         dto.setGameName(game.getGameName());
         dto.setGameDescription(game.getGameDescription());
-        dto.setTicketInventoryStatus(game.isTicketInventoryStatus());
 
         Set<TicketType> typeSet = game.getTicketTypes();
         Set<String> typeString = new HashSet<>();

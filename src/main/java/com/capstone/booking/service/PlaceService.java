@@ -22,4 +22,6 @@ public interface PlaceService {
     //change status
     ResponseEntity<?> changeStatus(Long id);
 
+    ResponseEntity<?> getAll();
+
 }
