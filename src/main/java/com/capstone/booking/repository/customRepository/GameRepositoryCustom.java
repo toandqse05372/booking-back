@@ -4,4 +4,6 @@ import com.capstone.booking.api.output.Output;
 
 public interface GameRepositoryCustom {
     Output findByMulParam(String gameName, String placeName, Long limit, Long page);
+
+    Output findByPlaceId(Long placeId, Long limit, Long page);
 }

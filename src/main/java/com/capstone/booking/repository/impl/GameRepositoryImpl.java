@@ -79,6 +79,47 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
         return output;
     }
 
+
+    @Override
+    public Output findByPlaceId(Long placeId, Long limit, Long page) {
+        boolean addedWhere = false;
+        String queryStr = "select game0_.* from t_game game0_ ";
+        String where = "";
+        Integer stack = 1;
+        int pageInt = Math.toIntExact(page);
+
+        Map<String, Object> params = new HashMap<>();
+        if (placeId !=null && placeId != 0) {
+            if (stack > 1) {
+                where += " and ";
+            }
+            where += "game0_.place_id = :id ";
+            addedWhere = true;
+            params.put("id", placeId);
+            stack++;
+        }
+
+        if (addedWhere) {
+            queryStr += " where ";
+        }
+        if (!searched) {
+            totalItem = queryGame(params, queryStr + where).size();
+            totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
+        }
+        params.put("from", (page - 1) * limit);
+        stack++;
+        params.put("limit", limit);
+        stack++;
+        where += " limit :from, :limit";
+
+        Output output = new Output();
+        output.setListResult(convertList(queryGame(params, queryStr + where)));
+        output.setPage(pageInt);
+        output.setTotalItems(totalItem);
+        output.setTotalPage((int) totalPage);
+        return output;
+    }
+
     public List<GameDTO> convertList(List<Game> gameList) {
         List<GameDTO> results = new ArrayList<>();
         for (Game item : gameList) {

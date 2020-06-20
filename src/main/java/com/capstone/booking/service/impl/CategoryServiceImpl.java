@@ -3,6 +3,7 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.CategoryConverter;
 import com.capstone.booking.entity.Category;
+import com.capstone.booking.entity.Game;
 import com.capstone.booking.entity.Place;
 import com.capstone.booking.entity.dto.CategoryDTO;
 import com.capstone.booking.repository.CategoryRepository;
@@ -74,11 +75,11 @@ public class CategoryServiceImpl implements CategoryService {
         return ResponseEntity.ok(results);
     }
 
+    //search by Id
     @Override
     public ResponseEntity<?> getCategory(Long id) {
         Category category = categoryRepository.findById(id).get();
         return ResponseEntity.ok(categoryConverter.toDTO(category));
     }
-
 
 }

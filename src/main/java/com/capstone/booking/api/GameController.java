@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 public class GameController {
@@ -59,6 +58,14 @@ public class GameController {
     @GetMapping("/game/{id}")
     public ResponseEntity<?> getGame(@PathVariable Long id) {
         return gameService.getGame(id);
+    }
+
+    //tim kiem Game theo placeId & paging
+    @GetMapping("/game/findByPlaceId")
+    public ResponseEntity<?> findByPlaceId(@RequestParam(value = "placeId", required = false) Long placeId,
+                                           @RequestParam(value = "limit", required = false) Long limit,
+                                           @RequestParam(value = "page", required = false) Long page) {
+        return gameService.findByPlaceId(placeId, limit, page);
     }
 
 }
