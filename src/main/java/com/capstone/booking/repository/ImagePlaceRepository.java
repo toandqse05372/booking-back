@@ -9,6 +9,6 @@ import java.util.List;
 public interface ImagePlaceRepository extends JpaRepository<ImagePlace, Long> {
     List<ImagePlace> findByPlace(Place place);
 
-    ImagePlace findByImageLink(String imageLink);
+    ImagePlace findByImageName(String imageName);
 
 }

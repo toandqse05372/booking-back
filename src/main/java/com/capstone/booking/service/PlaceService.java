@@ -1,6 +1,7 @@
 package com.capstone.booking.service;
 import com.capstone.booking.entity.dto.PlaceDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface PlaceService {
 
@@ -12,7 +13,7 @@ public interface PlaceService {
     ResponseEntity<?> getPlace(Long id);
 
     //them
-    ResponseEntity<?> create(PlaceDTO placeDTO);
+    ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile file);
 
     //sửa
     ResponseEntity<?> update(PlaceDTO placeDTO);

@@ -15,7 +15,6 @@ public class PlaceDTO extends BaseDTO{
     private String detailDescription;
     private String mail;
     private String phoneNumber;
-    private Set<MultipartFile> placeImage;
     private Set<String> placeImageLink;
     private Long cityId;
     private String cityName;

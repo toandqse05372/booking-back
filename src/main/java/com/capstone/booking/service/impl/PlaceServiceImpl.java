@@ -5,13 +5,13 @@ import com.capstone.booking.common.converter.PlaceConverter;
 import com.capstone.booking.common.key.Status;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.PlaceDTO;
-import com.capstone.booking.entity.dto.CategoryDTO;
 import com.capstone.booking.entity.dto.PlaceDTOLite;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -53,7 +53,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     //them place
     @Override
-    public ResponseEntity<?> create(PlaceDTO placeDTO) {
+    public ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile file) {
         Place place = placeConverter.toPlace(placeDTO);
         City city= cityRepository.findById(placeDTO.getCityId()).get();
         place.setCity(city);

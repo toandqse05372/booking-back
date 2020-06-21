@@ -15,6 +15,8 @@ import javax.persistence.Table;
 public class ImagePlace extends BaseEntity{
     private String imageLink;
 
+    private String imageName;
+
     //Bảng Place qhe 1-n với Image
     @ManyToOne
     @JoinColumn(name = "place_id")

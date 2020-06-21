@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -23,8 +23,9 @@ public class PlaceController {
 
     //thêm place
     @PostMapping("/place")
-    public ResponseEntity<?> createPlace(@RequestBody PlaceDTO model) {
-        return placeService.create(model);
+    public ResponseEntity<?> createPlace(@RequestBody PlaceDTO model,
+    @RequestParam(value = "file", required = false) MultipartFile file) {
+        return placeService.create(model, file);
     }
 
     //sửa place

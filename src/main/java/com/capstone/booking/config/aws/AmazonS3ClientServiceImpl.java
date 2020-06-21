@@ -3,10 +3,12 @@ package com.capstone.booking.config.aws;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.capstone.booking.entity.ImagePlace;
+import com.capstone.booking.repository.ImagePlaceRepository;
+import com.capstone.booking.repository.PlaceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +30,12 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
     private static final Logger logger = LoggerFactory.getLogger(AmazonS3ClientServiceImpl.class);
 
     @Autowired
+    private ImagePlaceRepository imagePlaceRepository;
+
+    @Autowired
+    private PlaceRepository placeRepository;
+
+    @Autowired
     public AmazonS3ClientServiceImpl(Region awsRegion, AWSCredentialsProvider awsCredentialsProvider, String awsS3AudioBucket) 
     {
         this.amazonS3 = AmazonS3ClientBuilder.standard()
@@ -37,9 +45,9 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
     }
 
     @Async
-    public void uploadFileToS3Bucket(MultipartFile multipartFile, boolean enablePublicReadAccess) 
+    public void uploadFileToS3Bucket(Long placeId, MultipartFile multipartFile, String name, String ext, boolean enablePublicReadAccess)
     {
-        String fileName = multipartFile.getOriginalFilename();
+        String fileName = name + ext;
         String bucketLink = "https://toandqse05372-bucket.s3-ap-southeast-1.amazonaws.com/";
         try {
             //creating the file in the server (temporarily)
@@ -55,7 +63,17 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
             }
             this.amazonS3.putObject(putObjectRequest);
             //removing the file created in the server
-            System.out.println(bucketLink+fileName);
+            ImagePlace imagePlace = imagePlaceRepository.findByImageName(name);
+            if(imagePlace != null){
+                imagePlace.setImageLink(bucketLink+fileName);
+            }else{
+                imagePlace = new ImagePlace();
+                imagePlace.setImageLink(bucketLink+fileName);
+                imagePlace.setImageName(name);
+                imagePlace.setPlace(placeRepository.findById(placeId).get());
+            }
+            imagePlaceRepository.save(imagePlace);
+
             file.delete();
         } catch (IOException | AmazonServiceException ex) {
             logger.error("error [" + ex.getMessage() + "] occurred while uploading [" + fileName + "] ");
