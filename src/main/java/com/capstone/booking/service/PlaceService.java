@@ -13,10 +13,10 @@ public interface PlaceService {
     ResponseEntity<?> getPlace(Long id);
 
     //them
-    ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile file);
+    ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile[] file);
 
     //sửa
-    ResponseEntity<?> update(PlaceDTO placeDTO);
+    ResponseEntity<?> update(PlaceDTO placeDTO, MultipartFile[] files);
     //xóa
     void delete(long id);
 

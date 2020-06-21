@@ -2,6 +2,8 @@ package com.capstone.booking.api;
 
 import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.service.PlaceService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +25,23 @@ public class PlaceController {
 
     //thêm place
     @PostMapping("/place")
-    public ResponseEntity<?> createPlace(@RequestBody PlaceDTO model,
-    @RequestParam(value = "file", required = false) MultipartFile file) {
-        return placeService.create(model, file);
+    public ResponseEntity<?> createPlace(@RequestPart(value = "file") MultipartFile[] files,
+                                         @RequestPart(value = "place") String model,
+    @RequestParam(value = "file", required = false) MultipartFile file) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        PlaceDTO placeDTO = mapper.readValue(model, PlaceDTO.class);
+        return placeService.create(placeDTO, files);
     }
 
     //sửa place
     @PutMapping("/place/{id}")
-    public ResponseEntity<?> updatePlace(@RequestBody PlaceDTO model, @PathVariable("id") long id) {
-        model.setId(id);
-        return placeService.update(model);
+    public ResponseEntity<?> updatePlace(@RequestPart(value = "file") MultipartFile[] files,
+                                         @RequestPart(value = "place") String model,
+                                         @PathVariable("id") long id) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        PlaceDTO placeDTO = mapper.readValue(model, PlaceDTO.class);
+        placeDTO.setId(id);
+        return placeService.update(placeDTO, files);
     }
 
     //change status Place

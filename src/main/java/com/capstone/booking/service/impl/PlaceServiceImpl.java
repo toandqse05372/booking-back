@@ -3,11 +3,13 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.PlaceConverter;
 import com.capstone.booking.common.key.Status;
+import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.entity.dto.PlaceDTOLite;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.PlaceService;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,9 @@ public class PlaceServiceImpl implements PlaceService {
     private CategoryRepository categoryRepository;
 
     @Autowired
+    private AmazonS3ClientService amazonS3ClientService;
+
+    @Autowired
     private ImagePlaceRepository imageRepository;
     //tim kiem place theo ten & address, description, cityId, categoryId, & paging
     @Override
@@ -53,7 +58,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     //them place
     @Override
-    public ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile file) {
+    public ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile[] files) {
         Place place = placeConverter.toPlace(placeDTO);
         City city= cityRepository.findById(placeDTO.getCityId()).get();
         place.setCity(city);
@@ -75,12 +80,16 @@ public class PlaceServiceImpl implements PlaceService {
         place.setStatus(Status.ACTIVE.toString());
 
         placeRepository.save(place);
+        if(files != null){
+            Place saved = placeRepository.save(place);
+            uploadFile(files, saved.getId());
+        }
         return ResponseEntity.ok(placeConverter.toDTO(place));
     }
 
     //sưa place
     @Override
-    public ResponseEntity<?> update(PlaceDTO placeDTO) {
+    public ResponseEntity<?> update(PlaceDTO placeDTO, MultipartFile[] files) {
         Place place = new Place();
         Place oldplace = placeRepository.findById(placeDTO.getId()).get();
         place = placeConverter.toPlace(placeDTO, oldplace);
@@ -104,7 +113,11 @@ public class PlaceServiceImpl implements PlaceService {
             place.setAddress(placeDTO.getAddress());
         }
 
-        placeRepository.save(place);
+        if(files != null){
+            Place saved = placeRepository.save(place);
+            uploadFile(files, saved.getId());
+        }
+
         return ResponseEntity.ok(placeConverter.toDTO(place));
     }
 
@@ -137,5 +150,14 @@ public class PlaceServiceImpl implements PlaceService {
             liteList.add(lite);
         }
         return ResponseEntity.ok(liteList);
+    }
+
+    public void uploadFile(MultipartFile[] files, Long placeId){
+        int location = 1;
+        for (MultipartFile file: files) {
+            String ext = "."+ FilenameUtils.getExtension(file.getOriginalFilename());
+            this.amazonS3ClientService.uploadFileToS3Bucket(placeId, file, placeId +"_"+ location , ext, true);
+            location++;
+        }
     }
 }

@@ -31,10 +31,6 @@ public class PaymentMethodsConverter {
         dto.setMethodKey(methods.getMethodKey());
         dto.setStatus(methods.getStatus());
 
-        if (methods.getOrder() != null) {
-            dto.setOrderId(methods.getOrder().getId());
-        }
-
         return dto;
     }
 }

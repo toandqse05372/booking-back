@@ -2,6 +2,7 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.PaymentMethodsConverter;
+import com.capstone.booking.common.key.Status;
 import com.capstone.booking.entity.Order;
 import com.capstone.booking.entity.PaymentMethods;
 import com.capstone.booking.entity.dto.PaymentMethodsDTO;
@@ -27,28 +28,21 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
     //thêm
     @Override
     public ResponseEntity<?> create(PaymentMethodsDTO methodDTO) {
-        PaymentMethods methods = methodsConverter.toMethod(methodDTO);
-
-        Order order = orderRepository.findById(methodDTO.getOrderId()).get();
-        methods.setOrder(order);
-
-        methodsRepository.save(methods);
-        return ResponseEntity.ok(methodsConverter.toDTO(methods));
+        PaymentMethods method = methodsConverter.toMethod(methodDTO);
+        method.setStatus(Status.ACTIVE.toString());
+        methodsRepository.save(method);
+        return ResponseEntity.ok(methodsConverter.toDTO(method));
     }
 
 
     //sửa
     @Override
     public ResponseEntity<?> update(PaymentMethodsDTO methodDTO) {
-        PaymentMethods methods = new PaymentMethods();
+        PaymentMethods method = new PaymentMethods();
         PaymentMethods oldMethod = methodsRepository.findById(methodDTO.getId()).get();
-        methods = methodsConverter.toMethod(methodDTO, oldMethod);
-
-        Order order = orderRepository.findById(methodDTO.getOrderId()).get();
-        methods.setOrder(order);
-
-        methodsRepository.save(methods);
-        return ResponseEntity.ok(methodsConverter.toDTO(methods));
+        method = methodsConverter.toMethod(methodDTO, oldMethod);
+        methodsRepository.save(method);
+        return ResponseEntity.ok(methodsConverter.toDTO(method));
     }
 
 

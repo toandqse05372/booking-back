@@ -14,7 +14,6 @@ public class TicketTypeConverter {
     public TicketType toTicketType(TicketTypeDTO dto) {
         TicketType ticketType = new TicketType();
         ticketType.setTypeName(dto.getTypeName());
-        ticketType.setEffectiveTime(dto.getEffectiveTime());
         ticketType.setTicketDescription(dto.getTicketDescription());
         ticketType.setReservationInfo(dto.getReservationInfo());
         ticketType.setCancelPolicy(dto.getCancelPolicy());
@@ -24,7 +23,6 @@ public class TicketTypeConverter {
 
     public TicketType toTicketType(TicketTypeDTO dto, TicketType ticketType) {
         ticketType.setTypeName(dto.getTypeName());
-        ticketType.setEffectiveTime(dto.getEffectiveTime());
         ticketType.setTicketDescription(dto.getTicketDescription());
         ticketType.setReservationInfo(dto.getReservationInfo());
         ticketType.setCancelPolicy(dto.getCancelPolicy());
@@ -38,7 +36,6 @@ public class TicketTypeConverter {
             dto.setId(ticketType.getId());
         }
         dto.setTypeName(ticketType.getTypeName());
-        dto.setEffectiveTime(ticketType.getEffectiveTime());
         dto.setTicketDescription(ticketType.getTicketDescription());
         dto.setReservationInfo(ticketType.getReservationInfo());
         dto.setCancelPolicy(ticketType.getCancelPolicy());
