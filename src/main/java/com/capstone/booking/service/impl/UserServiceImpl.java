@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
         tokenRepository.save(verificationToken);
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo("quangtoandao123@gmail.com"); //user email
+        mailMessage.setTo(user.getMail()); //user email
         mailMessage.setSubject("Complete Registration!");
         mailMessage.setFrom("toandqse08372@fpt.edu.vn");
         mailMessage.setText("To confirm your account, please click here : "

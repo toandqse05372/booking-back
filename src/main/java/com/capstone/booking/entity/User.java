@@ -13,7 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class User extends BaseEntity {
-    @Column(length = 30)
+    @Column(length = 1000)
     private String password;
     @Column(length = 15)
     private String firstName;
