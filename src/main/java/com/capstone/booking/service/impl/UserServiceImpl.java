@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         mailMessage.setSubject("Complete Registration!");
         mailMessage.setFrom("toandqse08372@fpt.edu.vn");
         mailMessage.setText("To confirm your account, please click here : "
-                +"http://localhost:8090/user/active?token="+verificationToken.getConfirmationToken());
+                +"http://localhost:3000/confirmMail?token="+verificationToken.getConfirmationToken());
 
         emailSenderService.sendEmail(mailMessage);
     }
