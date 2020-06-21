@@ -44,7 +44,6 @@ public class TicketServiceImpl implements TicketService {
         Ticket oldTicket = ticketRepository.findById(ticketDTO.getId()).get();
         ticket = ticketConverter.toTicket(ticketDTO, oldTicket);
 
-
         TicketType ticketType = ticketTypeRepository.findById(ticketDTO.getTicketType().getId()).get();
         ticket.setTicketType(ticketType);
 
