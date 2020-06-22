@@ -16,6 +16,7 @@ public class OrderDTO extends BaseDTO{
     private String mail;
     private String phoneNumber;
     private String status;
+    private String orderCode;
     private int totalPayment;
     private Date purchaseDay;
 }

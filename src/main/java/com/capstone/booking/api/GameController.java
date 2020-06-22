@@ -31,8 +31,7 @@ public class GameController {
     //delete Game
     @DeleteMapping("/game/{id}")
     public ResponseEntity<?> deleteGame(@PathVariable("id") long id) {
-        gameService.delete(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return gameService.delete(id);
     }
 
     //change status Game

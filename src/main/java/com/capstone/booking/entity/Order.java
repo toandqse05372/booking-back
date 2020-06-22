@@ -23,6 +23,7 @@ public class Order extends BaseEntity{
     private String phoneNumber;
     @Column(length = 20)
     private String status;
+    private String orderCode;
     private int totalPayment;
     private Date purchaseDay;
 
