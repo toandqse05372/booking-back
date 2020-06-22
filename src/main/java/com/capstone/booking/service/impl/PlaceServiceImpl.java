@@ -2,7 +2,7 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.PlaceConverter;
-import com.capstone.booking.common.key.Status;
+import com.capstone.booking.common.key.PlaceAndGameStatus;
 import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.PlaceDTO;
@@ -77,7 +77,7 @@ public class PlaceServiceImpl implements PlaceService {
         if(placeDTO.getAddress() != null){
             place.setDetailDescription(placeDTO.getAddress());
         }
-        place.setStatus(Status.ACTIVE.toString());
+        place.setStatus(PlaceAndGameStatus.ACTIVE.toString());
 
         placeRepository.save(place);
         if(files != null){
@@ -132,10 +132,10 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public ResponseEntity<?> changeStatus(Long id) {
         Place place = placeRepository.findById(id).get();
-        if (place.getStatus().equals(Status.ACTIVE.toString())) {
-            place.setStatus(Status.DEACTIVATE.toString());
+        if (place.getStatus().equals(PlaceAndGameStatus.ACTIVE.toString())) {
+            place.setStatus(PlaceAndGameStatus.DEACTIVATE.toString());
         } else {
-            place.setStatus(Status.ACTIVE.toString());
+            place.setStatus(PlaceAndGameStatus.ACTIVE.toString());
         }
         place = placeRepository.save(place);
         return ResponseEntity.ok(placeConverter.toDTO(place));

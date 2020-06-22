@@ -2,8 +2,7 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.PaymentMethodsConverter;
-import com.capstone.booking.common.key.Status;
-import com.capstone.booking.entity.Order;
+import com.capstone.booking.common.key.PlaceAndGameStatus;
 import com.capstone.booking.entity.PaymentMethods;
 import com.capstone.booking.entity.dto.PaymentMethodsDTO;
 import com.capstone.booking.repository.OrderRepository;
@@ -29,7 +28,7 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
     @Override
     public ResponseEntity<?> create(PaymentMethodsDTO methodDTO) {
         PaymentMethods method = methodsConverter.toMethod(methodDTO);
-        method.setStatus(Status.ACTIVE.toString());
+        method.setStatus(PlaceAndGameStatus.ACTIVE.toString());
         methodsRepository.save(method);
         return ResponseEntity.ok(methodsConverter.toDTO(method));
     }

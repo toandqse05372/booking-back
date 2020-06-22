@@ -1,6 +1,5 @@
 package com.capstone.booking.common.key;
 
-public enum Status {
+public enum PlaceAndGameStatus {
     ACTIVE, DEACTIVATE,
-    PAID, UNPAID
 }

@@ -2,7 +2,7 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.GameConverter;
-import com.capstone.booking.common.key.Status;
+import com.capstone.booking.common.key.PlaceAndGameStatus;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.GameDTO;
 import com.capstone.booking.repository.GameRepository;
@@ -47,7 +47,7 @@ public class GameServiceImpl implements GameService {
             game.setPlace(placeOptional.get());
         }
 
-        game.setStatus(Status.ACTIVE.toString());
+        game.setStatus(PlaceAndGameStatus.ACTIVE.toString());
 
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
@@ -114,10 +114,10 @@ public class GameServiceImpl implements GameService {
     @Override
     public ResponseEntity<?> changeStatus(Long id) {
         Game game = gameRepository.findById(id).get();
-        if (game.getStatus().equals(Status.ACTIVE.toString())) {
-            game.setStatus(Status.DEACTIVATE.toString());
+        if (game.getStatus().equals(PlaceAndGameStatus.ACTIVE.toString())) {
+            game.setStatus(PlaceAndGameStatus.DEACTIVATE.toString());
         } else {
-            game.setStatus(Status.ACTIVE.toString());
+            game.setStatus(PlaceAndGameStatus.ACTIVE.toString());
         }
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));

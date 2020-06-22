@@ -1,9 +1,9 @@
 package com.capstone.booking.service.impl;
 
 import com.capstone.booking.common.converter.OrderConverter;
-import com.capstone.booking.common.key.Status;
+import com.capstone.booking.common.key.OrderStatus;
+import com.capstone.booking.common.key.PlaceAndGameStatus;
 import com.capstone.booking.entity.Order;
-import com.capstone.booking.entity.TicketType;
 import com.capstone.booking.entity.User;
 import com.capstone.booking.entity.dto.OrderDTO;
 import com.capstone.booking.repository.OrderRepository;
@@ -33,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findById(orderDTO.getUserId()).get();
         order.setUser(user);
 
-        order.setStatus(Status.UNPAID.toString());
+        order.setStatus(OrderStatus.UNPAID.toString());
         orderRepository.save(order);
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
