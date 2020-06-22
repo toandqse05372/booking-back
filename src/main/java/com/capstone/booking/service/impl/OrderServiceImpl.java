@@ -30,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
     public ResponseEntity<?> create(OrderDTO orderDTO) {
         Order order = orderConverter.toOrder(orderDTO);
 
-        User user = userRepository.findById(orderDTO.getUser().getId()).get();
+        User user = userRepository.findById(orderDTO.getUserId()).get();
         order.setUser(user);
 
         order.setStatus(Status.UNPAID.toString());
@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
         Order oldOrder = orderRepository.findById(orderDTO.getId()).get();
         order = orderConverter.toOrder(orderDTO, oldOrder);
 
-        User user = userRepository.findById(orderDTO.getUser().getId()).get();
+        User user = userRepository.findById(orderDTO.getUserId()).get();
         order.setUser(user);
 
         orderRepository.save(order);

@@ -10,7 +10,11 @@ import java.util.Date;
 public class OrderDTO extends BaseDTO{
     private int totalTicket;
     private int ticketTypeId;
-    private UserDTO user;
+    private Long userId;
+    private String firstName;
+    private String lastName;
+    private String mail;
+    private String phoneNumber;
     private String status;
     private int totalPayment;
     private Date purchaseDay;

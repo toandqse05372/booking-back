@@ -17,9 +17,7 @@ public class Order extends BaseEntity{
     private int ticketTypeId;
     @Column(length = 50)
     private String firstName;
-    @Column(length = 50)
     private String lastName;
-    @Column(length = 50)
     private String mail;
     @Column(length = 20)
     private String phoneNumber;
