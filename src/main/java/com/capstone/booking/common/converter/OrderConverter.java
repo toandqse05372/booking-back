@@ -16,6 +16,7 @@ public class OrderConverter {
         order.setMail(dto.getMail());
         order.setPhoneNumber(dto.getPhoneNumber());
 
+        order.setOrderCode(dto.getOrderCode());
         order.setTotalPayment(dto.getTotalPayment());
         order.setPurchaseDay(dto.getPurchaseDay());
         return order;
@@ -28,6 +29,7 @@ public class OrderConverter {
         order.setLastName(dto.getLastName());
         order.setMail(dto.getMail());
         order.setPhoneNumber(dto.getPhoneNumber());
+        order.setOrderCode(dto.getOrderCode());
         order.setTotalPayment(dto.getTotalPayment());
         order.setPurchaseDay(dto.getPurchaseDay());
         return order;
@@ -47,6 +49,7 @@ public class OrderConverter {
         dto.setMail(order.getUser().getMail());
         dto.setPhoneNumber(order.getUser().getPhoneNumber());
 
+        dto.setOrderCode(order.getOrderCode());
         dto.setTotalPayment(order.getTotalPayment());
         dto.setPurchaseDay(order.getPurchaseDay());
         dto.setStatus(order.getStatus());

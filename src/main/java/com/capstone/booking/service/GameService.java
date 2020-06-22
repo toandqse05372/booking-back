@@ -12,7 +12,7 @@ public interface GameService {
     ResponseEntity<?> update(GameDTO gameDTO);
 
     //delete game
-    void delete(long id);
+    ResponseEntity<?> delete(long id);
 
     //search by Id
     ResponseEntity<?> getGame(Long id);
