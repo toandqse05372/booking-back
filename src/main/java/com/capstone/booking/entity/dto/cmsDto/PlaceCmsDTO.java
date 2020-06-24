@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Data
 public class PlaceCmsDTO extends BaseDTO {
-    private String name;
+    private LanguageChanger name;
     private String address;
     private LanguageChanger shortDescription;
     private LanguageChanger detailDescription;

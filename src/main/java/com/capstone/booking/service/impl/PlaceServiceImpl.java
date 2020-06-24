@@ -5,7 +5,6 @@ import com.capstone.booking.common.converter.PlaceConverter;
 import com.capstone.booking.common.key.PlaceAndGameStatus;
 import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.entity.*;
-import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.entity.dto.PlaceDTOLite;
 import com.capstone.booking.entity.dto.cmsDto.PlaceCmsDTO;
 import com.capstone.booking.repository.*;
@@ -46,17 +45,17 @@ public class PlaceServiceImpl implements PlaceService {
     //tim kiem place theo ten & address, description, cityId, categoryId, & paging
     @Override
     public ResponseEntity<?> findByMultipleParam(String name, String address, Long cityId,
-                                                 Long categoryId, Long limit, Long page) {
-        Output results = placeRepository.findByMultiParam(name, address, cityId, categoryId, limit, page);
+                                                 Long categoryId, Long limit, Long page, String language) throws JsonProcessingException {
+        Output results = placeRepository.findByMultiParam(name, address, cityId, categoryId, limit, page, language);
         return ResponseEntity.ok(results);
     }
 
     //search By placeId
     @Override
-    public ResponseEntity<?> getPlace(Long id) {
+    public ResponseEntity<?> getPlace(Long id) throws JsonProcessingException {
         Optional<Place> places = placeRepository.findById(id);
         Place place = places.get();
-        return ResponseEntity.ok(placeConverter.toDTO(place));
+        return ResponseEntity.ok(placeConverter.toCmsDTO(place));
     }
 
     //them place
@@ -69,7 +68,7 @@ public class PlaceServiceImpl implements PlaceService {
             Place saved = placeRepository.save(place);
             uploadFile(files, saved.getId());
         }
-        return ResponseEntity.ok(placeConverter.toDTO(place));
+        return ResponseEntity.ok(placeConverter.toCmsDTO(place));
     }
 
     //sưa place
@@ -83,7 +82,7 @@ public class PlaceServiceImpl implements PlaceService {
             uploadFile(files, saved.getId());
         }
 
-        return ResponseEntity.ok(placeConverter.toDTO(place));
+        return ResponseEntity.ok(placeConverter.toCmsDTO(place));
     }
 
     //xóa place
@@ -98,7 +97,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     //change status
     @Override
-    public ResponseEntity<?> changeStatus(Long id) {
+    public ResponseEntity<?> changeStatus(Long id) throws JsonProcessingException {
         Place place = placeRepository.findById(id).get();
         if (place.getStatus().equals(PlaceAndGameStatus.ACTIVE.toString())) {
             place.setStatus(PlaceAndGameStatus.DEACTIVATE.toString());
@@ -106,7 +105,7 @@ public class PlaceServiceImpl implements PlaceService {
             place.setStatus(PlaceAndGameStatus.ACTIVE.toString());
         }
         place = placeRepository.save(place);
-        return ResponseEntity.ok(placeConverter.toDTO(place));
+        return ResponseEntity.ok(placeConverter.toCmsDTO(place));
     }
 
     @Override

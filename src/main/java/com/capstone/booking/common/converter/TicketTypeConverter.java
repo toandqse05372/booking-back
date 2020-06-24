@@ -51,11 +51,11 @@ public class TicketTypeConverter {
 
         Set<Game> gameSet = ticketType.getGame();
         Set<String> gameString = new HashSet<>();
-        Set<GameDTO> gameDTOSet = new HashSet<>();
+        Set<Long> gameIdSet = new HashSet<>();
         for (Game game : gameSet) {
-            gameDTOSet.add(gameConverter.toDTO(game));
+            gameIdSet.add(game.getId());
         }
-        dto.setGame(gameDTOSet);
+        dto.setGameId(gameIdSet);
         return dto;
     }
 }

@@ -47,27 +47,27 @@ public class PlaceController {
 
     //change status Place
     @PutMapping("/changePlace/{id}")
-    public ResponseEntity<?> changeStatusGame(@PathVariable("id") long id) {
+    public ResponseEntity<?> changeStatusGame(@PathVariable("id") long id) throws JsonProcessingException {
         return placeService.changeStatus(id);
     }
 
     //search By Id
     @GetMapping("/place/{id}")
-    public ResponseEntity<?> getPlace(@PathVariable Long id) {
+    public ResponseEntity<?> getPlace(@PathVariable Long id) throws JsonProcessingException {
         return placeService.getPlace(id);
     }
 
 
     //tim kiem place theo ten & address, description, cityId, categoryId, & paging
     @GetMapping("/place/searchMul")
-    @PreAuthorize("hasAnyAuthority('READ_PLACE')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "name", required = false) String name,
                                        @RequestParam(value = "address", required = false) String address,
                                        @RequestParam(value = "limit", required = false) Long limit,
                                        @RequestParam(value = "page", required = false) Long page,
                                        @RequestParam(value = "cityId", required = false) Long cityId,
-                                       @RequestParam(value = "categoryId", required = false) Long categoryId) {
-        return placeService.findByMultipleParam(name, address, cityId, categoryId, limit, page);
+                                       @RequestParam(value = "categoryId", required = false) Long categoryId,
+                                       @RequestParam(value = "lang", required = false) String language) throws JsonProcessingException {
+        return placeService.findByMultipleParam(name, address, cityId, categoryId, limit, page, language);
     }
 
     //xoa place

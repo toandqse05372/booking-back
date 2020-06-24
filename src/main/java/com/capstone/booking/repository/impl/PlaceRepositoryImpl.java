@@ -7,6 +7,7 @@ import com.capstone.booking.entity.Place;
 import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.repository.ImagePlaceRepository;
 import com.capstone.booking.repository.customRepository.PlaceRepositoryCustom;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -33,7 +34,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
 
     @Override
     public Output findByMultiParam(String name, String address, Long cityId,
-                                   Long categoryId, Long limit, Long page) {
+                                   Long categoryId, Long limit, Long page, String language) throws JsonProcessingException {
         boolean addedWhere = false;
         String queryStr = "select place0_.* from t_place place0_ ";
         String where = "";
@@ -96,17 +97,17 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         where += "limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryPlace(params, queryStr +where)));
+        output.setListResult(convertList(queryPlace(params, queryStr +where), language));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);
         return output;
     }
 
-    public List<PlaceDTO> convertList (List<Place> placeList){
+    public List<PlaceDTO> convertList (List<Place> placeList, String language) throws JsonProcessingException {
         List<PlaceDTO> results = new ArrayList<>();
         for (Place item : placeList) {
-            PlaceDTO placeDTO = placeConverter.toDTO(item);
+            PlaceDTO placeDTO = placeConverter.toDTO(item, language);
             //
 
             results.add(placeDTO);

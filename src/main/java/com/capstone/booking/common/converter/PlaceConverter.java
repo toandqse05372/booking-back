@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -50,17 +49,66 @@ public class PlaceConverter {
 //        return place;
 //    }
 
-    public PlaceDTO toDTO(Place place) {
+
+
+    public PlaceDTO toDTO(Place place, String language) throws JsonProcessingException {
         PlaceDTO dto = new PlaceDTO();
         if (place.getId() != null) {
             dto.setId(place.getId());
         }
-        dto.setName(place.getName());
+        LanguageChanger languageChanger = new LanguageChanger();
+
+        languageChanger = xmlConverter.toLanguageChanger(place.getName());
+        dto.setName(xmlConverter.getLangauge(language, languageChanger));
+
         dto.setAddress(place.getAddress());
-        dto.setDetailDescription(place.getDetailDescription());
+
+        languageChanger = xmlConverter.toLanguageChanger(place.getDetailDescription());
+        dto.setDetailDescription(xmlConverter.getLangauge(language, languageChanger));
         dto.setMail(place.getMail());
         dto.setPhoneNumber(place.getPhoneNumber());
-        dto.setShortDescription(place.getShortDescription());
+
+        languageChanger = xmlConverter.toLanguageChanger(place.getShortDescription());
+        dto.setShortDescription(xmlConverter.getLangauge(language, languageChanger));
+
+        if(place.getImagePlace() != null){
+            Set<ImageDTO> imageSet = new HashSet<>();
+            for (ImagePlace image : place.getImagePlace()) {
+                imageSet.add(imageConverter.toDTO(image));
+            }
+        }
+
+        City city = place.getCity();
+        dto.setCityId(city.getId());
+        dto.setCityName(city.getName());
+
+        Set<Long> categorySet = new HashSet<>();
+        for (Category category : place.getCategories()) {
+            categorySet.add(category.getId());
+        }
+        dto.setCategoryId(categorySet);
+
+        Set<OpeningHoursDTO> openingHoursSet = new HashSet<>();
+        for (OpeningHours hours : place.getOpeningHours()) {
+            openingHoursSet.add(hoursConverter.toDTO(hours));
+        }
+        dto.setOpeningHours(openingHoursSet);
+
+        dto.setStatus(place.getStatus());
+        return dto;
+    }
+
+    public PlaceCmsDTO toCmsDTO(Place place) throws JsonProcessingException{
+        PlaceCmsDTO dto = new PlaceCmsDTO();
+        if (place.getId() != null) {
+            dto.setId(place.getId());
+        }
+        dto.setName(xmlConverter.toLanguageChanger(place.getName()));
+        dto.setAddress(place.getAddress());
+        dto.setDetailDescription(xmlConverter.toLanguageChanger(place.getDetailDescription()));
+        dto.setMail(place.getMail());
+        dto.setPhoneNumber(place.getPhoneNumber());
+        dto.setShortDescription(xmlConverter.toLanguageChanger(place.getShortDescription()));
 
         if(place.getImagePlace() != null){
             Set<ImageDTO> imageSet = new HashSet<>();
@@ -90,7 +138,7 @@ public class PlaceConverter {
     }
 
     public Place toPlace(PlaceCmsDTO placeCmsDTO, Place place) throws JsonProcessingException {
-        place.setName(placeCmsDTO.getName());
+        place.setName(xmlConverter.toXmlString(placeCmsDTO.getName()));
         place.setAddress(placeCmsDTO.getAddress());
         Set<Category> categorySet = new HashSet<>();
         for(Long categoryId: placeCmsDTO.getCategoryId()){
@@ -113,11 +161,12 @@ public class PlaceConverter {
 
     public Place toPlace(PlaceCmsDTO placeCmsDTO) throws JsonProcessingException {
         Place place = new Place();
-        place.setName(placeCmsDTO.getName());
+        place.setName(xmlConverter.toXmlString(placeCmsDTO.getName()));
         place.setAddress(placeCmsDTO.getAddress());
         Set<Category> categorySet = new HashSet<>();
         for(Long categoryId: placeCmsDTO.getCategoryId()){
-            categorySet.add(categoryRepository.findById(categoryId).get());
+            Category category = categoryRepository.findById(categoryId).get();
+            categorySet.add(category);
         }
         place.setCategories(categorySet);
         place.setShortDescription(xmlConverter.toXmlString(placeCmsDTO.getShortDescription()));

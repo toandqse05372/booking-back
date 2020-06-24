@@ -22,4 +22,18 @@ public class XmlConverter {
         LanguageChanger value = xmlMapper.readValue(xmlString, LanguageChanger.class);
         return value;
     }
+
+    public String getLangauge(String language, LanguageChanger languageChanger){
+        String getStr = "";
+        if(language.equals("vn")){
+            getStr = languageChanger.getVietnamese();
+        }
+        if(language.equals("en")){
+            getStr = languageChanger.getEnglish();
+        }
+        if(language.equals("jp")){
+            getStr = languageChanger.getEnglish();
+        }
+        return getStr;
+    }
 }

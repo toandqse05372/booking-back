@@ -1,5 +1,4 @@
 package com.capstone.booking.service;
-import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.entity.dto.cmsDto.PlaceCmsDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +8,10 @@ public interface PlaceService {
 
     //tim kiem Place theo ten & address, description, cityId, categoryId, & paging
     ResponseEntity<?> findByMultipleParam(String name, String address, Long cityId,
-                                          Long categoryId, Long limit, Long page);
+                                          Long categoryId, Long limit, Long page, String language) throws JsonProcessingException;
 
     //search ById
-    ResponseEntity<?> getPlace(Long id);
+    ResponseEntity<?> getPlace(Long id) throws JsonProcessingException;
 
     //them
     ResponseEntity<?> create(PlaceCmsDTO placeDTO, MultipartFile[] file) throws JsonProcessingException;
@@ -23,7 +22,7 @@ public interface PlaceService {
     ResponseEntity<?> delete(long id);
 
     //change status
-    ResponseEntity<?> changeStatus(Long id);
+    ResponseEntity<?> changeStatus(Long id) throws JsonProcessingException;
 
     ResponseEntity<?> getAll();
 
