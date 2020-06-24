@@ -11,5 +11,9 @@ public interface OrderService {
     ResponseEntity<?> update(OrderDTO orderDTO);
 
     //delete
-    void delete(long id);
+    ResponseEntity<?> delete(long id);
+
+    //tim kiem Order theo status, & paging
+    ResponseEntity<?> findByStatus(String status, Long limit, Long page);
+
 }

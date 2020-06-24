@@ -36,8 +36,7 @@ public class CityController {
     //delete City
     @DeleteMapping("/city/{id}")
     public ResponseEntity<?> deleteCity(@PathVariable("id") long id) {
-        cityService.delete(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return cityService.delete(id);
     }
 
     //add

@@ -22,7 +22,7 @@ public interface UserService {
     ResponseEntity<?> findByMultiParam(String fname, String mail, String lastName, String phoneNumber, Long roleId, Long limit, Long page);
 
     //xóa
-    void delete(long id);
+    ResponseEntity<?> delete(long id);
 
     //tim theo id
     ResponseEntity<?> getUser(Long id);

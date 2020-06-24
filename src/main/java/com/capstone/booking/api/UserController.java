@@ -1,11 +1,9 @@
 package com.capstone.booking.api;
-import com.capstone.booking.entity.Token;
-import com.capstone.booking.entity.dto.TokenDTO;
+
 import com.capstone.booking.entity.dto.UserDTO;
 import com.capstone.booking.service.TokenService;
 import com.capstone.booking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -67,8 +65,7 @@ public class UserController {
     @DeleteMapping("/user/{id}")
     @PreAuthorize("hasAnyAuthority('DELETE_USER')")
     public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
-        userService.delete(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return userService.delete(id);
     }
 
     //search by Id

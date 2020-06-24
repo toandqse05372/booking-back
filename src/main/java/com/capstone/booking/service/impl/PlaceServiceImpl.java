@@ -11,6 +11,7 @@ import com.capstone.booking.repository.*;
 import com.capstone.booking.service.PlaceService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -124,8 +125,12 @@ public class PlaceServiceImpl implements PlaceService {
 
     //xóa place
     @Override
-    public void delete(long id) {
+    public ResponseEntity<?> delete(long id) {
+        if (!placeRepository.findById(id).isPresent()) {
+            return new ResponseEntity("Id already exists", HttpStatus.BAD_REQUEST);
+        }
         placeRepository.deleteById(id);
+        return new ResponseEntity("Delete Successful", HttpStatus.OK);
     }
 
     //change status

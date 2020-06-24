@@ -141,8 +141,12 @@ public class UserServiceImpl implements UserService {
 
     //delete user
     @Override
-    public void delete(long id) {
+    public ResponseEntity<?> delete(long id) {
+        if (!userRepository.findById(id).isPresent()) {
+            return new ResponseEntity("Id already exists", HttpStatus.BAD_REQUEST);
+        }
         userRepository.deleteById(id);
+        return new ResponseEntity("Delete Successful", HttpStatus.OK);
     }
 
     //search by id

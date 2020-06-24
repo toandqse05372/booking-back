@@ -8,6 +8,7 @@ import com.capstone.booking.entity.dto.TicketDTO;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +53,11 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void delete(long id) {
+    public ResponseEntity<?> delete(long id) {
+        if (!ticketRepository.findById(id).isPresent()) {
+            return new ResponseEntity("Id already exists", HttpStatus.BAD_REQUEST);
+        }
         ticketRepository.deleteById(id);
+        return new ResponseEntity("Delete Successful", HttpStatus.OK);
     }
 }

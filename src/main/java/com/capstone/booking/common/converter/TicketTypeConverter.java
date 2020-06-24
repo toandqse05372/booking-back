@@ -18,6 +18,7 @@ public class TicketTypeConverter {
         ticketType.setReservationInfo(dto.getReservationInfo());
         ticketType.setCancelPolicy(dto.getCancelPolicy());
         ticketType.setConversionMethod(dto.getConversionMethod());
+        ticketType.setPlaceId(dto.getPlaceId());
         return ticketType;
     }
 
@@ -27,6 +28,7 @@ public class TicketTypeConverter {
         ticketType.setReservationInfo(dto.getReservationInfo());
         ticketType.setCancelPolicy(dto.getCancelPolicy());
         ticketType.setConversionMethod(dto.getConversionMethod());
+        ticketType.setPlaceId(dto.getPlaceId());
         return ticketType;
     }
 
@@ -40,6 +42,7 @@ public class TicketTypeConverter {
         dto.setReservationInfo(ticketType.getReservationInfo());
         dto.setCancelPolicy(ticketType.getCancelPolicy());
         dto.setConversionMethod(ticketType.getConversionMethod());
+        dto.setPlaceId(ticketType.getPlaceId());
 
         Set<Game> gameSet = ticketType.getGame();
         Set<String> gameString = new HashSet<>();

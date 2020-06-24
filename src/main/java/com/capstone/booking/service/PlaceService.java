@@ -18,7 +18,7 @@ public interface PlaceService {
     //sửa
     ResponseEntity<?> update(PlaceDTO placeDTO, MultipartFile[] files);
     //xóa
-    void delete(long id);
+    ResponseEntity<?> delete(long id);
 
     //change status
     ResponseEntity<?> changeStatus(Long id);

@@ -15,5 +15,6 @@ public class TicketTypeDTO extends BaseDTO{
     private String reservationInfo;
     private String cancelPolicy;
     private String conversionMethod;
+    private Long placeId;
     private Set<String> gameName;
 }

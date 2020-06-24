@@ -30,7 +30,6 @@ public class TicketController {
     //xóa
     @DeleteMapping("/ticket/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        ticketService.delete(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return ticketService.delete(id);
     }
 }
