@@ -50,8 +50,12 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 
     //xoa
     @Override
-    public void delete(Long id) {
+    public ResponseEntity<?> delete(long id) {
+        if (!ticketTypeRepository.findById(id).isPresent()) {
+            return new ResponseEntity("Id already exists", HttpStatus.BAD_REQUEST);
+        }
         ticketTypeRepository.deleteById(id);
+        return new ResponseEntity("Delete Successful", HttpStatus.OK);
     }
 
     //tao ticketType

@@ -17,6 +17,7 @@ public class TicketType extends BaseEntity{
     private String reservationInfo;
     private String cancelPolicy;
     private String conversionMethod;
+    private Long placeId;
 
 
     //Bảng ticketType qhe 1-n với Ticket

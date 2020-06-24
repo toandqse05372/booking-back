@@ -8,7 +8,7 @@ public interface CategoryService {
     ResponseEntity<?> getAllCategories();
 
     //xóa
-    void delete(Long id);
+    ResponseEntity<?> delete(long id);
 
     //them
     ResponseEntity<?> create(CategoryDTO categoryDTO);

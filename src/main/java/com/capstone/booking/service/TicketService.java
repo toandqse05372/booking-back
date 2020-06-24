@@ -12,5 +12,5 @@ public interface TicketService {
     ResponseEntity<?> update(TicketDTO ticketDTO);
 
     //delete
-    void delete(long id);
+    ResponseEntity<?> delete(long id);
 }

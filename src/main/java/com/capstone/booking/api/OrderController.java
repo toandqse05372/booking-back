@@ -16,8 +16,15 @@ public class OrderController {
     //delete
     @DeleteMapping("/order/{id}")
     public ResponseEntity<?> deleteMethod(@PathVariable("id") long id) {
-        orderService.delete(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return orderService.delete(id);
+    }
+
+    //tim kiem Order theo status, & paging
+    @GetMapping("/order/searchByStatus")
+    public ResponseEntity<?> searchByStatus(@RequestParam(value = "status", required = false) String status,
+                                       @RequestParam(value = "limit", required = false) Long limit,
+                                       @RequestParam(value = "page", required = false) Long page) {
+        return orderService.findByStatus(status, limit, page);
     }
 
     //add

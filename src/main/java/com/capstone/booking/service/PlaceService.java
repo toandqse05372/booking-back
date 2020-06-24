@@ -20,7 +20,7 @@ public interface PlaceService {
     //sửa
     ResponseEntity<?> update(PlaceCmsDTO placeDTO, MultipartFile[] files) throws JsonProcessingException;
     //xóa
-    void delete(long id);
+    ResponseEntity<?> delete(long id);
 
     //change status
     ResponseEntity<?> changeStatus(Long id);

@@ -31,8 +31,7 @@ public class CategoryController {
     //xóa
     @DeleteMapping("/category/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        categoryService.delete(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return categoryService.delete(id);
     }
 
     //them

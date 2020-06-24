@@ -31,8 +31,7 @@ public class TicketTypeController {
     //delete ticketType
     @DeleteMapping("/ticketType/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        ticketTypeService.delete(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return ticketTypeService.delete(id);
     }
 
     //add ticketType

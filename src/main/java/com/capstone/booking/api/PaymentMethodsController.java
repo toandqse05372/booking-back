@@ -24,8 +24,7 @@ public class PaymentMethodsController {
     //delete
     @DeleteMapping("/method/{id}")
     public ResponseEntity<?> deleteMethod(@PathVariable("id") long id) {
-        methodService.delete(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return methodService.delete(id);
     }
 
     //add

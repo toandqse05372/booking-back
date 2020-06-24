@@ -9,7 +9,7 @@ public interface TicketTypeService {
     ResponseEntity<?> findAll();
 
     //xóa
-    void delete(Long id);
+    ResponseEntity<?> delete(long id);
 
     //them
     ResponseEntity<?> create(TicketTypeDTO ticketTypeDTO);

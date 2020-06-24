@@ -20,5 +20,5 @@ public interface CityService {
     ResponseEntity<?> update(CityDTO cityDTO);
 
     //delete city
-    void delete(long id);
+    ResponseEntity<?> delete(long id);
 }
