@@ -123,7 +123,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
             if(key.equals("id") || key.equals("from")|| key.equals("limit")){
                 query.setParameter(key, value);
             }else
-                query.setParameter(key, value+"%");
+                query.setParameter(key, "%"+value+"%");
         }
         return query.getResultList();
     }

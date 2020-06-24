@@ -32,7 +32,7 @@ public class XmlConverter {
             getStr = languageChanger.getEnglish();
         }
         if(language.equals("jp")){
-            getStr = languageChanger.getEnglish();
+            getStr = languageChanger.getJapanese();
         }
         return getStr;
     }
