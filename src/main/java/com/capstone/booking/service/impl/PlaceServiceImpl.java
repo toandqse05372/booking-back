@@ -7,8 +7,10 @@ import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.entity.dto.PlaceDTOLite;
+import com.capstone.booking.entity.dto.cmsDto.PlaceCmsDTO;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.PlaceService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -58,27 +60,9 @@ public class PlaceServiceImpl implements PlaceService {
 
     //them place
     @Override
-    public ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile[] files) {
-        Place place = placeConverter.toPlace(placeDTO);
-        City city= cityRepository.findById(placeDTO.getCityId()).get();
-        place.setCity(city);
-
-        Set<Category> categorySet = new HashSet<>();
-        for(Long categoryId: placeDTO.getCategoryId()){
-            categorySet.add(categoryRepository.findById(categoryId).get());
-        }
-        place.setCategories(categorySet);
-        if(placeDTO.getShortDescription() != null){
-            place.setShortDescription(placeDTO.getShortDescription());
-        }
-        if(placeDTO.getDetailDescription() != null){
-            place.setDetailDescription(placeDTO.getDetailDescription());
-        }
-        if(placeDTO.getAddress() != null){
-            place.setDetailDescription(placeDTO.getAddress());
-        }
+    public ResponseEntity<?> create(PlaceCmsDTO placeCmsDTO, MultipartFile[] files) throws JsonProcessingException {
+        Place place = placeConverter.toPlace(placeCmsDTO);
         place.setStatus(PlaceAndGameStatus.ACTIVE.toString());
-
         placeRepository.save(place);
         if(files != null){
             Place saved = placeRepository.save(place);
@@ -89,30 +73,10 @@ public class PlaceServiceImpl implements PlaceService {
 
     //sưa place
     @Override
-    public ResponseEntity<?> update(PlaceDTO placeDTO, MultipartFile[] files) {
+    public ResponseEntity<?> update(PlaceCmsDTO placeDTO, MultipartFile[] files) throws JsonProcessingException {
         Place place = new Place();
         Place oldplace = placeRepository.findById(placeDTO.getId()).get();
         place = placeConverter.toPlace(placeDTO, oldplace);
-
-        City city= cityRepository.findById(placeDTO.getCityId()).get();
-        place.setCity(city);
-
-        Set<Category> categorySet = new HashSet<>();
-        for(Long categoryId: placeDTO.getCategoryId()){
-            categorySet.add(categoryRepository.findById(categoryId).get());
-        }
-        place.setCategories(categorySet);
-
-        if(placeDTO.getShortDescription() != null){
-            place.setShortDescription(placeDTO.getShortDescription());
-        }
-        if(placeDTO.getDetailDescription() != null){
-            place.setDetailDescription(placeDTO.getDetailDescription());
-        }
-        if(placeDTO.getAddress() != null){
-            place.setAddress(placeDTO.getAddress());
-        }
-
         if(files != null){
             Place saved = placeRepository.save(place);
             uploadFile(files, saved.getId());
@@ -120,7 +84,6 @@ public class PlaceServiceImpl implements PlaceService {
 
         return ResponseEntity.ok(placeConverter.toDTO(place));
     }
-
 
     //xóa place
     @Override

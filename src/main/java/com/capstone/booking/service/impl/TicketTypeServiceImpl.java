@@ -60,8 +60,8 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         TicketType ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO);
 
         Set<Game> gameSet = new HashSet<>();
-        for (String game : ticketTypeDTO.getGameName()) {
-            gameSet.add(gameRepository.findOneByGameName(game));
+        for (Long id : ticketTypeDTO.getGameId()) {
+            gameSet.add(gameRepository.findById(id).get());
         }
         ticketType.setGame(gameSet);
 
@@ -77,8 +77,8 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO, oldTicketType);
 
         Set<Game> gameSet = new HashSet<>();
-        for (String game : ticketTypeDTO.getGameName()) {
-            gameSet.add(gameRepository.findOneByGameName(game));
+        for (Long gameId : ticketTypeDTO.getGameId()) {
+            gameSet.add(gameRepository.findById(gameId).get());
         }
         ticketType.setGame(gameSet);
 

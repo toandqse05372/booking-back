@@ -5,6 +5,8 @@ import com.capstone.booking.common.converter.GameConverter;
 import com.capstone.booking.common.key.PlaceAndGameStatus;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.GameDTO;
+import com.capstone.booking.entity.dto.GameDTOLite;
+import com.capstone.booking.entity.dto.PlaceDTOLite;
 import com.capstone.booking.repository.GameRepository;
 import com.capstone.booking.repository.PlaceRepository;
 import com.capstone.booking.repository.TicketTypeRepository;
@@ -139,6 +141,17 @@ public class GameServiceImpl implements GameService {
     public ResponseEntity<?> findByPlaceId(Long placeId, Long limit, Long page) {
         Output results = gameRepository.findByPlaceId(placeId, limit, page);
         return ResponseEntity.ok(results);
+    }
+
+    @Override
+    public ResponseEntity<?> listOptionByPlace(long id) {
+        List<Game> gameList = gameRepository.findByPlaceId(id);
+        List<GameDTOLite> liteList = new ArrayList<>();
+        for(Game game: gameList){
+            GameDTOLite lite = gameConverter.toGameLite(game);
+            liteList.add(lite);
+        }
+        return ResponseEntity.ok(liteList);
     }
 
 }

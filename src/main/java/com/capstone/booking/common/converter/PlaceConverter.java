@@ -2,7 +2,10 @@ package com.capstone.booking.common.converter;
 
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.*;
+import com.capstone.booking.entity.dto.cmsDto.PlaceCmsDTO;
+import com.capstone.booking.repository.CategoryRepository;
 import com.capstone.booking.repository.CityRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +19,7 @@ public class PlaceConverter {
     @Autowired
     private GameConverter gameConverter;
     @Autowired
-    private CategoryConverter categoryConverter;
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private ImageConverter imageConverter;
@@ -30,19 +33,22 @@ public class PlaceConverter {
     @Autowired
     private OpeningHoursConverter hoursConverter;
 
-    public Place toPlace(PlaceDTO dto) {
-        Place place = new Place();
-        place.setName(dto.getName());
-        place.setAddress(dto.getAddress());
-        place.setShortDescription(dto.getShortDescription());
-        place.setDetailDescription(dto.getDetailDescription());
-        place.setMail(dto.getMail());
-        place.setPhoneNumber(dto.getPhoneNumber());
-        if(dto.getCityId() != null){
-            place.setCity(cityRepository.findById(dto.getCityId()).get());
-        }
-        return place;
-    }
+    @Autowired
+    private XmlConverter xmlConverter;
+
+//    public Place toPlace(PlaceDTO dto) {
+//        Place place = new Place();
+//        place.setName(dto.getName());
+//        place.setAddress(dto.getAddress());
+//        place.setShortDescription(dto.getShortDescription());
+//        place.setDetailDescription(dto.getDetailDescription());
+//        place.setMail(dto.getMail());
+//        place.setPhoneNumber(dto.getPhoneNumber());
+//        if(dto.getCityId() != null){
+//            place.setCity(cityRepository.findById(dto.getCityId()).get());
+//        }
+//        return place;
+//    }
 
     public PlaceDTO toDTO(Place place) {
         PlaceDTO dto = new PlaceDTO();
@@ -83,16 +89,18 @@ public class PlaceConverter {
         return dto;
     }
 
-    public Place toPlace(PlaceDTO dto, Place place) {
-        place.setName(dto.getName());
-        place.setAddress(dto.getAddress());
-        place.setShortDescription(dto.getShortDescription());
-        place.setDetailDescription(dto.getDetailDescription());
-        place.setMail(dto.getMail());
-        place.setPhoneNumber(dto.getPhoneNumber());
-        if(dto.getCityId() != null){
-            place.setCity(cityRepository.findById(dto.getCityId()).get());
+    public Place toPlace(PlaceCmsDTO placeCmsDTO, Place place) throws JsonProcessingException {
+        place.setName(placeCmsDTO.getName());
+        place.setAddress(placeCmsDTO.getAddress());
+        Set<Category> categorySet = new HashSet<>();
+        for(Long categoryId: placeCmsDTO.getCategoryId()){
+            categorySet.add(categoryRepository.findById(categoryId).get());
         }
+        place.setShortDescription(xmlConverter.toXmlString(placeCmsDTO.getShortDescription()));
+        place.setDetailDescription(xmlConverter.toXmlString(placeCmsDTO.getDetailDescription()));
+        place.setMail(placeCmsDTO.getMail());
+        place.setPhoneNumber(placeCmsDTO.getPhoneNumber());
+        place.setCity(cityRepository.findById(placeCmsDTO.getCityId()).get());
         return place;
     }
 
@@ -101,5 +109,22 @@ public class PlaceConverter {
         lite.setId(place.getId());
         lite.setName(place.getName());
         return lite;
+    }
+
+    public Place toPlace(PlaceCmsDTO placeCmsDTO) throws JsonProcessingException {
+        Place place = new Place();
+        place.setName(placeCmsDTO.getName());
+        place.setAddress(placeCmsDTO.getAddress());
+        Set<Category> categorySet = new HashSet<>();
+        for(Long categoryId: placeCmsDTO.getCategoryId()){
+            categorySet.add(categoryRepository.findById(categoryId).get());
+        }
+        place.setCategories(categorySet);
+        place.setShortDescription(xmlConverter.toXmlString(placeCmsDTO.getShortDescription()));
+        place.setDetailDescription(xmlConverter.toXmlString(placeCmsDTO.getDetailDescription()));
+        place.setMail(placeCmsDTO.getMail());
+        place.setPhoneNumber(placeCmsDTO.getPhoneNumber());
+        place.setCity(cityRepository.findById(placeCmsDTO.getCityId()).get());
+        return place;
     }
 }

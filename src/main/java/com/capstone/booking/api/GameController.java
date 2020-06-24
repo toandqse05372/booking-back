@@ -67,4 +67,9 @@ public class GameController {
         return gameService.findByPlaceId(placeId, limit, page);
     }
 
+    @GetMapping("/game/listOption")
+    public ResponseEntity<?> listOptionByPlace(@RequestParam(value = "placeId", required = false) Long id){
+        return gameService.listOptionByPlace(id);
+    }
+
 }

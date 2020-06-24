@@ -29,4 +29,5 @@ public interface GameService {
     //tim kiem Game theo placeId & paging
     ResponseEntity<?> findByPlaceId(Long placeId, Long limit, Long page);
 
+    ResponseEntity<?> listOptionByPlace(long id);
 }

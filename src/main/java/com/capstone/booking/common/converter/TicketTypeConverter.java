@@ -2,7 +2,9 @@ package com.capstone.booking.common.converter;
 
 import com.capstone.booking.entity.Game;
 import com.capstone.booking.entity.TicketType;
+import com.capstone.booking.entity.dto.GameDTO;
 import com.capstone.booking.entity.dto.TicketTypeDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -10,6 +12,9 @@ import java.util.Set;
 
 @Component
 public class TicketTypeConverter {
+
+    @Autowired
+    GameConverter gameConverter;
 
     public TicketType toTicketType(TicketTypeDTO dto) {
         TicketType ticketType = new TicketType();
@@ -43,10 +48,11 @@ public class TicketTypeConverter {
 
         Set<Game> gameSet = ticketType.getGame();
         Set<String> gameString = new HashSet<>();
+        Set<GameDTO> gameDTOSet = new HashSet<>();
         for (Game game : gameSet) {
-            gameString.add(game.getGameName());
+            gameDTOSet.add(gameConverter.toDTO(game));
         }
-        dto.setGameName(gameString);
+        dto.setGame(gameDTOSet);
         return dto;
     }
 }

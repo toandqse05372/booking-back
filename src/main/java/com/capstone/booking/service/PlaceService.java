@@ -1,5 +1,7 @@
 package com.capstone.booking.service;
 import com.capstone.booking.entity.dto.PlaceDTO;
+import com.capstone.booking.entity.dto.cmsDto.PlaceCmsDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,10 +15,10 @@ public interface PlaceService {
     ResponseEntity<?> getPlace(Long id);
 
     //them
-    ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile[] file);
+    ResponseEntity<?> create(PlaceCmsDTO placeDTO, MultipartFile[] file) throws JsonProcessingException;
 
     //sửa
-    ResponseEntity<?> update(PlaceDTO placeDTO, MultipartFile[] files);
+    ResponseEntity<?> update(PlaceCmsDTO placeDTO, MultipartFile[] files) throws JsonProcessingException;
     //xóa
     void delete(long id);
 

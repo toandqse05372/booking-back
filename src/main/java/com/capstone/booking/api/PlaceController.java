@@ -1,6 +1,7 @@
 package com.capstone.booking.api;
 
 import com.capstone.booking.entity.dto.PlaceDTO;
+import com.capstone.booking.entity.dto.cmsDto.PlaceCmsDTO;
 import com.capstone.booking.service.PlaceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,11 +27,11 @@ public class PlaceController {
     //thêm place
     @PostMapping("/place")
     public ResponseEntity<?> createPlace(@RequestPart(value = "file") MultipartFile[] files,
-                                         @RequestPart(value = "place") String model,
-    @RequestParam(value = "file", required = false) MultipartFile file) throws JsonProcessingException {
+                                         @RequestPart(value = "place") String model)
+            throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        PlaceDTO placeDTO = mapper.readValue(model, PlaceDTO.class);
-        return placeService.create(placeDTO, files);
+        PlaceCmsDTO placeCmsDTO = mapper.readValue(model, PlaceCmsDTO.class);
+        return placeService.create(placeCmsDTO, files);
     }
 
     //sửa place
@@ -39,9 +40,9 @@ public class PlaceController {
                                          @RequestPart(value = "place") String model,
                                          @PathVariable("id") long id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        PlaceDTO placeDTO = mapper.readValue(model, PlaceDTO.class);
-        placeDTO.setId(id);
-        return placeService.update(placeDTO, files);
+        PlaceCmsDTO placeCmsDTO = mapper.readValue(model, PlaceCmsDTO.class);
+        placeCmsDTO.setId(id);
+        return placeService.update(placeCmsDTO, files);
     }
 
     //change status Place
