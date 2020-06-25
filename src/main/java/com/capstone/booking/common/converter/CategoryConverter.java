@@ -13,12 +13,6 @@ public class CategoryConverter {
         }
         dto.setCategoryName(category.getTypeName());
         dto.setTypeKey(category.getTypeKey());
-//        Set<Place> placeSet = category.getplaces();
-//        Set<String> placeString = new HashSet<>();
-//        for (Place place : placeSet) {
-//            placeString.add(place.getName());
-//        }
-//        dto.setplaceName(placeString);
         return dto;
     }
 

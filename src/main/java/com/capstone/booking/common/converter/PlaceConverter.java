@@ -1,10 +1,15 @@
 package com.capstone.booking.common.converter;
 
+import com.capstone.booking.common.converter.trans.PlaceTransConvert;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.*;
 import com.capstone.booking.entity.dto.cmsDto.PlaceCmsDTO;
+import com.capstone.booking.entity.dto.transDto.PlaceTransDto;
+import com.capstone.booking.entity.trans.PlaceTran;
 import com.capstone.booking.repository.CategoryRepository;
 import com.capstone.booking.repository.CityRepository;
+import com.capstone.booking.repository.LanguageRepository;
+import com.capstone.booking.repository.PlaceTranRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,6 +40,15 @@ public class PlaceConverter {
     @Autowired
     private XmlConverter xmlConverter;
 
+    @Autowired
+    private PlaceTranRepository placeTranRepository;
+
+    @Autowired
+    private LanguageRepository languageRepository;
+
+    @Autowired
+    private PlaceTransConvert placeTransConvert;
+
 //    public Place toPlace(PlaceDTO dto) {
 //        Place place = new Place();
 //        place.setName(dto.getName());
@@ -56,21 +70,29 @@ public class PlaceConverter {
         if (place.getId() != null) {
             dto.setId(place.getId());
         }
-        LanguageChanger languageChanger = new LanguageChanger();
+//        LanguageChanger languageChanger = new LanguageChanger();
 
-        languageChanger = xmlConverter.toLanguageChanger(place.getName());
-        dto.setName(xmlConverter.getLangauge(language, languageChanger));
+//        languageChanger = xmlConverter.toLanguageChanger(place.getName());
+//        dto.setName(xmlConverter.getLangauge(language, languageChanger));
+//
+//        dto.setAddress(place.getAddress());
+//
+//        languageChanger = xmlConverter.toLanguageChanger(place.getDetailDescription());
+//        dto.setDetailDescription(xmlConverter.getLangauge(language, languageChanger));
+//        dto.setMail(place.getMail());
+//        dto.setPhoneNumber(place.getPhoneNumber());
+//
+//        languageChanger = xmlConverter.toLanguageChanger(place.getShortDescription());
+//        dto.setShortDescription(xmlConverter.getLangauge(language, languageChanger));
 
-        dto.setAddress(place.getAddress());
+        PlaceTran placeTran = placeTranRepository.findByPlaceAndLanguage(place, languageRepository.findByCode(language));
 
-        languageChanger = xmlConverter.toLanguageChanger(place.getDetailDescription());
-        dto.setDetailDescription(xmlConverter.getLangauge(language, languageChanger));
-        dto.setMail(place.getMail());
+        dto.setName(placeTran.getName());
         dto.setPhoneNumber(place.getPhoneNumber());
-
-        languageChanger = xmlConverter.toLanguageChanger(place.getShortDescription());
-        dto.setShortDescription(xmlConverter.getLangauge(language, languageChanger));
-
+        dto.setShortDescription(placeTran.getShortDescription());
+        dto.setDetailDescription(placeTran.getDetailDescription());
+        dto.setMail(place.getMail());
+        dto.setAddress(place.getAddress());
         if(place.getImagePlace() != null){
             Set<ImageDTO> imageSet = new HashSet<>();
             for (ImagePlace image : place.getImagePlace()) {
@@ -100,16 +122,15 @@ public class PlaceConverter {
 
     public PlaceCmsDTO toCmsDTO(Place place) throws JsonProcessingException{
         PlaceCmsDTO dto = new PlaceCmsDTO();
-        if (place.getId() != null) {
-            dto.setId(place.getId());
-        }
-        dto.setName(xmlConverter.toLanguageChanger(place.getName()));
+        dto.setId(place.getId());
         dto.setAddress(place.getAddress());
-        dto.setDetailDescription(xmlConverter.toLanguageChanger(place.getDetailDescription()));
         dto.setMail(place.getMail());
         dto.setPhoneNumber(place.getPhoneNumber());
-        dto.setShortDescription(xmlConverter.toLanguageChanger(place.getShortDescription()));
-
+        Set<PlaceTransDto> transSet = new HashSet<>();
+        for(PlaceTran placeTran : place.getPlaceTrans()){
+            transSet.add(placeTransConvert.toDTO(placeTran));
+        }
+        dto.setPlaceTrans(transSet);
         if(place.getImagePlace() != null){
             Set<ImageDTO> imageSet = new HashSet<>();
             for (ImagePlace image : place.getImagePlace()) {
@@ -138,14 +159,16 @@ public class PlaceConverter {
     }
 
     public Place toPlace(PlaceCmsDTO placeCmsDTO, Place place) throws JsonProcessingException {
-        place.setName(xmlConverter.toXmlString(placeCmsDTO.getName()));
+        Set<PlaceTran> transSet = new HashSet<>();
+        for(PlaceTransDto placeTransDto : placeCmsDTO.getPlaceTrans()){
+            transSet.add(placeTransConvert.toPlaceTrans(placeTransDto));
+        }
+        place.setPlaceTrans(transSet);
         place.setAddress(placeCmsDTO.getAddress());
         Set<Category> categorySet = new HashSet<>();
         for(Long categoryId: placeCmsDTO.getCategoryId()){
             categorySet.add(categoryRepository.findById(categoryId).get());
         }
-        place.setShortDescription(xmlConverter.toXmlString(placeCmsDTO.getShortDescription()));
-        place.setDetailDescription(xmlConverter.toXmlString(placeCmsDTO.getDetailDescription()));
         place.setMail(placeCmsDTO.getMail());
         place.setPhoneNumber(placeCmsDTO.getPhoneNumber());
         place.setCity(cityRepository.findById(placeCmsDTO.getCityId()).get());
@@ -161,7 +184,11 @@ public class PlaceConverter {
 
     public Place toPlace(PlaceCmsDTO placeCmsDTO) throws JsonProcessingException {
         Place place = new Place();
-        place.setName(xmlConverter.toXmlString(placeCmsDTO.getName()));
+        Set<PlaceTran> transSet = new HashSet<>();
+        for(PlaceTransDto placeTransDto : placeCmsDTO.getPlaceTrans()){
+            transSet.add(placeTransConvert.toPlaceTrans(placeTransDto));
+        }
+        place.setPlaceTrans(transSet);
         place.setAddress(placeCmsDTO.getAddress());
         Set<Category> categorySet = new HashSet<>();
         for(Long categoryId: placeCmsDTO.getCategoryId()){
@@ -169,8 +196,6 @@ public class PlaceConverter {
             categorySet.add(category);
         }
         place.setCategories(categorySet);
-        place.setShortDescription(xmlConverter.toXmlString(placeCmsDTO.getShortDescription()));
-        place.setDetailDescription(xmlConverter.toXmlString(placeCmsDTO.getDetailDescription()));
         place.setMail(placeCmsDTO.getMail());
         place.setPhoneNumber(placeCmsDTO.getPhoneNumber());
         place.setCity(cityRepository.findById(placeCmsDTO.getCityId()).get());

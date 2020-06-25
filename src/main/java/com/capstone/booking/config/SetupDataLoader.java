@@ -2,13 +2,11 @@ package com.capstone.booking.config;
 
 import com.capstone.booking.common.key.PermissionKey;
 import com.capstone.booking.common.key.RoleKey;
-import com.capstone.booking.entity.Permission;
-import com.capstone.booking.entity.Role;
-import com.capstone.booking.entity.User;
-import com.capstone.booking.repository.PermissionRepository;
-import com.capstone.booking.repository.RoleRepository;
-import com.capstone.booking.repository.UserRepository;
+import com.capstone.booking.entity.*;
+import com.capstone.booking.repository.*;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.*;
 import java.util.*;
 
 @Component
@@ -26,19 +25,61 @@ public class SetupDataLoader implements
  
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private LanguageRepository languageRepository;
   
     @Autowired
     private RoleRepository roleRepository;
   
     @Autowired
     private PermissionRepository permissionRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
   
+    @SneakyThrows
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
-  
+//        alreadySetup = checkDBExisted();
         if (alreadySetup)
             return;
+        initPermission();
+        initLanguage();
+        initCategory();
+        alreadySetup = true;
+    }
+
+
+    public void initLanguage(){
+        List<Language> languages = new ArrayList<>();
+        if(languageRepository.findByCode("vn") == null){
+            Language vietnamese = new Language("Vietnamese", "vn");
+            languages.add(vietnamese);
+        }
+        if(languageRepository.findByCode("en") == null){
+            Language english = new Language("English", "en");
+            languages.add(english);
+        }
+
+        if(languageRepository.findByCode("jp") == null){
+            Language japanese = new Language("Japanese", "jp");
+            languages.add(japanese);
+        }
+
+        languageRepository.saveAll(languages);
+
+    }
+
+    public void initCategory(){
+        if(categoryRepository.findOneByTypeKey("PARK") == null){
+            Category category = new Category("Khu vui chơi", "PARK");
+            categoryRepository.save(category);
+        }
+    }
+
+    public void initPermission(){
         Set<Permission> adminPermission =
                 createPermissionIfNotFound(Arrays.asList(PermissionKey.AdminPermissionKey.values()));
         createRoleIfNotFound(RoleKey.ADMIN.toString(), adminPermission);
@@ -60,9 +101,8 @@ public class SetupDataLoader implements
             admin.setRoles(roleSet);
             userRepository.save(admin);
         }
-        alreadySetup = true;
     }
- 
+
     @Transactional
     public Set<Permission> createPermissionIfNotFound(List<Enum> keyList) {
         Set<Permission> permissionsList = new HashSet<>();

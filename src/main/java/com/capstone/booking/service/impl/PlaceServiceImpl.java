@@ -7,6 +7,7 @@ import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.PlaceDTOLite;
 import com.capstone.booking.entity.dto.cmsDto.PlaceCmsDTO;
+import com.capstone.booking.entity.trans.PlaceTran;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.PlaceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,6 +25,9 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Autowired
     private PlaceRepository placeRepository;
+
+    @Autowired
+    private PlaceTranRepository placeTranRepository;
 
     @Autowired
     private PlaceConverter placeConverter;
@@ -64,6 +68,10 @@ public class PlaceServiceImpl implements PlaceService {
         Place place = placeConverter.toPlace(placeCmsDTO);
         place.setStatus(PlaceAndGameStatus.ACTIVE.toString());
         placeRepository.save(place);
+        for(PlaceTran placeTran : place.getPlaceTrans()){
+            placeTran.setPlace(place);
+            placeTranRepository.save(placeTran);
+        }
         if(files != null){
             Place saved = placeRepository.save(place);
             uploadFile(files, saved.getId());

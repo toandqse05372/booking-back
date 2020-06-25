@@ -13,6 +13,14 @@ import java.util.Set;
 @Table(name = "t_category")
 @Data
 public class Category extends BaseEntity{
+
+    public Category(){}
+
+    public Category(String typeName, String typeKey) {
+        this.typeKey = typeKey;
+        this.typeName = typeName;
+    }
+
     @Column(length = 50)
     private String typeName;
     @Column(length = 50)

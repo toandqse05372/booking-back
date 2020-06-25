@@ -1,18 +1,16 @@
 package com.capstone.booking.entity.dto.cmsDto;
 
 import com.capstone.booking.entity.dto.BaseDTO;
-import com.capstone.booking.entity.dto.LanguageChanger;
 import com.capstone.booking.entity.dto.OpeningHoursDTO;
+import com.capstone.booking.entity.dto.transDto.PlaceTransDto;
 import lombok.Data;
 
 import java.util.Set;
 
 @Data
 public class PlaceCmsDTO extends BaseDTO {
-    private LanguageChanger name;
+    private Set<PlaceTransDto> placeTrans;
     private String address;
-    private LanguageChanger shortDescription;
-    private LanguageChanger detailDescription;
     private String mail;
     private String phoneNumber;
     private Long cityId;
