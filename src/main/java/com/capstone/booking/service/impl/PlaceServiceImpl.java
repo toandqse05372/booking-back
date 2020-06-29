@@ -9,6 +9,7 @@ import com.capstone.booking.entity.dto.PlaceDTOLite;
 import com.capstone.booking.entity.dto.cmsDto.PlaceCmsDTO;
 import com.capstone.booking.entity.trans.PlaceTran;
 import com.capstone.booking.repository.*;
+import com.capstone.booking.repository.trans.PlaceTranRepository;
 import com.capstone.booking.service.PlaceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.io.FilenameUtils;

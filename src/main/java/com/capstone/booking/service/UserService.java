@@ -1,5 +1,4 @@
 package com.capstone.booking.service;
-import com.capstone.booking.entity.User;
 import com.capstone.booking.entity.dto.UserDTO;
 import org.springframework.http.ResponseEntity;
 
@@ -28,4 +27,8 @@ public interface UserService {
     ResponseEntity<?> getUser(Long id);
 
     ResponseEntity<?> findAllRoles();
+
+    ResponseEntity<?> validatePasswordResetToken(String token);
+
+    ResponseEntity<?> createPasswordResetToken(String mail);
 }

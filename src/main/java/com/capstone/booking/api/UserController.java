@@ -78,4 +78,11 @@ public class UserController {
     public ResponseEntity<?> findAllRoles(){
         return userService.findAllRoles();
     }
+
+    @PostMapping("user/resetPassword")
+    public ResponseEntity<?> resetPasswordRequest(@RequestBody String mail){
+        return userService.findAllRoles();
+    }
+
+
 }

@@ -4,11 +4,13 @@ import com.capstone.booking.common.converter.UserConverter;
 import com.capstone.booking.common.key.RoleKey;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.UserDTO;
+import com.capstone.booking.repository.PasswordResetTokenRepository;
 import com.capstone.booking.repository.RoleRepository;
 import com.capstone.booking.repository.UserRepository;
 import com.capstone.booking.repository.VerificationTokenRepository;
 import com.capstone.booking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -19,6 +21,12 @@ import java.util.*;
 //nghiệp vụ user
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Value("${spring.mail.username}")
+    private String fromMail;
+
+    @Value("${frontend.host}")
+    private String hostFrontEnd;
 
     @Autowired
     private UserRepository userRepository;
@@ -38,6 +46,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private  AuthServiceImpl authService;
 
+    @Autowired
+    private PasswordResetTokenRepository passwordTokenRepository;
+
     //tạo customer mới
     @Override
     public ResponseEntity<?> register(UserDTO userDTO) {
@@ -50,9 +61,7 @@ public class UserServiceImpl implements UserService {
         user.setRoles(roleSet);
         user.setStatus("NOT");
         userRepository.save(user);
-
         sendEmailVerify(user);
-
         return ResponseEntity.ok(user);
     }
 
@@ -73,9 +82,9 @@ public class UserServiceImpl implements UserService {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(user.getMail()); //user email
         mailMessage.setSubject("Complete Registration!");
-        mailMessage.setFrom("toandqse08372@fpt.edu.vn");
+        mailMessage.setFrom(fromMail);
         mailMessage.setText("To confirm your account, please click here : "
-                +"http://localhost:3000/confirmMail?token="+verificationToken.getConfirmationToken());
+                +hostFrontEnd+"confirmMail?token="+verificationToken.getConfirmationToken());
 
         emailSenderService.sendEmail(mailMessage);
     }
@@ -93,7 +102,7 @@ public class UserServiceImpl implements UserService {
         }
         else
         {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("WTF");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("INVALID_TOKEN");
         }
 
     }
@@ -143,7 +152,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> delete(long id) {
         if (!userRepository.findById(id).isPresent()) {
-            return new ResponseEntity("Id already exists", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("USER_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
         userRepository.deleteById(id);
         return new ResponseEntity("Delete Successful", HttpStatus.OK);
@@ -161,5 +170,42 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> findAllRoles() {
         return ResponseEntity.ok(roleRepository.findAll());
+    }
+
+    @Override
+    public ResponseEntity<?> validatePasswordResetToken(String token) {
+        final PasswordResetToken passToken = passwordTokenRepository.findByToken(token);
+        if (passToken == null) {
+            return new ResponseEntity("INVALID_TOKEN", HttpStatus.BAD_REQUEST);
+        }
+
+        final Calendar cal = Calendar.getInstance();
+        if ((passToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+            return new ResponseEntity("TOKEN_EXPIRED", HttpStatus.BAD_REQUEST);
+        }
+        User user = passwordTokenRepository.findByToken(token).getUser();
+        String randomPass = UUID.randomUUID().toString();
+        user.setPassword(randomPass);
+        return new ResponseEntity(user.getId(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> createPasswordResetToken(String mail) {
+        User user = userRepository.findByMail(mail);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EMAIL_NOT_EXIST");
+        }
+        String tokenStr = UUID.randomUUID().toString();
+        PasswordResetToken token = new PasswordResetToken();
+        token.setToken(tokenStr);
+        token.setUser(user);
+        passwordTokenRepository.save(token);
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getMail()); //user email
+        mailMessage.setSubject("Reset password!");
+        mailMessage.setFrom(fromMail);
+        mailMessage.setText("To reset your account's password, please click here : "
+                +hostFrontEnd+"resetPassword?token="+token.getToken());
+        return new ResponseEntity("SENT_RESET_EMAIL", HttpStatus.OK);
     }
 }

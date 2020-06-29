@@ -9,7 +9,7 @@ import com.capstone.booking.entity.trans.PlaceTran;
 import com.capstone.booking.repository.CategoryRepository;
 import com.capstone.booking.repository.CityRepository;
 import com.capstone.booking.repository.LanguageRepository;
-import com.capstone.booking.repository.PlaceTranRepository;
+import com.capstone.booking.repository.trans.PlaceTranRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

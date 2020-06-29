@@ -1,4 +1,4 @@
-package com.capstone.booking.repository;
+package com.capstone.booking.repository.trans;
 
 import com.capstone.booking.entity.Language;
 import com.capstone.booking.entity.Place;
