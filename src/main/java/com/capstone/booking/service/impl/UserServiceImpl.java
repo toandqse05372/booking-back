@@ -1,4 +1,5 @@
 package com.capstone.booking.service.impl;
+
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.UserConverter;
 import com.capstone.booking.common.key.RoleKey;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
+
 
 import java.util.*;
 
@@ -36,7 +38,7 @@ public class UserServiceImpl implements UserService {
     private EmailSenderService emailSenderService;
 
     @Autowired
-    private  AuthServiceImpl authService;
+    private AuthServiceImpl authService;
 
     //tạo customer mới
     @Override
@@ -57,13 +59,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> resendEmailVerify(String mail){
+    public ResponseEntity<?> resendEmailVerify(String mail) {
         User user = userRepository.findByMail(mail);
         sendEmailVerify(user);
         return ResponseEntity.ok(user);
     }
 
-    public void sendEmailVerify(User user){
+    public void sendEmailVerify(User user) {
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setUser(user);
         verificationToken.setConfirmationToken(UUID.randomUUID().toString());
@@ -75,7 +77,7 @@ public class UserServiceImpl implements UserService {
         mailMessage.setSubject("Complete Registration!");
         mailMessage.setFrom("toandqse08372@fpt.edu.vn");
         mailMessage.setText("To confirm your account, please click here : "
-                +"http://localhost:3000/confirmMail?token="+verificationToken.getConfirmationToken());
+                + "http://localhost:3000/confirmMail?token=" + verificationToken.getConfirmationToken());
 
         emailSenderService.sendEmail(mailMessage);
     }
@@ -84,15 +86,12 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> verifyEmail(String verificationToken) {
         VerificationToken token = tokenRepository.findByConfirmationToken(verificationToken);
 
-        if(token != null)
-        {
+        if (token != null) {
             User user = userRepository.findByMail(token.getUser().getMail());
             user.setStatus("ACTIVATED");
             userRepository.save(user);
             return ResponseEntity.ok(authService.returnToken(authService.setPermission(user)));
-        }
-        else
-        {
+        } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("WTF");
         }
 
@@ -108,13 +107,14 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EMAIL_EXISTED");
         }
         Set<Role> roleSet = new HashSet<>();
-        for(String role: userDTO.getRoleKey()){
+        for (String role : userDTO.getRoleKey()) {
             roleSet.add(roleRepository.findByRoleKey(role));
         }
         user.setRoles(roleSet);
         userRepository.save(user);
         return ResponseEntity.ok(user);
     }
+
 
     @Override
     public ResponseEntity<?> createUserCMS(UserDTO userDTO) {
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EMAIL_EXISTED");
         }
         Set<Role> roleSet = new HashSet<>();
-        for(String roleKey: userDTO.getRoleKey()){
+        for (String roleKey : userDTO.getRoleKey()) {
             roleSet.add(roleRepository.findByRoleKey(roleKey));
         }
         user.setRoles(roleSet);
@@ -143,15 +143,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> delete(long id) {
         if (!userRepository.findById(id).isPresent()) {
-            return new ResponseEntity("Id already exists", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("USER_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
         userRepository.deleteById(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
     //search by id
     @Override
-    public  ResponseEntity<?> getUser(Long id) {
+    public ResponseEntity<?> getUser(Long id) {
         Optional<User> users = userRepository.findById(id);
         User user = users.get();
         return ResponseEntity.ok(userConverter.toDTO(user));

@@ -19,6 +19,7 @@ public class PlaceController {
     @Autowired
     private PlaceService placeService;
 
+    //getAll
     @GetMapping("/places")
     public ResponseEntity<?> getAllPlace() {
         return placeService.getAll();

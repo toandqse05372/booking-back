@@ -87,10 +87,10 @@ public class GameServiceImpl implements GameService {
     @Override
     public ResponseEntity<?> delete(long id) {
         if (!gameRepository.findById(id).isPresent()) {
-            return new ResponseEntity("Id already exists", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("GAME_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
         gameRepository.deleteById(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
 

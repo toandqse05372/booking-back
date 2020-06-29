@@ -43,10 +43,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<?> delete(long id) {
         if (!categoryRepository.findById(id).isPresent()) {
-            return new ResponseEntity("Id already exists", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("CATEGORY_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
         categoryRepository.deleteById(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
     //thêm

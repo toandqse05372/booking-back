@@ -97,10 +97,10 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public ResponseEntity<?> delete(long id) {
         if (!placeRepository.findById(id).isPresent()) {
-            return new ResponseEntity("Id already exists", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("PLACE_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
         placeRepository.deleteById(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
     //change status

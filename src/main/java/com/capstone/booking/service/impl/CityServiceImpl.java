@@ -79,10 +79,10 @@ public class CityServiceImpl implements CityService {
     @Override
     public ResponseEntity<?> delete(long id) {
         if (!cityRepository.findById(id).isPresent()) {
-            return new ResponseEntity("Id already exists", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("CITY_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
         cityRepository.deleteById(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
 }

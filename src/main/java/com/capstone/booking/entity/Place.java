@@ -26,6 +26,8 @@ public class Place extends BaseEntity {
     private String phoneNumber;
     @Column(length = 20)
     private String status;
+    @Length(max = 1000)
+    private String location;
 
     //Bảng Place qhe 1-n với OpeningHours
     @OneToMany(mappedBy = "place")
