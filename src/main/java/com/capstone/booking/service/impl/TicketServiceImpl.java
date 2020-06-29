@@ -55,9 +55,9 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public ResponseEntity<?> delete(long id) {
         if (!ticketRepository.findById(id).isPresent()) {
-            return new ResponseEntity("Id already exists", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("TICKET_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
         ticketRepository.deleteById(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 }

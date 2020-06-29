@@ -55,10 +55,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<?> delete(long id) {
         if (!orderRepository.findById(id).isPresent()) {
-            return new ResponseEntity("Id already exists", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("ORDER_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
         orderRepository.deleteById(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
     @Override

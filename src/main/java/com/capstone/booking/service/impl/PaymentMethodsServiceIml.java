@@ -49,10 +49,10 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
     @Override
     public ResponseEntity<?> delete(long id) {
         if (!methodsRepository.findById(id).isPresent()) {
-            return new ResponseEntity("Id already exists", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("PAYMENT_METHOD_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
         methodsRepository.deleteById(id);
-        return new ResponseEntity("Delete Successful", HttpStatus.OK);
+        return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
     @Override

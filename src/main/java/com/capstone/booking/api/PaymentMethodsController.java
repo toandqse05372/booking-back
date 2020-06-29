@@ -3,7 +3,6 @@ package com.capstone.booking.api;
 import com.capstone.booking.entity.dto.PaymentMethodsDTO;
 import com.capstone.booking.service.PaymentMethodsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
