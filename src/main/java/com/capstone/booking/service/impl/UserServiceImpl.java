@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -65,6 +66,7 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(user);
     }
 
+    //send email again
     @Override
     public ResponseEntity<?> resendEmailVerify(String mail){
         User user = userRepository.findByMail(mail);
@@ -72,6 +74,7 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(user);
     }
 
+    //send verify email
     public void sendEmailVerify(User user){
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setUser(user);
@@ -166,12 +169,13 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(userConverter.toDTO(user));
     }
 
-
+    //get all user role
     @Override
     public ResponseEntity<?> findAllRoles() {
         return ResponseEntity.ok(roleRepository.findAll());
     }
 
+    //validate reset token
     @Override
     public ResponseEntity<?> validatePasswordResetToken(String token) {
         final PasswordResetToken passToken = passwordTokenRepository.findByToken(token);
@@ -189,6 +193,26 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity(user.getId(), HttpStatus.OK);
     }
 
+    //change password after reset
+    @Override
+    public ResponseEntity<?> changePasswordAfterReset(long uid, String newPassword) {
+        User user = userRepository.findById(uid).get();
+        user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+        return new ResponseEntity(user.getId(), HttpStatus.OK);
+    }
+
+    //change password
+    @Override
+    public ResponseEntity<?> changePassword(long uid, String oldPassword, String newPassword) {
+        User user = userRepository.findById(uid).get();
+        if (!new BCryptPasswordEncoder().matches(oldPassword, user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("WRONG_OLD_PASSWORD");
+        }
+        user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+        return new ResponseEntity(user.getId(), HttpStatus.OK);
+    }
+
+    //create password reset token
     @Override
     public ResponseEntity<?> createPasswordResetToken(String mail) {
         User user = userRepository.findByMail(mail);

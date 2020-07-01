@@ -32,5 +32,9 @@ public interface UserService {
 
     ResponseEntity<?> validatePasswordResetToken(String token);
 
+    ResponseEntity<?> changePasswordAfterReset(long uid, String newPassword);
+
+    ResponseEntity<?> changePassword(long uid, String oldPassword, String newPassword);
+
     ResponseEntity<?> createPasswordResetToken(String mail);
 }
