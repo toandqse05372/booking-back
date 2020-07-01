@@ -51,9 +51,10 @@ public class GameServiceImpl implements GameService {
         game.setTicketTypes(typeSet);
 
         Optional<Place> placeOptional = placeRepository.findById(gameDTO.getPlaceId());
-        if (placeOptional.isPresent()) {
-            game.setPlace(placeOptional.get());
+        if (!placeOptional.isPresent()) {
+            return new ResponseEntity("PLACE_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
+        game.setPlace(placeOptional.get());
 
         game.setStatus(PlaceAndGameStatus.ACTIVE.toString());
 
@@ -73,11 +74,12 @@ public class GameServiceImpl implements GameService {
         Set<TicketType> typeSet = new HashSet<>();
         game.setTicketTypes(typeSet);
 
-
         Optional<Place> placeOptional = placeRepository.findById(gameDTO.getPlaceId());
-        if (placeOptional.isPresent()) {
-            game.setPlace(placeOptional.get());
+        if (!placeOptional.isPresent()) {
+            return new ResponseEntity("PLACE_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
+        game.setPlace(placeOptional.get());
+
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
     }
