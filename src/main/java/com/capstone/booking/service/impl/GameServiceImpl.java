@@ -44,6 +44,12 @@ public class GameServiceImpl implements GameService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
         }
 
+//        Set<TicketType> typeSet = new HashSet<>();
+//        for (String type : gameDTO.getTicketTypeName()) {
+//            typeSet.add(ticketTypeRepository.findOneByTypeName(type));
+//        }
+//        game.setTicketTypes(typeSet);
+
         Optional<Place> placeOptional = placeRepository.findById(gameDTO.getPlaceId());
         if (!placeOptional.isPresent()) {
             return new ResponseEntity("PLACE_NOT_FOUND", HttpStatus.BAD_REQUEST);

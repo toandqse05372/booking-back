@@ -82,8 +82,8 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public ResponseEntity<?> update(PlaceDTO placeDTO, MultipartFile[] files) {
         Place place = new Place();
-        Place oldplace = placeRepository.findById(placeDTO.getId()).get();
-        place = placeConverter.toPlace(placeDTO, oldplace);
+        Place oldPlace = placeRepository.findById(placeDTO.getId()).get();
+        place = placeConverter.toPlace(placeDTO, oldPlace);
         Place existedPlace = placeRepository.findByName(place.getName());
         if (existedPlace != null) {
             if (existedPlace.getId() != place.getId()) {

@@ -9,5 +9,7 @@ import java.util.List;
 public interface TicketTypeRepository extends JpaRepository<TicketType, Long>, TicketTypeCustom {
     TicketType findByTypeName(String name);
 
+    TicketType findOneByTypeName(String name);
+
     List<TicketType> findByPlaceId(Long placeId);
 }
