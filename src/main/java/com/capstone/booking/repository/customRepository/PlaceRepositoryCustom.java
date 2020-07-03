@@ -5,6 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface PlaceRepositoryCustom {
     Output findByMultiParam(String name, String address, Long cityId,
-                            Long categoryId, Long limit, Long page, String language) throws JsonProcessingException;
+                            Long categoryId, Long limit, Long page);
 
 }

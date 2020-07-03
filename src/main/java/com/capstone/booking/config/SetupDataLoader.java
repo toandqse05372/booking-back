@@ -25,9 +25,6 @@ public class SetupDataLoader implements
  
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private LanguageRepository languageRepository;
   
     @Autowired
     private RoleRepository roleRepository;
@@ -46,31 +43,10 @@ public class SetupDataLoader implements
         if (alreadySetup)
             return;
         initPermission();
-        initLanguage();
         initCategory();
         alreadySetup = true;
     }
 
-
-    public void initLanguage(){
-        List<Language> languages = new ArrayList<>();
-        if(languageRepository.findByCode("vn") == null){
-            Language vietnamese = new Language("Vietnamese", "vn");
-            languages.add(vietnamese);
-        }
-        if(languageRepository.findByCode("en") == null){
-            Language english = new Language("English", "en");
-            languages.add(english);
-        }
-
-        if(languageRepository.findByCode("jp") == null){
-            Language japanese = new Language("Japanese", "jp");
-            languages.add(japanese);
-        }
-
-        languageRepository.saveAll(languages);
-
-    }
 
     public void initCategory(){
         if(categoryRepository.findOneByTypeKey("PARK") == null){

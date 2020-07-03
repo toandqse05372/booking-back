@@ -29,4 +29,17 @@ public class VisitorTypeController {
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         return visitorTypeService.delete(id);
     }
+
+    //search by Id
+    @GetMapping("/visitorType/{id}")
+    public ResponseEntity<?> getVistorType(@PathVariable Long id) {
+        return visitorTypeService.getById(id);
+    }
+
+    //search by Id
+    @GetMapping("/visitorType")
+    public ResponseEntity<?> findByTicketTypeId(@RequestParam(value = "ticketTypeId", required = false) Long ticketTypeId) {
+        return visitorTypeService.findByTicketTypeId(ticketTypeId);
+    }
+
 }

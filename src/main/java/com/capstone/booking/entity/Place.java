@@ -1,6 +1,5 @@
 package com.capstone.booking.entity;
 
-import com.capstone.booking.entity.trans.PlaceTran;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -52,7 +51,4 @@ public class Place extends BaseEntity {
     //Bảng Place qhe 1-n với GAme
     @OneToMany(mappedBy = "place", fetch = FetchType.EAGER)
     private Set<Game> game;
-
-    @OneToMany(mappedBy = "place", fetch = FetchType.EAGER)
-    private Set<PlaceTran> placeTrans;
 }

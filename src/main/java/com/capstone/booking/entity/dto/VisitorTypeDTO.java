@@ -8,6 +8,6 @@ import lombok.EqualsAndHashCode;
 public class VisitorTypeDTO extends BaseDTO{
     private String typeName;
     private String typeKey;
+    private Long ticketTypeId;
     private int price;
-    private TicketTypeDTO ticketType;
 }

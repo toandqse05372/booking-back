@@ -34,7 +34,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
 
     @Override
     public Output findByMultiParam(String name, String address, Long cityId,
-                                   Long categoryId, Long limit, Long page, String language) throws JsonProcessingException {
+                                   Long categoryId, Long limit, Long page) {
         boolean addedWhere = false;
         String queryStr = "select place0_.* from t_place place0_ ";
         String where = "";
@@ -97,19 +97,17 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         where += "limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryPlace(params, queryStr +where), language));
+        output.setListResult(convertList(queryPlace(params, queryStr +where)));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);
         return output;
     }
 
-    public List<PlaceDTO> convertList (List<Place> placeList, String language) throws JsonProcessingException {
+    public List<PlaceDTO> convertList (List<Place> placeList) {
         List<PlaceDTO> results = new ArrayList<>();
         for (Place item : placeList) {
-            PlaceDTO placeDTO = placeConverter.toDTO(item, language);
-            //
-
+            PlaceDTO placeDTO = placeConverter.toDTO(item);
             results.add(placeDTO);
         }
         return  results;

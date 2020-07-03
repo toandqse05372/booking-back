@@ -12,4 +12,8 @@ public interface VisitorTypeService {
 
     //xoa
     ResponseEntity<?> delete(long id);
+
+    ResponseEntity<?> findByTicketTypeId(long id);
+
+    ResponseEntity<?> getById(long id);
 }

@@ -47,8 +47,15 @@ public class TicketTypeController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("codeType") String codeType) {
+    public ResponseEntity<?> uploadFile(@RequestPart(value = "file") MultipartFile file,
+                                        @RequestPart(value = "codeType") String codeType) {
         return ticketTypeService.addCodeForTicketType(file, codeType);
+    }
+
+    //search by Id
+    @GetMapping("/ticketType/{id}")
+    public ResponseEntity<?> getTicketType(@PathVariable Long id) {
+        return ticketTypeService.getTicketType(id);
     }
 
 }

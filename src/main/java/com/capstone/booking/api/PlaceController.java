@@ -1,7 +1,6 @@
 package com.capstone.booking.api;
 
 import com.capstone.booking.entity.dto.PlaceDTO;
-import com.capstone.booking.entity.dto.cmsDto.PlaceCmsDTO;
 import com.capstone.booking.service.PlaceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,8 +30,8 @@ public class PlaceController {
                                          @RequestPart(value = "place") String model)
             throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        PlaceCmsDTO placeCmsDTO = mapper.readValue(model, PlaceCmsDTO.class);
-        return placeService.create(placeCmsDTO, files);
+        PlaceDTO placeDTO = mapper.readValue(model, PlaceDTO.class);
+        return placeService.create(placeDTO, files);
     }
 
     //sửa place
@@ -41,20 +40,20 @@ public class PlaceController {
                                          @RequestPart(value = "place") String model,
                                          @PathVariable("id") long id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        PlaceCmsDTO placeCmsDTO = mapper.readValue(model, PlaceCmsDTO.class);
-        placeCmsDTO.setId(id);
-        return placeService.update(placeCmsDTO, files);
+        PlaceDTO placeDTO = mapper.readValue(model, PlaceDTO.class);
+        placeDTO.setId(id);
+        return placeService.update(placeDTO, files);
     }
 
     //change status Place
     @PutMapping("/changePlace/{id}")
-    public ResponseEntity<?> changeStatusGame(@PathVariable("id") long id) throws JsonProcessingException {
+    public ResponseEntity<?> changeStatusGame(@PathVariable("id") long id)  {
         return placeService.changeStatus(id);
     }
 
     //search By Id
     @GetMapping("/place/{id}")
-    public ResponseEntity<?> getPlace(@PathVariable Long id) throws JsonProcessingException {
+    public ResponseEntity<?> getPlace(@PathVariable Long id){
         return placeService.getPlace(id);
     }
 
@@ -66,9 +65,8 @@ public class PlaceController {
                                        @RequestParam(value = "limit", required = false) Long limit,
                                        @RequestParam(value = "page", required = false) Long page,
                                        @RequestParam(value = "cityId", required = false) Long cityId,
-                                       @RequestParam(value = "categoryId", required = false) Long categoryId,
-                                       @RequestParam(value = "lang", required = false) String language) throws JsonProcessingException {
-        return placeService.findByMultipleParam(name, address, cityId, categoryId, limit, page, language);
+                                       @RequestParam(value = "categoryId", required = false) Long categoryId) {
+        return placeService.findByMultipleParam(name, address, cityId, categoryId, limit, page);
     }
 
     //xoa place

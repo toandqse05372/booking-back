@@ -29,7 +29,10 @@ public class TicketType extends BaseEntity{
     private Set<VisitorType> visitorType;
 
     //Bảng GAme qhe n-n với ticketType
-    @ManyToMany(mappedBy = "ticketTypes")
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinTable(name = "t_game_ticketType",
+            joinColumns = {@JoinColumn(name = "ticketType_id")},
+            inverseJoinColumns = {@JoinColumn(name = "game_id")})
     private Set<Game> game = new HashSet<>();
 
 

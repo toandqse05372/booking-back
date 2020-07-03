@@ -110,4 +110,10 @@ public class TicketTypeServiceImpl implements TicketTypeService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT_EXCEL_FILE");
 
     }
+
+    @Override
+    public ResponseEntity<?> getTicketType(Long id) {
+        TicketTypeDTO dto = ticketTypeConverter.toDTO(ticketTypeRepository.findById(id).get());
+        return ResponseEntity.ok(dto);
+    }
 }

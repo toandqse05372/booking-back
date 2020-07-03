@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 public class VisitorTypeServiceImpl implements VisitorTypeService {
@@ -30,10 +33,8 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     @Override
     public ResponseEntity<?> create(VisitorTypeDTO model) {
         VisitorType visitorType = visitorTypeConverter.toVisitorType(model);
-
-        TicketType ticketType = ticketTypeRepository.findById(model.getTicketType().getId()).get();
+        TicketType ticketType = ticketTypeRepository.findById(model.getTicketTypeId()).get();
         visitorType.setTicketType(ticketType);
-
         visitorTypeRepository.save(visitorType);
         return ResponseEntity.ok(visitorTypeConverter.toDTO(visitorType));
     }
@@ -45,7 +46,7 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         VisitorType oldVisitor = visitorTypeRepository.findById(model.getId()).get();
         visitorType = visitorTypeConverter.toVisitorType(model, oldVisitor);
 
-        TicketType ticketType = ticketTypeRepository.findById(model.getTicketType().getId()).get();
+        TicketType ticketType = ticketTypeRepository.findById(model.getTicketTypeId()).get();
         visitorType.setTicketType(ticketType);
 
         visitorTypeRepository.save(visitorType);
@@ -60,5 +61,20 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
        }
        visitorTypeRepository.deleteById(id);
        return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> findByTicketTypeId(long id) {
+        List<VisitorTypeDTO> list = new ArrayList<>();
+        for(VisitorType type: visitorTypeRepository.findAllByTicketType(ticketTypeRepository.findById(id).get())){
+            list.add(visitorTypeConverter.toDTO(type));
+        }
+        return ResponseEntity.ok(list);
+    }
+
+    @Override
+    public ResponseEntity<?> getById(long id) {
+        VisitorType type = visitorTypeRepository.findById(id).get();
+        return ResponseEntity.ok(visitorTypeConverter.toDTO(type));
     }
 }

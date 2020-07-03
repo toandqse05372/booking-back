@@ -5,11 +5,9 @@ import com.capstone.booking.common.converter.PlaceConverter;
 import com.capstone.booking.common.key.PlaceAndGameStatus;
 import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.entity.*;
+import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.entity.dto.PlaceDTOLite;
-import com.capstone.booking.entity.dto.cmsDto.PlaceCmsDTO;
-import com.capstone.booking.entity.trans.PlaceTran;
 import com.capstone.booking.repository.*;
-import com.capstone.booking.repository.trans.PlaceTranRepository;
 import com.capstone.booking.service.PlaceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.io.FilenameUtils;
@@ -27,8 +25,6 @@ public class PlaceServiceImpl implements PlaceService {
     @Autowired
     private PlaceRepository placeRepository;
 
-    @Autowired
-    private PlaceTranRepository placeTranRepository;
 
     @Autowired
     private PlaceConverter placeConverter;
@@ -50,39 +46,35 @@ public class PlaceServiceImpl implements PlaceService {
     //tim kiem place theo ten & address, description, cityId, categoryId, & paging
     @Override
     public ResponseEntity<?> findByMultipleParam(String name, String address, Long cityId,
-                                                 Long categoryId, Long limit, Long page, String language) throws JsonProcessingException {
-        Output results = placeRepository.findByMultiParam(name, address, cityId, categoryId, limit, page, language);
+                                                 Long categoryId, Long limit, Long page){
+        Output results = placeRepository.findByMultiParam(name, address, cityId, categoryId, limit, page);
         return ResponseEntity.ok(results);
     }
 
     //search By placeId
     @Override
-    public ResponseEntity<?> getPlace(Long id) throws JsonProcessingException {
+    public ResponseEntity<?> getPlace(Long id){
         Optional<Place> places = placeRepository.findById(id);
         Place place = places.get();
-        return ResponseEntity.ok(placeConverter.toCmsDTO(place));
+        return ResponseEntity.ok(placeConverter.toDTO(place));
     }
 
     //them place
     @Override
-    public ResponseEntity<?> create(PlaceCmsDTO placeCmsDTO, MultipartFile[] files) throws JsonProcessingException {
-        Place place = placeConverter.toPlace(placeCmsDTO);
+    public ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile[] files) {
+        Place place = placeConverter.toPlace(placeDTO);
         place.setStatus(PlaceAndGameStatus.ACTIVE.toString());
         placeRepository.save(place);
-        for(PlaceTran placeTran : place.getPlaceTrans()){
-            placeTran.setPlace(place);
-            placeTranRepository.save(placeTran);
-        }
         if(files != null){
             Place saved = placeRepository.save(place);
             uploadFile(files, saved.getId());
         }
-        return ResponseEntity.ok(placeConverter.toCmsDTO(place));
+        return ResponseEntity.ok(placeConverter.toDTO(place));
     }
 
     //sưa place
     @Override
-    public ResponseEntity<?> update(PlaceCmsDTO placeDTO, MultipartFile[] files) throws JsonProcessingException {
+    public ResponseEntity<?> update(PlaceDTO placeDTO, MultipartFile[] files) {
         Place place = new Place();
         Place oldplace = placeRepository.findById(placeDTO.getId()).get();
         place = placeConverter.toPlace(placeDTO, oldplace);
@@ -91,7 +83,7 @@ public class PlaceServiceImpl implements PlaceService {
             uploadFile(files, saved.getId());
         }
 
-        return ResponseEntity.ok(placeConverter.toCmsDTO(place));
+        return ResponseEntity.ok(placeConverter.toDTO(place));
     }
 
     //xóa place
@@ -106,7 +98,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     //change status
     @Override
-    public ResponseEntity<?> changeStatus(Long id) throws JsonProcessingException {
+    public ResponseEntity<?> changeStatus(Long id) {
         Place place = placeRepository.findById(id).get();
         if (place.getStatus().equals(PlaceAndGameStatus.ACTIVE.toString())) {
             place.setStatus(PlaceAndGameStatus.DEACTIVATE.toString());
@@ -114,7 +106,7 @@ public class PlaceServiceImpl implements PlaceService {
             place.setStatus(PlaceAndGameStatus.ACTIVE.toString());
         }
         place = placeRepository.save(place);
-        return ResponseEntity.ok(placeConverter.toCmsDTO(place));
+        return ResponseEntity.ok(placeConverter.toDTO(place));
     }
 
     @Override

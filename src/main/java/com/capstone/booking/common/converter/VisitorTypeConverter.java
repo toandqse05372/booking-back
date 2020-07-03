@@ -10,9 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class VisitorTypeConverter {
 
-    @Autowired
-    private TicketTypeConverter typeConverter;
-
     public VisitorType toVisitorType(VisitorTypeDTO dto) {
         VisitorType visitorType = new VisitorType();
         visitorType.setTypeName(dto.getTypeName());
@@ -39,8 +36,6 @@ public class VisitorTypeConverter {
 
         TicketTypeDTO typeDTO = new TicketTypeDTO();
         TicketType type = visitorType.getTicketType();
-        typeDTO = typeConverter.toDTO(type);
-        dto.setTicketType(typeDTO);
 
         return dto;
     }

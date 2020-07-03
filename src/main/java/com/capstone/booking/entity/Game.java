@@ -21,10 +21,7 @@ public class Game extends BaseEntity{
     private String status;
 
     //Bảng Game qhe n-n với TicketType
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinTable(name = "t_game_ticketType",
-            joinColumns = {@JoinColumn(name = "game_id")},
-            inverseJoinColumns = {@JoinColumn(name = "ticketType_id")})
+    @ManyToMany(mappedBy = "game")
     private Set<TicketType> ticketTypes = new HashSet<>();
 
 
