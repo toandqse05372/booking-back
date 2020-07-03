@@ -11,20 +11,20 @@ public class CategoryConverter {
         if (category.getId() != null) {
             dto.setId(category.getId());
         }
-        dto.setCategoryName(category.getTypeName());
+        dto.setTypeName(category.getTypeName());
         dto.setTypeKey(category.getTypeKey());
         return dto;
     }
 
     public Category toCategory(CategoryDTO dto) {
         Category category = new Category();
-        category.setTypeName(dto.getCategoryName());
+        category.setTypeName(dto.getTypeName());
         category.setTypeKey(dto.getTypeKey());
         return category;
     }
 
     public Category toCategory(CategoryDTO dto, Category category) {
-        category.setTypeName(dto.getCategoryName());
+        category.setTypeName(dto.getTypeName());
         category.setTypeKey(dto.getTypeKey());
         return category;
     }

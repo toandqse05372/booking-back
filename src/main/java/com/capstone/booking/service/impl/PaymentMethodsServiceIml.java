@@ -3,6 +3,7 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.PaymentMethodsConverter;
 import com.capstone.booking.common.key.PlaceAndGameStatus;
+import com.capstone.booking.entity.City;
 import com.capstone.booking.entity.PaymentMethods;
 import com.capstone.booking.entity.dto.PaymentMethodsDTO;
 import com.capstone.booking.repository.OrderRepository;
@@ -29,6 +30,9 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
     @Override
     public ResponseEntity<?> create(PaymentMethodsDTO methodDTO) {
         PaymentMethods method = methodsConverter.toMethod(methodDTO);
+        if (methodsRepository.findByMethodName(method.getMethodName()) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PAYMENT_METHOD_EXISTED");
+        }
         method.setStatus(PlaceAndGameStatus.ACTIVE.toString());
         methodsRepository.save(method);
         return ResponseEntity.ok(methodsConverter.toDTO(method));
@@ -41,6 +45,12 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
         PaymentMethods method = new PaymentMethods();
         PaymentMethods oldMethod = methodsRepository.findById(methodDTO.getId()).get();
         method = methodsConverter.toMethod(methodDTO, oldMethod);
+        PaymentMethods existedMethod = methodsRepository.findByMethodName(method.getMethodName());
+        if (existedMethod != null) {
+            if (existedMethod.getId() != method.getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PAYMENT_METHOD_EXISTED");
+            }
+        }
         methodsRepository.save(method);
         return ResponseEntity.ok(methodsConverter.toDTO(method));
     }

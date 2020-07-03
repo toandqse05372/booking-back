@@ -62,9 +62,14 @@ public class GameServiceImpl implements GameService {
         Game game = new Game();
         Game oldGame = gameRepository.findById(gameDTO.getId()).get();
         game = gameConverter.toGame(gameDTO, oldGame);
-//        if (gameRepository.findByGameName(game.getGameName()) != null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
-//        }
+
+        if (gameRepository.findByGameName(game.getGameName()) != null
+                && gameRepository.findByPlaceId(gameDTO.getPlaceId()).size() != 0) {
+            if (gameRepository.findByGameName(game.getGameName()).getId() != game.getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
+            }
+        }
+
         Set<TicketType> typeSet = new HashSet<>();
         game.setTicketTypes(typeSet);
 
@@ -143,7 +148,7 @@ public class GameServiceImpl implements GameService {
     public ResponseEntity<?> listOptionByPlace(long id) {
         List<Game> gameList = gameRepository.findByPlaceId(id);
         List<GameDTOLite> liteList = new ArrayList<>();
-        for(Game game: gameList){
+        for (Game game : gameList) {
             GameDTOLite lite = gameConverter.toGameLite(game);
             liteList.add(lite);
         }

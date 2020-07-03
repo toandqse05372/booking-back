@@ -32,7 +32,7 @@ public class VisitorTypeController {
 
     //search by Id
     @GetMapping("/visitorType/{id}")
-    public ResponseEntity<?> getVistorType(@PathVariable Long id) {
+    public ResponseEntity<?> getVisitorType(@PathVariable Long id) {
         return visitorTypeService.getById(id);
     }
 

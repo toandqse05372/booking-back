@@ -43,6 +43,8 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Autowired
     private ImagePlaceRepository imageRepository;
+
+
     //tim kiem place theo ten & address, description, cityId, categoryId, & paging
     @Override
     public ResponseEntity<?> findByMultipleParam(String name, String address, Long cityId,
@@ -63,6 +65,10 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile[] files) {
         Place place = placeConverter.toPlace(placeDTO);
+        if (placeRepository.findByName(place.getName()) != null
+                && placeRepository.findByCityId(placeDTO.getCityId()).size() != 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PLACE_EXISTED");
+        }
         place.setStatus(PlaceAndGameStatus.ACTIVE.toString());
         placeRepository.save(place);
         if(files != null){
@@ -78,6 +84,12 @@ public class PlaceServiceImpl implements PlaceService {
         Place place = new Place();
         Place oldplace = placeRepository.findById(placeDTO.getId()).get();
         place = placeConverter.toPlace(placeDTO, oldplace);
+        Place existedPlace = placeRepository.findByName(place.getName());
+        if (existedPlace != null) {
+            if (existedPlace.getId() != place.getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PLACE_EXISTED");
+            }
+        }
         if(files != null){
             Place saved = placeRepository.save(place);
             uploadFile(files, saved.getId());

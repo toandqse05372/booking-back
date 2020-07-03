@@ -3,6 +3,7 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.TicketTypeConverter;
 import com.capstone.booking.common.helper.ExcelHelper;
+import com.capstone.booking.entity.City;
 import com.capstone.booking.entity.Code;
 import com.capstone.booking.entity.Game;
 import com.capstone.booking.entity.TicketType;
@@ -63,6 +64,10 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     public ResponseEntity<?> create(TicketTypeDTO ticketTypeDTO) {
         TicketType ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO);
 
+//        if (ticketTypeRepository.findByTypeName(ticketType.getTypeName()) != null
+//                && ticketTypeRepository.findByPlaceId(ticketTypeDTO.getPlaceId()).size() != 0) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("TICKET_TYPE_EXISTED");
+//        }
         Set<Game> gameSet = new HashSet<>();
         for (Long id : ticketTypeDTO.getGameId()) {
             gameSet.add(gameRepository.findById(id).get());
@@ -79,6 +84,13 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         TicketType ticketType = new TicketType();
         TicketType oldTicketType = ticketTypeRepository.findById(ticketTypeDTO.getId()).get();
         ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO, oldTicketType);
+
+//        TicketType existedType = ticketTypeRepository.findByTypeName(ticketType.getTypeName());
+//        if (existedType != null) {
+//            if (existedType.getId() != ticketType.getId()) {
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("TICKET_TYPE_EXISTED");
+//            }
+//        }
 
         Set<Game> gameSet = new HashSet<>();
         for (Long gameId : ticketTypeDTO.getGameId()) {

@@ -3,6 +3,7 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.CategoryConverter;
 import com.capstone.booking.entity.Category;
+import com.capstone.booking.entity.City;
 import com.capstone.booking.entity.Game;
 import com.capstone.booking.entity.Place;
 import com.capstone.booking.entity.dto.CategoryDTO;
@@ -53,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<?> create(CategoryDTO categoryDTO) {
         Category category = categoryConverter.toCategory(categoryDTO);
-        if (categoryRepository.findOneByTypeName(category.getTypeName()) != null) {
+        if (categoryRepository.findByTypeName(category.getTypeName()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
         }
         categoryRepository.save(category);
@@ -66,8 +67,12 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = new Category();
         Category categoryOld = categoryRepository.findById(categoryDTO.getId()).get();
         category = categoryConverter.toCategory(categoryDTO, categoryOld);
-        if (categoryRepository.findOneByTypeName(category.getTypeName()) != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
+
+        Category existedCategory = categoryRepository.findByTypeName(category.getTypeName());
+        if (existedCategory != null) {
+            if (existedCategory.getId() != category.getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
+            }
         }
         categoryRepository.save(category);
         return ResponseEntity.ok(categoryConverter.toDTO(category));
