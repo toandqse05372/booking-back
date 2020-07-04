@@ -109,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
         }
         if(!token.getTokenExpDate().after(new Date())){
             tokenRepository.delete(token);
-            return new ResponseEntity("TOKEN_ILLEGAL", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("TOKEN_OUT_OF_DATE", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity("OK", HttpStatus.OK);
     }
