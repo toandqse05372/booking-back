@@ -40,16 +40,15 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
         addedWhere = true;
         where += " p.status like 'ACTIVE' ";
         if (placeName != null && !placeName.equals("")) {
-            where += "p.name like :pname ";
+
+            where += "and p.name like :pname ";
             params.put("pname", placeName);
             stack++;
         }
 
         if (gameName != null && !gameName.equals("")) {
-            if (stack > 1) {
-                where += " and ";
-            }
-            where += "game0_.game_name like :gname ";
+
+            where += "and game0_.game_name like :gname ";
             params.put("gname", gameName);
             stack++;
         }
