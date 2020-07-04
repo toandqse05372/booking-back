@@ -15,7 +15,6 @@ public interface GameRepository extends JpaRepository<Game, Long>, GameRepositor
 
     List<Game> findByPlaceId(Long placeId);
 
-
     @Query("select g from Game g where g.status like 'ACTIVE' and g.place.status like 'ACTIVE'")
     List<Game> findAll();
 

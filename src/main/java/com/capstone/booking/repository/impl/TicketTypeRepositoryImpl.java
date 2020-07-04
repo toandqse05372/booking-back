@@ -83,7 +83,7 @@ public class TicketTypeRepositoryImpl implements TicketTypeCustom {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            if (key.equals("id") || key.equals("from") || key.equals("limit")) {
+            if (key.equals("from") || key.equals("limit")) {
                 query.setParameter(key, value);
             } else
                 query.setParameter(key, "%" + value + "%");

@@ -29,9 +29,6 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     @Autowired
     private PlaceConverter placeConverter;
 
-    @Autowired
-    private ImagePlaceRepository imageRepository;
-
     @Override
     public Output findByMultiParam(String name, String address, Long cityId,
                                    Long categoryId, Long limit, Long page) {
@@ -118,7 +115,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         for(Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            if(key.equals("id") || key.equals("from")|| key.equals("limit") || key.equals("cid") | key.equals("ptid")){
+            if(key.equals("from")|| key.equals("limit") || key.equals("cid") || key.equals("ptid")){
                 query.setParameter(key, value);
             }else
                 query.setParameter(key, "%"+value+"%");

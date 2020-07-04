@@ -58,7 +58,7 @@ public class PlaceController {
     }
 
 
-    //tim kiem place theo ten & address, description, cityId, categoryId, & paging
+    //tim kiem place theo ten & address, cityId, categoryId, & paging
     @GetMapping("/place/searchMul")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "name", required = false) String name,
                                        @RequestParam(value = "address", required = false) String address,

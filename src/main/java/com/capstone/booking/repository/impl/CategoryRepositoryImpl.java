@@ -41,9 +41,9 @@ public class CategoryRepositoryImpl implements CategoryCustom {
             if (stack > 1) {
                 where += " and ";
             }
-            where += "pt.type_name like :tname ";
+            where += "pt.type_name like :cname ";
             addedWhere = true;
-            params.put("tname", typeName);
+            params.put("cname", typeName);
             stack++;
         }
 
@@ -82,7 +82,7 @@ public class CategoryRepositoryImpl implements CategoryCustom {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            if (key.equals("id") || key.equals("from") || key.equals("limit")) {
+            if (key.equals("from") || key.equals("limit")) {
                 query.setParameter(key, value);
             } else
                 query.setParameter(key, value + "%");
