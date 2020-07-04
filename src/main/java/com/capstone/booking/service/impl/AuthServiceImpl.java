@@ -12,6 +12,7 @@ import com.capstone.booking.entity.User;
 import com.capstone.booking.entity.dto.FBLoginDTO;
 import com.capstone.booking.entity.dto.UserDTO;
 import com.capstone.booking.repository.RoleRepository;
+import com.capstone.booking.repository.TokenRepository;
 import com.capstone.booking.repository.UserRepository;
 import com.capstone.booking.service.AuthService;
 import com.capstone.booking.service.TokenService;
@@ -20,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -39,6 +39,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private TokenRepository tokenRepository;
 
     @Autowired
     private RestFB restFB;
@@ -79,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
 
     //đăng kí/đăng nhập bằng fb
     @Override
-    public ResponseEntity<?> loginFb(@RequestBody FBLoginDTO fbForm) throws IOException {
+    public ResponseEntity<?> loginFb( FBLoginDTO fbForm) throws IOException {
         String accessToken = fbForm.getAccessToken();
         UserDTO userDTO = restFB.getUserInfo(accessToken);
         User user = userRepository.findByMail(userDTO.getMail());
@@ -87,6 +90,18 @@ public class AuthServiceImpl implements AuthService {
             return ResponseEntity.ok(returnToken(setPermission(saveFbUser(userDTO))).getToken());
         }else
             return ResponseEntity.ok(returnToken(setPermission(user)).getToken());
+    }
+
+    @Override
+    public ResponseEntity<?> logout(String tokenStr){
+        Token token = tokenRepository.findByToken(tokenStr);
+        if(token == null){
+            return new ResponseEntity("BAD_REQUEST", HttpStatus.BAD_REQUEST);
+        }
+        tokenRepository.delete(token);
+        return new ResponseEntity("LOGOUT_SUCCESSFUL", HttpStatus.OK);
+//        }else
+//            return ResponseEntity.ok(returnToken(setPermission(user)).getToken());
     }
 
     //đặt permission cho user tương ứng vs role
@@ -143,4 +158,6 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
         return user;
     }
+
+
 }

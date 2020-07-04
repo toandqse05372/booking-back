@@ -22,9 +22,9 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Token findByToken(String token) {
-        Token tokent = tokenRepository.findByToken(token);
-        return tokent;
+    public Token findByToken(String tokenStr) {
+        Token token = tokenRepository.findByToken(tokenStr);
+        return token;
     }
 
 }
