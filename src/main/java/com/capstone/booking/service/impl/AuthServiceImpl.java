@@ -23,10 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -82,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
 
     //đăng kí/đăng nhập bằng fb
     @Override
-    public ResponseEntity<?> loginFb( FBLoginDTO fbForm) throws IOException {
+    public ResponseEntity<?> loginFb( FBLoginDTO fbForm){
         String accessToken = fbForm.getAccessToken();
         UserDTO userDTO = restFB.getUserInfo(accessToken);
         User user = userRepository.findByMail(userDTO.getMail());
@@ -94,7 +91,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<?> logout(String tokenStr){
-        Token token = tokenRepository.findByToken(tokenStr);
+        Token token = tokenRepository.findByToken(tokenStr.substring(6));
         if(token == null){
             return new ResponseEntity("BAD_REQUEST", HttpStatus.BAD_REQUEST);
         }
@@ -102,6 +99,19 @@ public class AuthServiceImpl implements AuthService {
         return new ResponseEntity("LOGOUT_SUCCESSFUL", HttpStatus.OK);
 //        }else
 //            return ResponseEntity.ok(returnToken(setPermission(user)).getToken());
+    }
+
+    @Override
+    public ResponseEntity<?> checkToken(String tokenStr){
+        Token token = tokenRepository.findByToken(tokenStr.substring(6));
+        if(token == null){
+            return new ResponseEntity("TOKEN_ILLEGAL", HttpStatus.BAD_REQUEST);
+        }
+        if(!token.getTokenExpDate().after(new Date())){
+            tokenRepository.delete(token);
+            return new ResponseEntity("TOKEN_OUT_OF_DATE", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("OK", HttpStatus.OK);
     }
 
     //đặt permission cho user tương ứng vs role

@@ -28,9 +28,14 @@ public class AuthController {
         return authService.loginFb(fbForm);
     }
 
-    @PostMapping(value = "/logout")
+    @PostMapping(value = "/login/logout")
     public ResponseEntity<?> logout(@RequestHeader(value = "Authorization") String token){
         return authService.logout(token);
+    }
+
+    @PostMapping(value = "/login/checkToken")
+    public ResponseEntity<?> checkToken(@RequestHeader(value = "Authorization") String token){
+        return authService.checkToken(token);
     }
 
 }
