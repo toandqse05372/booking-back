@@ -13,4 +13,6 @@ public interface AuthService {
     ResponseEntity<?> loginFb(@RequestBody FBLoginDTO fbForm) throws IOException;
 
     ResponseEntity<?> logout(String token) ;
+
+    ResponseEntity<?> checkToken(String tokenStr);
 }
