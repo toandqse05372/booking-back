@@ -37,10 +37,10 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
 
         Map<String, Object> params = new HashMap<>();
         queryStr += "INNER join t_place p on p.id = game0_.place_id";
-        where += " p.status like 'ACTIVE' and ";
+        addedWhere = true;
+        where += " p.status like 'ACTIVE' ";
         if (placeName != null && !placeName.equals("")) {
             where += "p.name like :pname ";
-            addedWhere = true;
             params.put("pname", placeName);
             stack++;
         }
@@ -50,7 +50,6 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
                 where += " and ";
             }
             where += "game0_.game_name like :gname ";
-            addedWhere = true;
             params.put("gname", gameName);
             stack++;
         }
