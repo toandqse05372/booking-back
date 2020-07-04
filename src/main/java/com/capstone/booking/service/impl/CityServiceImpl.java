@@ -69,8 +69,8 @@ public class CityServiceImpl implements CityService {
         City oldCity = cityRepository.findById(cityDTO.getId()).get();
         city = cityConverter.toCity(cityDTO, oldCity);
         City existedCity = cityRepository.findByName(city.getName());
-        if ( existedCity != null ) {
-            if(existedCity.getId() != city.getId()){
+        if (existedCity != null) {
+            if (existedCity.getId() != city.getId()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CITY_EXISTED");
             }
         }

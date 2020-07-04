@@ -34,8 +34,9 @@ public class VisitorTypeConverter {
         dto.setTypeKey(visitorType.getTypeKey());
         dto.setPrice(visitorType.getPrice());
 
-        TicketTypeDTO typeDTO = new TicketTypeDTO();
-        TicketType type = visitorType.getTicketType();
+        dto.setTicketTypeId(visitorType.getTicketType().getId());
+//        TicketTypeDTO typeDTO = new TicketTypeDTO();
+//        TicketType type = visitorType.getTicketType();
 
         return dto;
     }

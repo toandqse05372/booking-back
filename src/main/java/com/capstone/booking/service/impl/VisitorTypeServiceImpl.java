@@ -1,6 +1,7 @@
 package com.capstone.booking.service.impl;
 
 import com.capstone.booking.common.converter.VisitorTypeConverter;
+import com.capstone.booking.entity.Game;
 import com.capstone.booking.entity.TicketType;
 import com.capstone.booking.entity.VisitorType;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
@@ -33,6 +34,10 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     @Override
     public ResponseEntity<?> create(VisitorTypeDTO model) {
         VisitorType visitorType = visitorTypeConverter.toVisitorType(model);
+        if (visitorTypeRepository.findByTypeName(visitorType.getTypeName()) != null
+                && visitorTypeRepository.findByTicketTypeId(model.getTicketTypeId()).size() != 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("VISITOR_TYPE_EXISTED");
+        }
         TicketType ticketType = ticketTypeRepository.findById(model.getTicketTypeId()).get();
         visitorType.setTicketType(ticketType);
         visitorTypeRepository.save(visitorType);
@@ -45,6 +50,13 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         VisitorType visitorType = new VisitorType();
         VisitorType oldVisitor = visitorTypeRepository.findById(model.getId()).get();
         visitorType = visitorTypeConverter.toVisitorType(model, oldVisitor);
+
+        VisitorType existedVisitor = visitorTypeRepository.findByTypeName(visitorType.getTypeName());
+        if (existedVisitor != null) {
+            if (existedVisitor.getId() != visitorType.getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("VISITOR_TYPE_EXISTED");
+            }
+        }
 
         TicketType ticketType = ticketTypeRepository.findById(model.getTicketTypeId()).get();
         visitorType.setTicketType(ticketType);

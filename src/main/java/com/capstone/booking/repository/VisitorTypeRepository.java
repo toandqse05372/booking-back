@@ -8,4 +8,8 @@ import java.util.List;
 
 public interface VisitorTypeRepository extends JpaRepository<VisitorType, Long> {
     List<VisitorType> findAllByTicketType(TicketType ticketType);
+
+    VisitorType findByTypeName(String name);
+
+    List<VisitorType> findByTicketTypeId(Long ticketTypeId);
 }

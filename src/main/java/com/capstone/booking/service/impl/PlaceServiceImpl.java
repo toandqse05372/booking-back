@@ -64,11 +64,6 @@ public class PlaceServiceImpl implements PlaceService {
     public ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile[] files) {
         Place place = placeConverter.toPlace(placeDTO);
         place.setStatus(PlaceAndGameStatus.ACTIVE.toString());
-        Set<Category> categories = new HashSet<>();
-        for(Long categoryId : placeDTO.getCategoryId()){
-            categories.add(categoryRepository.findById(categoryId).get());
-        }
-        place.setCategories(categories);
         placeRepository.save(place);
         if(files != null){
             Place saved = placeRepository.save(place);
@@ -83,11 +78,6 @@ public class PlaceServiceImpl implements PlaceService {
         Place place = new Place();
         Place oldplace = placeRepository.findById(placeDTO.getId()).get();
         place = placeConverter.toPlace(placeDTO, oldplace);
-        Set<Category> categories = new HashSet<>();
-        for(Long categoryId : placeDTO.getCategoryId()){
-            categories.add(categoryRepository.findById(categoryId).get());
-        }
-        place.setCategories(categories);
         if(files != null){
             Place saved = placeRepository.save(place);
             uploadFile(files, saved.getId());
