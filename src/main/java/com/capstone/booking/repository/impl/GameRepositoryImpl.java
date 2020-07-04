@@ -37,10 +37,9 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
 
         Map<String, Object> params = new HashMap<>();
         queryStr += "INNER join t_place p on p.id = game0_.place_id";
-        where += " where p.status like 'ACTIVE' ";
+        where += " p.status like 'ACTIVE' and ";
         if (placeName != null && !placeName.equals("")) {
-
-            where += "and p.name like :pname ";
+            where += "p.name like :pname ";
             addedWhere = true;
             params.put("pname", placeName);
             stack++;
