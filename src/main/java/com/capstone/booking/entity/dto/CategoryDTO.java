@@ -8,7 +8,7 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode
 public class CategoryDTO extends BaseDTO{
-    private String typeName;
+    private String categoryName;
     private String typeKey;
     //private Set<String> placeName;
 }
