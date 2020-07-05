@@ -37,6 +37,11 @@ public class PlaceConverter {
         place.setShortDescription(dto.getShortDescription());
         place.setDetailDescription(dto.getDetailDescription());
         place.setMail(dto.getMail());
+        Set<Category> categories = new HashSet<>();
+        for(Long categoryId: dto.getCategoryId()){
+            categories.add(categoryRepository.findById(categoryId).get());
+        }
+        place.setCategories(categories);
         place.setPhoneNumber(dto.getPhoneNumber());
         if(dto.getCityId() != null){
             place.setCity(cityRepository.findById(dto.getCityId()).get());
@@ -97,6 +102,11 @@ public class PlaceConverter {
         place.setDetailDescription(dto.getDetailDescription());
         place.setMail(dto.getMail());
         place.setPhoneNumber(dto.getPhoneNumber());
+        Set<Category> categories = new HashSet<>();
+        for(Long categoryId: dto.getCategoryId()){
+            categories.add(categoryRepository.findById(categoryId).get());
+        }
+        place.setCategories(categories);
         if(dto.getCityId() != null){
             place.setCity(cityRepository.findById(dto.getCityId()).get());
         }

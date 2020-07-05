@@ -11,6 +11,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.Set;
+
 
 @RestController
 public class PlaceController {
@@ -67,6 +70,17 @@ public class PlaceController {
                                        @RequestParam(value = "cityId", required = false) Long cityId,
                                        @RequestParam(value = "categoryId", required = false) Long categoryId) {
         return placeService.findByMultipleParam(name, address, cityId, categoryId, limit, page);
+    }
+
+    @GetMapping("/place/searchClient")
+    public ResponseEntity<?> searchPlaceForClient(@RequestParam(value = "name", required = false) String name,
+                                       @RequestParam(value = "limit", required = false) Long limit,
+                                       @RequestParam(value = "page", required = false) Long page,
+                                       @RequestParam(value = "cityId", required = false) List<Long> cityId,
+                                       @RequestParam(value = "categoryId", required = false) List<Long> categoryId,
+                                          @RequestParam(value = "minValue", required = false) Long minValue,
+                                          @RequestParam(value = "maxValue", required = false) Long maxValue) {
+        return placeService.searchPlaceForClient(name, minValue, maxValue, cityId, categoryId, limit, page);
     }
 
     //xoa place

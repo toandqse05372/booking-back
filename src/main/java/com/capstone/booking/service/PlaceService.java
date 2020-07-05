@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.Set;
+
 public interface PlaceService {
 
     //tim kiem Place theo ten & address, description, cityId, categoryId, & paging
@@ -27,4 +30,6 @@ public interface PlaceService {
 
     ResponseEntity<?> getAll();
 
+    ResponseEntity<?> searchPlaceForClient(String name, Long minValue, Long maxValue, List<Long> cityId,
+                                           List<Long> categoryId, Long limit, Long page);
 }

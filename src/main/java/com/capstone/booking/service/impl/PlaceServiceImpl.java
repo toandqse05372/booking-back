@@ -120,6 +120,12 @@ public class PlaceServiceImpl implements PlaceService {
         return ResponseEntity.ok(liteList);
     }
 
+    @Override
+    public ResponseEntity<?> searchPlaceForClient(String name, Long minValue, Long maxValue, List<Long> cityId, List<Long> categoryId, Long limit, Long page) {
+        Output results = placeRepository.findByMultiParamForClient(name, minValue, maxValue, cityId, categoryId, limit, page);
+        return ResponseEntity.ok(results);
+    }
+
     public void uploadFile(MultipartFile[] files, Long placeId){
         int location = 1;
         for (MultipartFile file: files) {
