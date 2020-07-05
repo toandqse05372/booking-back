@@ -1,7 +1,6 @@
 package com.capstone.booking.service.impl;
 
 import com.capstone.booking.common.converter.VisitorTypeConverter;
-import com.capstone.booking.entity.Game;
 import com.capstone.booking.entity.TicketType;
 import com.capstone.booking.entity.VisitorType;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;

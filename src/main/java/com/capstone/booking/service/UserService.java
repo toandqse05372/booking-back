@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserService {
 
-
     //tạo customer mới
     ResponseEntity<?> register(UserDTO userDTO);
 
@@ -14,7 +13,6 @@ public interface UserService {
 
     //sửa
     ResponseEntity<?> update(UserDTO userDTO);
-
 
     //createUserCMS
     ResponseEntity<?> createUserCMS(UserDTO user);
