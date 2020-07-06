@@ -3,10 +3,7 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.TicketTypeConverter;
 import com.capstone.booking.common.helper.ExcelHelper;
-import com.capstone.booking.entity.City;
-import com.capstone.booking.entity.Code;
-import com.capstone.booking.entity.Game;
-import com.capstone.booking.entity.TicketType;
+import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.TicketTypeDTO;
 import com.capstone.booking.repository.CodeRepository;
 import com.capstone.booking.repository.GameRepository;
@@ -100,6 +97,16 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 
         ticketTypeRepository.save(ticketType);
         return ResponseEntity.ok(ticketTypeConverter.toDTO(ticketType));
+    }
+
+    @Override
+    public ResponseEntity<?> findByPlaceId(long placeId) {
+        List<TicketTypeDTO> list = new ArrayList<>();
+        List<TicketType> ticketTypes = ticketTypeRepository.findByPlaceId(placeId);
+        for(TicketType type: ticketTypes){
+            list.add(ticketTypeConverter.toDTO(type));
+        }
+        return ResponseEntity.ok(list);
     }
 
     @Override

@@ -14,7 +14,7 @@ public class TicketTypeController {
     private TicketTypeService ticketTypeService;
 
     //find all
-    @GetMapping("/ticketType")
+    @GetMapping("/ticketTypes")
     public ResponseEntity<?> searchAll() {
         return ticketTypeService.findAll();
     }
@@ -26,6 +26,13 @@ public class TicketTypeController {
                                             @RequestParam(value = "page", required = false) Long page) {
         return ticketTypeService.findByTypeName(typeName, limit, page);
     }
+
+    //tim kiem theo PlaceId
+    @GetMapping("/ticketType")
+    public ResponseEntity<?> searchByPlaceId(@RequestParam(value = "placeId", required = false) Long placeId){
+        return ticketTypeService.findByPlaceId(placeId);
+    }
+
 
     //delete ticketType
     @DeleteMapping("/ticketType/{id}")

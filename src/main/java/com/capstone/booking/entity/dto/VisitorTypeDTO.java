@@ -10,5 +10,5 @@ public class VisitorTypeDTO extends BaseDTO{
     private String typeKey;
     private Long ticketTypeId;
     private int price;
-    private String isBasicType;
+    private boolean isBasicType;
 }
