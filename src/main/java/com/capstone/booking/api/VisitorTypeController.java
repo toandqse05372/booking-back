@@ -4,6 +4,7 @@ import com.capstone.booking.entity.dto.VisitorTypeDTO;
 import com.capstone.booking.service.VisitorTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,12 +14,14 @@ public class VisitorTypeController {
 
     //them
     @PostMapping("/visitorType")
+    @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
     public ResponseEntity<?> create(@RequestBody VisitorTypeDTO model) {
         return visitorTypeService.create(model);
     }
 
     //sửa
     @PutMapping("/visitorType/{id}")
+    @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
     public ResponseEntity<?> update(@RequestBody VisitorTypeDTO model, @PathVariable("id") long id) {
         model.setId(id);
         return visitorTypeService.update(model);
@@ -26,6 +29,7 @@ public class VisitorTypeController {
 
     //xóa
     @DeleteMapping("/visitorType/{id}")
+    @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         return visitorTypeService.delete(id);
     }

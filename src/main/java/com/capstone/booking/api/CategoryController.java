@@ -15,7 +15,7 @@ public class CategoryController {
 
     //tim kiem category theo name & paging
     @GetMapping("/category/searchByName")
-    @PreAuthorize("hasAnyAuthority('READ_GAME')")
+    @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "categoryName", required = false) String categoryName,
                                        @RequestParam(value = "limit", required = false) Long limit,
                                        @RequestParam(value = "page", required = false) Long page) {
@@ -31,21 +31,21 @@ public class CategoryController {
 
     //xóa
     @DeleteMapping("/category/{id}")
-    @PreAuthorize("hasAnyAuthority('READ_GAME')")
+    @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         return categoryService.delete(id);
     }
 
     //them
     @PostMapping("/category")
-    @PreAuthorize("hasAnyAuthority('READ_GAME')")
+    @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
     public ResponseEntity<?> create(@RequestBody CategoryDTO model) {
         return categoryService.create(model);
     }
 
     //sua
     @PutMapping("/category/{id}")
-    @PreAuthorize("hasAnyAuthority('READ_GAME')")
+    @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
     public ResponseEntity<?> update(@RequestBody CategoryDTO model, @PathVariable("id") long id) {
         model.setId(id);
         return categoryService.update(model);
