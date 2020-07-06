@@ -3,10 +3,7 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.TicketTypeConverter;
 import com.capstone.booking.common.helper.ExcelHelper;
-import com.capstone.booking.entity.City;
-import com.capstone.booking.entity.Code;
-import com.capstone.booking.entity.Game;
-import com.capstone.booking.entity.TicketType;
+import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.TicketTypeDTO;
 import com.capstone.booking.repository.CodeRepository;
 import com.capstone.booking.repository.GameRepository;
@@ -64,10 +61,6 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     public ResponseEntity<?> create(TicketTypeDTO ticketTypeDTO) {
         TicketType ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO);
 
-//        if (ticketTypeRepository.findByTypeName(ticketType.getTypeName()) != null
-//                && ticketTypeRepository.findByPlaceId(ticketTypeDTO.getPlaceId()).size() != 0) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("TICKET_TYPE_EXISTED");
-//        }
         Set<Game> gameSet = new HashSet<>();
         for (Long id : ticketTypeDTO.getGameId()) {
             gameSet.add(gameRepository.findById(id).get());
@@ -85,13 +78,6 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         TicketType oldTicketType = ticketTypeRepository.findById(ticketTypeDTO.getId()).get();
         ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO, oldTicketType);
 
-//        TicketType existedType = ticketTypeRepository.findByTypeName(ticketType.getTypeName());
-//        if (existedType != null) {
-//            if (existedType.getId() != ticketType.getId()) {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("TICKET_TYPE_EXISTED");
-//            }
-//        }
-
         Set<Game> gameSet = new HashSet<>();
         for (Long gameId : ticketTypeDTO.getGameId()) {
             gameSet.add(gameRepository.findById(gameId).get());
@@ -102,6 +88,18 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         return ResponseEntity.ok(ticketTypeConverter.toDTO(ticketType));
     }
 
+    //search by placeId
+    @Override
+    public ResponseEntity<?> findByPlaceId(long placeId) {
+        List<TicketTypeDTO> list = new ArrayList<>();
+        List<TicketType> ticketTypes = ticketTypeRepository.findByPlaceId(placeId);
+        for(TicketType type: ticketTypes){
+            list.add(ticketTypeConverter.toDTO(type));
+        }
+        return ResponseEntity.ok(list);
+    }
+
+    //tim kiem theo tên loại vé
     @Override
     public ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page) {
         Output results = ticketTypeRepository.findByTypeName(typeName, limit, page);

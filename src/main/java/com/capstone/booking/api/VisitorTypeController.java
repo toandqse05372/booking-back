@@ -36,7 +36,7 @@ public class VisitorTypeController {
         return visitorTypeService.getById(id);
     }
 
-    //search by Id
+    //search by ticketTypeId
     @GetMapping("/visitorType")
     public ResponseEntity<?> findByTicketTypeId(@RequestParam(value = "ticketTypeId", required = false) Long ticketTypeId) {
         return visitorTypeService.findByTicketTypeId(ticketTypeId);

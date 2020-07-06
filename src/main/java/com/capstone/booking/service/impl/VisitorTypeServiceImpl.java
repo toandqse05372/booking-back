@@ -34,10 +34,16 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     @Override
     public ResponseEntity<?> create(VisitorTypeDTO model) {
         VisitorType visitorType = visitorTypeConverter.toVisitorType(model);
-        if (visitorTypeRepository.findByTypeName(visitorType.getTypeName()) != null
-                && visitorTypeRepository.findByTicketTypeId(model.getTicketTypeId()).size() != 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("VISITOR_TYPE_EXISTED");
+
+        List<VisitorType> typeList = visitorTypeRepository.findByTypeName(visitorType.getTypeName());
+        if (typeList.size() > 0) {
+            for (VisitorType t : typeList) {
+                if (t.getTicketType().getId().equals(model.getTicketTypeId())) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("VISITOR_TYPE_EXISTED");
+                }
+            }
         }
+
         TicketType ticketType = ticketTypeRepository.findById(model.getTicketTypeId()).get();
         visitorType.setTicketType(ticketType);
         visitorTypeRepository.save(visitorType);
@@ -51,15 +57,17 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         VisitorType oldVisitor = visitorTypeRepository.findById(model.getId()).get();
         visitorType = visitorTypeConverter.toVisitorType(model, oldVisitor);
 
-        VisitorType existedVisitor = visitorTypeRepository.findByTypeName(visitorType.getTypeName());
-        if (existedVisitor != null) {
-            if (existedVisitor.getId() != visitorType.getId()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("VISITOR_TYPE_EXISTED");
-            }
-        }
-
         TicketType ticketType = ticketTypeRepository.findById(model.getTicketTypeId()).get();
         visitorType.setTicketType(ticketType);
+
+        List<VisitorType> typeList = visitorTypeRepository.findByTypeName(visitorType.getTypeName());
+        if (typeList.size() > 0) {
+            for (VisitorType t : typeList) {
+                if (t.getTicketType().getId().equals(model.getTicketTypeId()) && !t.getId().equals(visitorType.getId())) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("VISITOR_TYPE_EXISTED");
+                }
+            }
+        }
 
         visitorTypeRepository.save(visitorType);
         return ResponseEntity.ok(visitorTypeConverter.toDTO(visitorType));
@@ -68,17 +76,17 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     //xóa
     @Override
     public ResponseEntity<?> delete(long id) {
-       if (!visitorTypeRepository.findById(id).isPresent()){
-           return new ResponseEntity("VISITOR_TYPE_NOT_FOUND", HttpStatus.BAD_REQUEST);
-       }
-       visitorTypeRepository.deleteById(id);
-       return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
+        if (!visitorTypeRepository.findById(id).isPresent()) {
+            return new ResponseEntity("VISITOR_TYPE_NOT_FOUND", HttpStatus.BAD_REQUEST);
+        }
+        visitorTypeRepository.deleteById(id);
+        return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<?> findByTicketTypeId(long id) {
         List<VisitorTypeDTO> list = new ArrayList<>();
-        for(VisitorType type: visitorTypeRepository.findAllByTicketType(ticketTypeRepository.findById(id).get())){
+        for (VisitorType type : visitorTypeRepository.findAllByTicketType(ticketTypeRepository.findById(id).get())) {
             list.add(visitorTypeConverter.toDTO(type));
         }
         return ResponseEntity.ok(list);

@@ -17,6 +17,9 @@ public interface TicketTypeService {
     //sưa
     ResponseEntity<?> update(TicketTypeDTO ticketTypeDTO);
 
+    //search by placeId
+    ResponseEntity<?> findByPlaceId(long placeId);
+
     //tim kiem theo tên loại vé
     ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page);
 

@@ -69,10 +69,8 @@ public class CategoryServiceImpl implements CategoryService {
         category = categoryConverter.toCategory(categoryDTO, categoryOld);
 
         Category existedCategory = categoryRepository.findByTypeName(category.getTypeName());
-        if (existedCategory != null) {
-            if (existedCategory.getId() != category.getId()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
-            }
+        if (existedCategory != null && existedCategory.getId() != category.getId()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
         }
         categoryRepository.save(category);
         return ResponseEntity.ok(categoryConverter.toDTO(category));

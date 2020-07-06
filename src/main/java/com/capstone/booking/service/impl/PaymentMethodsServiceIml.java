@@ -46,10 +46,8 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
         PaymentMethods oldMethod = methodsRepository.findById(methodDTO.getId()).get();
         method = methodsConverter.toMethod(methodDTO, oldMethod);
         PaymentMethods existedMethod = methodsRepository.findByMethodName(method.getMethodName());
-        if (existedMethod != null) {
-            if (existedMethod.getId() != method.getId()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PAYMENT_METHOD_EXISTED");
-            }
+        if (existedMethod != null && existedMethod.getId() != method.getId()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PAYMENT_METHOD_EXISTED");
         }
         methodsRepository.save(method);
         return ResponseEntity.ok(methodsConverter.toDTO(method));
