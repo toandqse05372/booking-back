@@ -39,9 +39,13 @@ public class GameServiceImpl implements GameService {
     @Override
     public ResponseEntity<?> create(GameDTO gameDTO) {
         Game game = gameConverter.toGame(gameDTO);
-        if (gameRepository.findByGameName(game.getGameName()) != null
-                && gameRepository.findByPlaceId(gameDTO.getPlaceId()).size() != 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
+        List<Game> gameTemp = gameRepository.findByGameName(game.getGameName());
+        if (gameTemp.size() > 0) {
+            for (Game g : gameTemp) {
+                if (g.getPlace().getId().equals(gameDTO.getPlaceId())) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
+                }
+            }
         }
 
 //        Set<TicketType> typeSet = new HashSet<>();
@@ -57,7 +61,6 @@ public class GameServiceImpl implements GameService {
         game.setPlace(placeOptional.get());
 
         game.setStatus(PlaceAndGameStatus.ACTIVE.toString());
-
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
     }
@@ -69,13 +72,6 @@ public class GameServiceImpl implements GameService {
         Game oldGame = gameRepository.findById(gameDTO.getId()).get();
         game = gameConverter.toGame(gameDTO, oldGame);
 
-        if (gameRepository.findByGameName(game.getGameName()) != null
-                && gameRepository.findByPlaceId(gameDTO.getPlaceId()).size() != 0) {
-            if (gameRepository.findByGameName(game.getGameName()).getId() != game.getId()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
-            }
-        }
-
         Set<TicketType> typeSet = new HashSet<>();
         game.setTicketTypes(typeSet);
 
@@ -84,7 +80,14 @@ public class GameServiceImpl implements GameService {
             return new ResponseEntity("PLACE_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
         game.setPlace(placeOptional.get());
-
+        List<Game> gameTemp = gameRepository.findByGameName(game.getGameName());
+        if (gameTemp.size() > 0) {
+            for (Game g : gameTemp) {
+                if (g.getPlace().getId().equals(game.getPlace().getId()) && !g.getId().equals(game.getId())) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
+                }
+            }
+        }
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
     }

@@ -61,10 +61,6 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     public ResponseEntity<?> create(TicketTypeDTO ticketTypeDTO) {
         TicketType ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO);
 
-//        if (ticketTypeRepository.findByTypeName(ticketType.getTypeName()) != null
-//                && ticketTypeRepository.findByPlaceId(ticketTypeDTO.getPlaceId()).size() != 0) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("TICKET_TYPE_EXISTED");
-//        }
         Set<Game> gameSet = new HashSet<>();
         for (Long id : ticketTypeDTO.getGameId()) {
             gameSet.add(gameRepository.findById(id).get());
@@ -82,13 +78,6 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         TicketType oldTicketType = ticketTypeRepository.findById(ticketTypeDTO.getId()).get();
         ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO, oldTicketType);
 
-//        TicketType existedType = ticketTypeRepository.findByTypeName(ticketType.getTypeName());
-//        if (existedType != null) {
-//            if (existedType.getId() != ticketType.getId()) {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("TICKET_TYPE_EXISTED");
-//            }
-//        }
-
         Set<Game> gameSet = new HashSet<>();
         for (Long gameId : ticketTypeDTO.getGameId()) {
             gameSet.add(gameRepository.findById(gameId).get());
@@ -99,6 +88,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         return ResponseEntity.ok(ticketTypeConverter.toDTO(ticketType));
     }
 
+    //search by placeId
     @Override
     public ResponseEntity<?> findByPlaceId(long placeId) {
         List<TicketTypeDTO> list = new ArrayList<>();
@@ -109,6 +99,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         return ResponseEntity.ok(list);
     }
 
+    //tim kiem theo tên loại vé
     @Override
     public ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page) {
         Output results = ticketTypeRepository.findByTypeName(typeName, limit, page);

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface GameRepository extends JpaRepository<Game, Long>, GameRepositoryCustom {
 
-    Game findByGameName(String name);
+    List<Game> findByGameName(String name);
 
     List<Game> findByPlaceId(Long placeId);
 

@@ -119,6 +119,7 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.findByMail(user.getMail()).getId().equals(oldUser.getId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EMAIL_EXISTED");
         }
+
         Set<Role> roleSet = new HashSet<>();
         for(String role: userDTO.getRoleKey()){
             roleSet.add(roleRepository.findByRoleKey(role));

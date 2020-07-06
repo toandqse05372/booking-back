@@ -28,6 +28,7 @@ public class TicketServiceImpl implements TicketService {
     @Autowired
     private OrderRepository orderRepository;
 
+    //them
     @Override
     public ResponseEntity<?> create(TicketDTO ticketDTO) {
         Ticket ticket = ticketConverter.toTicket(ticketDTO);
@@ -39,6 +40,7 @@ public class TicketServiceImpl implements TicketService {
         return ResponseEntity.ok(ticketConverter.toDTO(ticket));
     }
 
+    //sua
     @Override
     public ResponseEntity<?> update(TicketDTO ticketDTO) {
         Ticket ticket = new Ticket();
@@ -52,6 +54,7 @@ public class TicketServiceImpl implements TicketService {
         return ResponseEntity.ok(ticketConverter.toDTO(ticket));
     }
 
+    //xóa
     @Override
     public ResponseEntity<?> delete(long id) {
         if (!ticketRepository.findById(id).isPresent()) {
