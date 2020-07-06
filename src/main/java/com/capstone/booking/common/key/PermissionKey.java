@@ -2,12 +2,14 @@ package com.capstone.booking.common.key;
 
 public interface PermissionKey {
     enum AdminPermissionKey{
-        ADD_USER, UPDATE_USER, DELETE_USER, READ_USER,
+        USER_EDIT, PLACE_EDIT, CITY_EDIT, GAME_EDIT, ORDER_EDIT, PAYMENT_METHOD_EDIT, TICKET_TYPE_EDIT, VISITOR_TYPE_EDIT
+    }
 
-        ADD_PLACE, UPDATE_PLACE, DELETE_PLACE, READ_PLACE,
+    enum StaffPermissionKey{
+
     }
 
     enum UserPermission{
-        ADD_USER
+
     }
 }

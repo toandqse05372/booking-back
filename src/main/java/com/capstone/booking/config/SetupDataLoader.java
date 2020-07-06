@@ -62,6 +62,9 @@ public class SetupDataLoader implements
         Set<Permission> userPermission =
                 createPermissionIfNotFound(Arrays.asList(PermissionKey.UserPermission.values()));
         createRoleIfNotFound(RoleKey.USER.toString(), userPermission);
+        Set<Permission> staffPermission =
+                createPermissionIfNotFound(Arrays.asList(PermissionKey.StaffPermissionKey.values()));
+        createRoleIfNotFound(RoleKey.STAFF.toString(), staffPermission);
         addPermissionForRoleIfNew(RoleKey.ADMIN.toString());
 
         Role adminRole = roleRepository.findByRoleKey(RoleKey.ADMIN.toString());

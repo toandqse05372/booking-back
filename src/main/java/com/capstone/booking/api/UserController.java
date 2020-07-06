@@ -35,14 +35,14 @@ public class UserController {
 
     //đăng kí tài khoản bt
     @PostMapping("/user/createUserCMS")
-    @PreAuthorize("hasAnyAuthority('ADD_USER')")
+    @PreAuthorize("hasAnyAuthority('USER_EDIT')")
     public ResponseEntity<?> createUserCMS(@RequestBody UserDTO user) {
         return userService.createUserCMS(user);
     }
 
     //sửa User
     @PutMapping(value = "/user/{id}")
-    @PreAuthorize("hasAnyAuthority('UPDATE_USER')")
+    @PreAuthorize("hasAnyAuthority('USER_EDIT')")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO model, @PathVariable("id") long id) {
         model.setId(id);
         return userService.update(model);
@@ -50,7 +50,7 @@ public class UserController {
 
     //search by first_name & mail, lname, phoneNumber, role
     @GetMapping("/user/searchMul")
-    @PreAuthorize("hasAnyAuthority('READ_USER')")
+    @PreAuthorize("hasAnyAuthority('USER_EDIT')")
     public ResponseEntity<?> findByMultiParam(@RequestParam(value = "firstName", required = false) String firstName,
                                               @RequestParam(value = "mail", required = false) String mail,
                                               @RequestParam(value = "lastName", required = false) String lastName,
@@ -63,7 +63,7 @@ public class UserController {
 
     //delete User
     @DeleteMapping("/user/{id}")
-    @PreAuthorize("hasAnyAuthority('DELETE_USER')")
+    @PreAuthorize("hasAnyAuthority('USER_EDIT')")
     public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
         return userService.delete(id);
     }

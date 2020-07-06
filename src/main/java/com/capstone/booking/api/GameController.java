@@ -4,6 +4,7 @@ import com.capstone.booking.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -21,6 +22,7 @@ public class GameController {
 
     //tim kiem Game theo name & placeName, & paging
     @GetMapping("/game/searchMul")
+    @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "gameName", required = false) String gameName,
                                        @RequestParam(value = "limit", required = false) Long limit,
                                        @RequestParam(value = "page", required = false) Long page,
@@ -30,12 +32,14 @@ public class GameController {
 
     //delete Game
     @DeleteMapping("/game/{id}")
+    @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> deleteGame(@PathVariable("id") long id) {
         return gameService.delete(id);
     }
 
     //change status Game
     @PutMapping("/changeGame/{id}")
+    @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> changeStatusGame(@PathVariable("id") long id) {
         gameService.changeStatus(id);
         return new ResponseEntity("Change Successful", HttpStatus.OK);
@@ -43,11 +47,13 @@ public class GameController {
 
     //add Game
     @PostMapping("/game")
+    @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> createGame(@RequestBody GameDTO model) {
         return gameService.create(model);
     }
     //edit Game
     @PutMapping("/game/{id}")
+    @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> updateGame(@RequestBody GameDTO model, @PathVariable("id") long id) {
         model.setId(id);
         return gameService.update(model);
@@ -61,6 +67,7 @@ public class GameController {
 
     //tim kiem Game theo placeId & paging
     @GetMapping("/game/findByPlaceId")
+    @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> findByPlaceId(@RequestParam(value = "placeId", required = false) Long placeId,
                                            @RequestParam(value = "limit", required = false) Long limit,
                                            @RequestParam(value = "page", required = false) Long page) {
