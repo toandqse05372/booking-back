@@ -68,4 +68,10 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
         Output results = methodsRepository.findByMulParam(methodName, limit, page);
         return ResponseEntity.ok(results);
     }
+
+    @Override
+    public ResponseEntity<?> getMethod(Long id) {
+        PaymentMethodsDTO dto = methodsConverter.toDTO(methodsRepository.findById(id).get());
+        return ResponseEntity.ok(dto);
+    }
 }

@@ -43,4 +43,10 @@ public class PaymentMethodsController {
         model.setId(id);
         return methodService.update(model);
     }
+
+    //search by Id
+    @GetMapping("/method/{id}")
+    public ResponseEntity<?> getMethod(@PathVariable Long id) {
+        return methodService.getMethod(id);
+    }
 }
