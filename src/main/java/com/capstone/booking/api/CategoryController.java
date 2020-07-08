@@ -19,7 +19,7 @@ public class CategoryController {
     public ResponseEntity<?> searchMUL(@RequestParam(value = "categoryName", required = false) String categoryName,
                                        @RequestParam(value = "limit", required = false) Long limit,
                                        @RequestParam(value = "page", required = false) Long page) {
-        return categoryService.findByMulParam(categoryName, limit, page);
+        return categoryService.findByTypeName(categoryName, limit, page);
     }
 
 

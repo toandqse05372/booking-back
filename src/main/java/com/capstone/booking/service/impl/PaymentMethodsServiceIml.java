@@ -64,7 +64,7 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
     }
 
     @Override
-    public ResponseEntity<?> findByMulParam(String methodName, Long limit, Long page) {
+    public ResponseEntity<?> findByName(String methodName, Long limit, Long page) {
         Output results = methodsRepository.findByMulParam(methodName, limit, page);
         return ResponseEntity.ok(results);
     }

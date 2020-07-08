@@ -77,7 +77,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<?> findByMulParam(String typeName, Long limit, Long page) {
+    public ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page) {
         Output results = categoryRepository.findByMulParam(typeName, limit, page);
         return ResponseEntity.ok(results);
     }

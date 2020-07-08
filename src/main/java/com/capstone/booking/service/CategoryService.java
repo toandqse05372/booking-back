@@ -17,7 +17,7 @@ public interface CategoryService {
     ResponseEntity<?> update(CategoryDTO categoryDTO);
 
     //tim kiem Category theo name  & paging
-    ResponseEntity<?> findByMulParam(String typeName, Long limit, Long page);
+    ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page);
 
     //search by Id
     ResponseEntity<?> getCategory(Long id);

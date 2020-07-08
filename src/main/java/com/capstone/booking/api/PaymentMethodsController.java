@@ -19,7 +19,7 @@ public class PaymentMethodsController {
     public ResponseEntity<?> searchMUL(@RequestParam(value = "methodName", required = false) String methodName,
                                        @RequestParam(value = "limit", required = false) Long limit,
                                        @RequestParam(value = "page", required = false) Long page) {
-        return methodService.findByMulParam(methodName, limit, page);
+        return methodService.findByName(methodName, limit, page);
     }
 
     //delete
