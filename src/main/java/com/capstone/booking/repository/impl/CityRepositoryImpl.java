@@ -84,7 +84,7 @@ public class CityRepositoryImpl implements CityRepositoryCustom {
             if (key.equals("from") || key.equals("limit")) {
                 query.setParameter(key, value);
             } else
-                query.setParameter(key, value + "%");
+                query.setParameter(key,"%"+ value + "%");
         }
         return query.getResultList();
     }

@@ -79,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
 
     //đăng kí/đăng nhập bằng fb
     @Override
-    public ResponseEntity<?> loginFb( FBLoginDTO fbForm){
+    public ResponseEntity<?> loginFb(FBLoginDTO fbForm){
         String accessToken = fbForm.getAccessToken();
         UserDTO userDTO = restFB.getUserInfo(accessToken);
         User user = userRepository.findByMail(userDTO.getMail());
