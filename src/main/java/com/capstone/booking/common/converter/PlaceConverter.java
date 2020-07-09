@@ -85,11 +85,11 @@ public class PlaceConverter {
         }
         dto.setCategoryId(categorySet);
 
-        Set<OpeningHoursDTO> openingHoursSet = new HashSet<>();
-        for (OpeningHours hours : place.getOpeningHours()) {
-            openingHoursSet.add(hoursConverter.toDTO(hours));
-        }
-        dto.setOpeningHours(openingHoursSet);
+//        Set<OpeningHoursDTO> openingHoursSet = new HashSet<>();
+//        for (OpeningHours hours : place.getOpeningHours()) {
+//            openingHoursSet.add(hoursConverter.toDTO(hours));
+//        }
+//        dto.setOpeningHours(openingHoursSet);
 
         dto.setStatus(place.getStatus());
         return dto;
