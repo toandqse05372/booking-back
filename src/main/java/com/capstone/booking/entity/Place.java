@@ -28,9 +28,8 @@ public class Place extends BaseEntity {
     @Length(max = 1000)
     private String location;
 
-    //Bảng Place qhe 1-n với OpeningHours
-    @OneToMany(mappedBy = "place")
-    private Set<OpeningHours> openingHours = new HashSet<>();
+    private String openingHours;//tu thu 2 den thu 7...
+    private String weekDays;//1.2.3.4..
 
     //Bảng Place qhe n-n với category
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)

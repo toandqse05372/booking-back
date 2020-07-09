@@ -19,6 +19,7 @@ public class PlaceDTO extends BaseDTO{
     private Long cityId;
     private String cityName;
     private Set<Long> categoryId;
-    private Set<OpeningHoursDTO> openingHours;
+    private String openingHours;//tu thu 2 den thu 7...
+    private Integer weekDays;
     private String status;
 }

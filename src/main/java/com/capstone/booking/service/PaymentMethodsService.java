@@ -14,7 +14,7 @@ public interface PaymentMethodsService {
     ResponseEntity<?> delete(long id);
 
     //tim kiem PaymentMethods theo name  & paging
-    ResponseEntity<?> findByMulParam(String methodName, Long limit, Long page);
+    ResponseEntity<?> findByName(String methodName, Long limit, Long page);
 
     ResponseEntity<?> getMethod(Long id);
 }
