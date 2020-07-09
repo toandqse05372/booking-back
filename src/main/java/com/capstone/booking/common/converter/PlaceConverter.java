@@ -7,7 +7,9 @@ import com.capstone.booking.repository.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -46,6 +48,17 @@ public class PlaceConverter {
         if(dto.getCityId() != null){
             place.setCity(cityRepository.findById(dto.getCityId()).get());
         }
+        place.setOpeningHours(dto.getOpeningHours());
+        String weekdays = "";
+        List<Integer> dayList = dto.getWeekDays();
+        for(int i = 0; i < dayList.size(); i++){
+            if(i < dto.getWeekDays().size() - 1){
+                weekdays = weekdays + dayList.get(i) +",";
+            }else{
+                weekdays = weekdays + dayList.get(i);
+            }
+        }
+        place.setWeekDays(weekdays);
         return place;
     }
 
@@ -66,7 +79,9 @@ public class PlaceConverter {
         dto.setDetailDescription(place.getDetailDescription());
         dto.setMail(place.getMail());
         dto.setPhoneNumber(place.getPhoneNumber());
+        dto.setOpeningHours(place.getOpeningHours());
         dto.setShortDescription(place.getShortDescription());
+
 
         if(place.getImagePlace() != null){
             Set<ImageDTO> imageSet = new HashSet<>();
@@ -85,12 +100,13 @@ public class PlaceConverter {
         }
         dto.setCategoryId(categorySet);
 
-//        Set<OpeningHoursDTO> openingHoursSet = new HashSet<>();
-//        for (OpeningHours hours : place.getOpeningHours()) {
-//            openingHoursSet.add(hoursConverter.toDTO(hours));
-//        }
-//        dto.setOpeningHours(openingHoursSet);
-
+        String weekdayStr = place.getWeekDays();
+        String[] days = weekdayStr.split(",");
+        List<Integer> weekDays = new ArrayList<>();
+        for(String day: days){
+            weekDays.add(Integer.parseInt(day));
+        }
+        dto.setWeekDays(weekDays);
         dto.setStatus(place.getStatus());
         return dto;
     }
@@ -102,6 +118,7 @@ public class PlaceConverter {
         place.setDetailDescription(dto.getDetailDescription());
         place.setMail(dto.getMail());
         place.setPhoneNumber(dto.getPhoneNumber());
+
         Set<Category> categories = new HashSet<>();
         for(Long categoryId: dto.getCategoryId()){
             categories.add(categoryRepository.findById(categoryId).get());
@@ -110,6 +127,17 @@ public class PlaceConverter {
         if(dto.getCityId() != null){
             place.setCity(cityRepository.findById(dto.getCityId()).get());
         }
+        place.setOpeningHours(dto.getOpeningHours());
+        String weekdays = "";
+        List<Integer> dayList = dto.getWeekDays();
+        for(int i = 0; i < dayList.size(); i++){
+            if(i < dto.getWeekDays().size() - 1){
+                weekdays = weekdays + dayList.get(i) +",";
+            }else{
+                weekdays = weekdays + dayList.get(i);
+            }
+        }
+        place.setWeekDays(weekdays);
         return place;
     }
 }
