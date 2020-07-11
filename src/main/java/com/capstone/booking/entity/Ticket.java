@@ -22,8 +22,9 @@ public class Ticket extends BaseEntity{
     @JoinColumn(name = "order_id")
     private Order order;
 
-    //Bảng Ticket qhe 1-n với VisitorType
-    @OneToMany(mappedBy = "ticket")
-    private Set<VisitorType> visitorType;
+    //Bảng VisitorType qhe 1-n với Ticket
+    @ManyToOne
+    @JoinColumn(name = "visitor_type_id")
+    private VisitorType visitorType;
 
 }
