@@ -26,6 +26,8 @@ public class Category extends BaseEntity{
     @Column(length = 50)
     private String typeKey;
 
+    private String iconLink;
+
     //Bảng Place qhe n-n với Category
     @ManyToMany(mappedBy = "categories")
     private Set<Place> places = new HashSet<>();

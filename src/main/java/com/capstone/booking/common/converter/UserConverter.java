@@ -48,7 +48,7 @@ public class UserConverter {
     }
 
     public User toUser(UserDTO dto, User user) {
-        if(dto.getPassword() != null) {
+        if(!dto.getPassword().equals(user.getPassword())) {
             user.setPassword(new BCryptPasswordEncoder().encode(dto.getPassword()));
         }
         user.setFirstName(dto.getFirstName());

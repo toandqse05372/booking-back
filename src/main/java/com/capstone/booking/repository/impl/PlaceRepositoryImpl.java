@@ -186,7 +186,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         for(Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            if(key.equals("from")|| key.equals("limit") || key.equals("cid") || key.equals("ptid")){
+            if(key.equals("from")|| key.equals("limit") || key.contains("cid") || key.contains("ptid")){
                 query.setParameter(key, value);
             }else
                 query.setParameter(key, "%"+value+"%");

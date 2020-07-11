@@ -1,11 +1,15 @@
 package com.capstone.booking.api;
 
 import com.capstone.booking.entity.dto.CategoryDTO;
+import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.service.CategoryService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class CategoryController {
@@ -39,16 +43,23 @@ public class CategoryController {
     //them
     @PostMapping("/category")
     @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
-    public ResponseEntity<?> create(@RequestBody CategoryDTO model) {
-        return categoryService.create(model);
+    public ResponseEntity<?> create(@RequestPart(value = "file") MultipartFile file,
+                                    @RequestPart(value = "category") String model) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        CategoryDTO categoryDTO = mapper.readValue(model, CategoryDTO.class);
+        return categoryService.create(categoryDTO, file);
     }
 
     //sua
     @PutMapping("/category/{id}")
     @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
-    public ResponseEntity<?> update(@RequestBody CategoryDTO model, @PathVariable("id") long id) {
-        model.setId(id);
-        return categoryService.update(model);
+    public ResponseEntity<?> update(@RequestPart(value = "file") MultipartFile file,
+                                    @RequestPart(value = "category") String model,
+                                    @PathVariable("id") long id) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        CategoryDTO categoryDTO = mapper.readValue(model, CategoryDTO.class);
+        categoryDTO.setId(id);
+        return categoryService.update(categoryDTO, file);
     }
 
     //search By Id

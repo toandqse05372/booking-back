@@ -30,6 +30,7 @@ public class CityConverter {
         dto.setName(city.getName());
         dto.setShortDescription(city.getShortDescription());
         dto.setDetailDescription(city.getDetailDescription());
+        dto.setImageLink(city.getImageLink());
         return dto;
     }
 }

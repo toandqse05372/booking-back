@@ -1,11 +1,15 @@
 package com.capstone.booking.api;
 
+import com.capstone.booking.entity.dto.CategoryDTO;
 import com.capstone.booking.entity.dto.CityDTO;
 import com.capstone.booking.service.CityService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -44,15 +48,22 @@ public class CityController {
     //add
     @PostMapping("/city")
     @PreAuthorize("hasAnyAuthority('CITY_EDIT')")
-    public ResponseEntity<?> createCity(@RequestBody CityDTO model) {
-        return cityService.create(model);
+    public ResponseEntity<?> createCity(@RequestPart(value = "file") MultipartFile file,
+                                        @RequestPart(value = "city") String model) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        CityDTO cityDTO = mapper.readValue(model, CityDTO.class);
+        return cityService.create(cityDTO, file);
     }
 
     //edit
     @PutMapping("/city/{id}")
     @PreAuthorize("hasAnyAuthority('CITY_EDIT')")
-    public ResponseEntity<?> updateCity(@RequestBody CityDTO model, @PathVariable("id") long id) {
-        model.setId(id);
-        return cityService.update(model);
+    public ResponseEntity<?> updateCity(@RequestPart(value = "file") MultipartFile file,
+                                        @RequestPart(value = "city") String model,
+                                        @PathVariable("id") long id) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        CityDTO cityDTO = mapper.readValue(model, CityDTO.class);
+        cityDTO.setId(id);
+        return cityService.update(cityDTO, file);
     }
 }

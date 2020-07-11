@@ -12,6 +12,7 @@ import com.capstone.booking.service.PlaceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,24 +23,20 @@ import java.util.*;
 @Service
 public class PlaceServiceImpl implements PlaceService {
 
+    @Value("${aws.bucketLink}")
+    private String bucketLink;
+
     @Autowired
     private PlaceRepository placeRepository;
-
 
     @Autowired
     private PlaceConverter placeConverter;
 
     @Autowired
-    private CityRepository cityRepository;
-
-    @Autowired
-    private GameRepository gameRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
     private AmazonS3ClientService amazonS3ClientService;
+
+    @Autowired
+    private ImagePlaceRepository imagePlaceRepository;
 
     @Autowired
     private ImagePlaceRepository imageRepository;
@@ -92,6 +89,10 @@ public class PlaceServiceImpl implements PlaceService {
         if (!placeRepository.findById(id).isPresent()) {
             return new ResponseEntity("PLACE_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
+        Set<ImagePlace> imagePlaces = placeRepository.findById(id).get().getImagePlace();
+        for(ImagePlace imagePlace: imagePlaces){
+            imagePlaceRepository.delete(imagePlace);
+        }
         placeRepository.deleteById(id);
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
@@ -130,8 +131,22 @@ public class PlaceServiceImpl implements PlaceService {
         int location = 1;
         for (MultipartFile file: files) {
             String ext = "."+ FilenameUtils.getExtension(file.getOriginalFilename());
-            this.amazonS3ClientService.uploadFileToS3Bucket(placeId, file, placeId +"_"+ location , ext, true);
+            String name = "Place_"+placeId +"_"+ location;
+            this.amazonS3ClientService.uploadFileToS3Bucket(placeId, file, name , ext, true);
             location++;
+            String fileName = name + ext;
+            ImagePlace imagePlace = imagePlaceRepository.findByImageName(name);
+            if(imagePlace != null){
+                imagePlace.setImageLink(bucketLink+fileName);
+            }else{
+                imagePlace = new ImagePlace();
+                imagePlace.setImageLink(bucketLink+fileName);
+                imagePlace.setImageName(name);
+                imagePlace.setPlace(placeRepository.findById(placeId).get());
+            }
+            imagePlaceRepository.save(imagePlace);
         }
+
+
     }
 }

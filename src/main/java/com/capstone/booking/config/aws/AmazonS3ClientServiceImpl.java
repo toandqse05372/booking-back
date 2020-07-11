@@ -30,12 +30,6 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
     private static final Logger logger = LoggerFactory.getLogger(AmazonS3ClientServiceImpl.class);
 
     @Autowired
-    private ImagePlaceRepository imagePlaceRepository;
-
-    @Autowired
-    private PlaceRepository placeRepository;
-
-    @Autowired
     public AmazonS3ClientServiceImpl(Region awsRegion, AWSCredentialsProvider awsCredentialsProvider, String awsS3AudioBucket) 
     {
         this.amazonS3 = AmazonS3ClientBuilder.standard()
@@ -63,16 +57,7 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
             }
             this.amazonS3.putObject(putObjectRequest);
             //removing the file created in the server
-            ImagePlace imagePlace = imagePlaceRepository.findByImageName(name);
-            if(imagePlace != null){
-                imagePlace.setImageLink(bucketLink+fileName);
-            }else{
-                imagePlace = new ImagePlace();
-                imagePlace.setImageLink(bucketLink+fileName);
-                imagePlace.setImageName(name);
-                imagePlace.setPlace(placeRepository.findById(placeId).get());
-            }
-            imagePlaceRepository.save(imagePlace);
+
 
             file.delete();
         } catch (IOException | AmazonServiceException ex) {

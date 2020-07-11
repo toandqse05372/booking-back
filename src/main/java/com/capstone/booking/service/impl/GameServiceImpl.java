@@ -38,6 +38,9 @@ public class GameServiceImpl implements GameService {
     //create
     @Override
     public ResponseEntity<?> create(GameDTO gameDTO) {
+        if(gameDTO.getPlaceId() == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT_CHOOSE_DATE");
+        }
         Game game = gameConverter.toGame(gameDTO);
         List<Game> gameTemp = gameRepository.findByGameName(game.getGameName());
         if (gameTemp.size() > 0) {

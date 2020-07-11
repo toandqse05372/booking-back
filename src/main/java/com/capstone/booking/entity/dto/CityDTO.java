@@ -12,4 +12,6 @@ public class CityDTO extends BaseDTO{
     private String shortDescription;
 
     private String detailDescription;
+
+    private String imageLink;
 }

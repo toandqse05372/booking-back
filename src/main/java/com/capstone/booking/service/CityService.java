@@ -1,7 +1,7 @@
 package com.capstone.booking.service;
 import com.capstone.booking.entity.dto.CityDTO;
-import com.capstone.booking.entity.dto.GameDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 
 public interface CityService {
@@ -14,10 +14,10 @@ public interface CityService {
     ResponseEntity<?> findByName(String name, Long limit, Long page);
 
     //Thêm
-    ResponseEntity<?> create(CityDTO cityDTO);
+    ResponseEntity<?> create(CityDTO cityDTO, MultipartFile file);
 
     //sửa
-    ResponseEntity<?> update(CityDTO cityDTO);
+    ResponseEntity<?> update(CityDTO cityDTO, MultipartFile file);
 
     //delete city
     ResponseEntity<?> delete(long id);

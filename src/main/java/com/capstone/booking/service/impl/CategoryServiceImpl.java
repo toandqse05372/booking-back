@@ -2,30 +2,37 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.CategoryConverter;
+import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.entity.Category;
-import com.capstone.booking.entity.City;
-import com.capstone.booking.entity.Game;
-import com.capstone.booking.entity.Place;
+import com.capstone.booking.entity.ImagePlace;
 import com.capstone.booking.entity.dto.CategoryDTO;
 import com.capstone.booking.repository.CategoryRepository;
 import com.capstone.booking.service.CategoryService;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
+
+    @Value("${aws.bucketLink}")
+    private String bucketLink;
 
     @Autowired
     private CategoryRepository categoryRepository;
 
     @Autowired
     private CategoryConverter categoryConverter;
+
+    @Autowired
+    private AmazonS3ClientService amazonS3ClientService;
 
     //get All
     @Override
@@ -52,18 +59,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     //thêm
     @Override
-    public ResponseEntity<?> create(CategoryDTO categoryDTO) {
+    public ResponseEntity<?> create(CategoryDTO categoryDTO, MultipartFile file) {
         Category category = categoryConverter.toCategory(categoryDTO);
         if (categoryRepository.findByTypeName(category.getTypeName()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
         }
-        categoryRepository.save(category);
-        return ResponseEntity.ok(categoryConverter.toDTO(category));
+        return setImageAndReturn(file, category);
     }
 
     //sửa
     @Override
-    public ResponseEntity<?> update(CategoryDTO categoryDTO) {
+    public ResponseEntity<?> update(CategoryDTO categoryDTO, MultipartFile file) {
         Category category = new Category();
         Category categoryOld = categoryRepository.findById(categoryDTO.getId()).get();
         category = categoryConverter.toCategory(categoryDTO, categoryOld);
@@ -72,7 +78,17 @@ public class CategoryServiceImpl implements CategoryService {
         if (existedCategory != null && existedCategory.getId() != category.getId()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
         }
-        categoryRepository.save(category);
+        return setImageAndReturn(file, category);
+    }
+
+    private ResponseEntity<?> setImageAndReturn(MultipartFile file, Category category) {
+        if(file != null){
+            Category saved = categoryRepository.save(category);
+            saved.setIconLink(uploadFile(file, saved.getId()));
+            categoryRepository.save(saved);
+        }else{
+            categoryRepository.save(category);
+        }
         return ResponseEntity.ok(categoryConverter.toDTO(category));
     }
 
@@ -87,6 +103,13 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<?> getCategory(Long id) {
         Category category = categoryRepository.findById(id).get();
         return ResponseEntity.ok(categoryConverter.toDTO(category));
+    }
+
+    public String uploadFile(MultipartFile file, Long categoryId){
+        String ext = "."+ FilenameUtils.getExtension(file.getOriginalFilename());
+        String name = "Category_"+categoryId;
+        this.amazonS3ClientService.uploadFileToS3Bucket(categoryId, file, "Category_" + categoryId, ext, true);
+        return bucketLink + name + ext;
     }
 
 }

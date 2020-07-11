@@ -21,6 +21,8 @@ public class City extends BaseEntity{
     @Length(max = 1000)
     private String detailDescription;
 
+    private String imageLink;
+
     //Bảng City qhe 1-n với Place
     @OneToMany(mappedBy = "city")
     private Set<Place> places = new HashSet<>();

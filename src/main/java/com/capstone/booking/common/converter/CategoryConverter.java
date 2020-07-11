@@ -13,6 +13,7 @@ public class CategoryConverter {
         }
         dto.setCategoryName(category.getTypeName());
         dto.setTypeKey(category.getTypeKey());
+        dto.setIconLink(category.getIconLink());
         return dto;
     }
 

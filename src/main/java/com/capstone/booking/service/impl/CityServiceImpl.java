@@ -2,14 +2,19 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.CityConverter;
+import com.capstone.booking.config.aws.AmazonS3ClientService;
+import com.capstone.booking.entity.Category;
 import com.capstone.booking.entity.City;
 import com.capstone.booking.entity.dto.CityDTO;
 import com.capstone.booking.repository.CityRepository;
 import com.capstone.booking.service.CityService;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +24,17 @@ import java.util.Optional;
 @Service
 public class CityServiceImpl implements CityService {
 
+    @Value("${aws.bucketLink}")
+    private String bucketLink;
+
     @Autowired
     private CityRepository cityRepository;
 
     @Autowired
     private CityConverter cityConverter;
+
+    @Autowired
+    private AmazonS3ClientService amazonS3ClientService;
 
     //hien thị city
     @Override
@@ -53,18 +64,18 @@ public class CityServiceImpl implements CityService {
 
     //thêm
     @Override
-    public ResponseEntity<?> create(CityDTO cityDTO) {
+    public ResponseEntity<?> create(CityDTO cityDTO, MultipartFile file) {
         City city = cityConverter.toCity(cityDTO);
         if (cityRepository.findByName(city.getName()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CITY_EXISTED");
         }
         cityRepository.save(city);
-        return ResponseEntity.ok(cityConverter.toDTO(city));
+        return setImageAndReturn(file, city);
     }
 
     //sửa
     @Override
-    public ResponseEntity<?> update(CityDTO cityDTO) {
+    public ResponseEntity<?> update(CityDTO cityDTO, MultipartFile file) {
         City city = new City();
         City oldCity = cityRepository.findById(cityDTO.getId()).get();
         city = cityConverter.toCity(cityDTO, oldCity);
@@ -73,6 +84,17 @@ public class CityServiceImpl implements CityService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CITY_EXISTED");
         }
         cityRepository.save(city);
+        return setImageAndReturn(file, city);
+    }
+
+    private ResponseEntity<?> setImageAndReturn(MultipartFile file, City city) {
+        if(file != null){
+            City saved = cityRepository.save(city);
+            saved.setImageLink(uploadFile(file, saved.getId()));
+            cityRepository.save(saved);
+        }else{
+            cityRepository.save(city);
+        }
         return ResponseEntity.ok(cityConverter.toDTO(city));
     }
 
@@ -84,6 +106,13 @@ public class CityServiceImpl implements CityService {
         }
         cityRepository.deleteById(id);
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
+    }
+
+    public String uploadFile(MultipartFile file, Long categoryId){
+        String ext = "."+ FilenameUtils.getExtension(file.getOriginalFilename());
+        String name = "City_"+categoryId;
+        this.amazonS3ClientService.uploadFileToS3Bucket(categoryId, file, "City_" + categoryId, ext, true);
+        return bucketLink + name + ext;
     }
 
 }

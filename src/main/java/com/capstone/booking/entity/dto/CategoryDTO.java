@@ -10,5 +10,5 @@ import java.util.Set;
 public class CategoryDTO extends BaseDTO{
     private String categoryName;
     private String typeKey;
-    //private Set<String> placeName;
+    private String iconLink;
 }

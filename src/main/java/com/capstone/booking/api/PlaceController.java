@@ -29,7 +29,7 @@ public class PlaceController {
 
     //thêm place
     @PostMapping("/place")
-    @PreAuthorize("hasAnyAuthority('ADD_PLACE')")
+    @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> createPlace(@RequestPart(value = "file") MultipartFile[] files,
                                          @RequestPart(value = "place") String model)
             throws JsonProcessingException {
@@ -40,7 +40,7 @@ public class PlaceController {
 
     //sửa place
     @PutMapping("/place/{id}")
-    @PreAuthorize("hasAnyAuthority('UPDATE_PLACE')")
+    @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> updatePlace(@RequestPart(value = "file") MultipartFile[] files,
                                          @RequestPart(value = "place") String model,
                                          @PathVariable("id") long id) throws JsonProcessingException {
@@ -52,7 +52,7 @@ public class PlaceController {
 
     //change status Place
     @PutMapping("/changePlace/{id}")
-    @PreAuthorize("hasAnyAuthority('UPDATE_PLACE')")
+    @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> changeStatusPlace(@PathVariable("id") long id)  {
         return placeService.changeStatus(id);
     }
@@ -66,7 +66,7 @@ public class PlaceController {
 
     //tim kiem place theo ten & address, cityId, categoryId, & paging
     @GetMapping("/place/searchMul")
-    @PreAuthorize("hasAnyAuthority('READ_PLACE')")
+    @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "name", required = false) String name,
                                        @RequestParam(value = "address", required = false) String address,
                                        @RequestParam(value = "limit", required = false) Long limit,
@@ -89,7 +89,7 @@ public class PlaceController {
 
     //xoa place
     @DeleteMapping("/place/{id}")
-    @PreAuthorize("hasAnyAuthority('DELETE_PLACE')")
+    @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> deletePlace(@PathVariable("id") long id) {
         placeService.delete(id);
         return new ResponseEntity("Delete Successful", HttpStatus.OK);
