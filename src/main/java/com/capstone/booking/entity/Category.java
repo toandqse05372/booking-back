@@ -17,15 +17,14 @@ public class Category extends BaseEntity{
     public Category(){}
 
     public Category(String typeName, String typeKey) {
-        //this.typeKey = typeKey;
+        this.typeKey = typeKey;
         this.typeName = typeName;
     }
 
-
     @Column(length = 50)
     private String typeName;
-//    @Column(length = 50)
-//    private String typeKey;
+    @Column(length = 50)
+    private String typeKey;
 
     private String iconLink;
 

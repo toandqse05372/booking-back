@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "t_ticket")
@@ -21,10 +22,8 @@ public class Ticket extends BaseEntity{
     @JoinColumn(name = "order_id")
     private Order order;
 
-
-    //Bảng TicketType qhe 1-n với Ticket
-    @ManyToOne
-    @JoinColumn(name = "ticket_type_id")
-    private TicketType ticketType;
+    //Bảng Ticket qhe 1-n với VisitorType
+    @OneToMany(mappedBy = "ticket")
+    private Set<VisitorType> visitorType;
 
 }

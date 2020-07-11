@@ -38,10 +38,10 @@ public class TicketConverter {
 
         //dto.setOrderId(ticket.getOrder().getId());
 
-        TicketTypeDTO typeDTO = new TicketTypeDTO();
-        TicketType type = ticket.getTicketType();
-        typeDTO = typeConverter.toDTO(type);
-        dto.setTicketType(typeDTO);
+//        TicketTypeDTO typeDTO = new TicketTypeDTO();
+//        TicketType type = ticket.getTicketType();
+//        typeDTO = typeConverter.toDTO(type);
+//        dto.setTicketType(typeDTO);
         return dto;
     }
 }
