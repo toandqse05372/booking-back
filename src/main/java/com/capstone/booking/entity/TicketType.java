@@ -20,10 +20,6 @@ public class TicketType extends BaseEntity{
     private Long placeId;
 
 
-    //Bảng ticketType qhe 1-n với Ticket
-    @OneToMany(mappedBy = "ticketType", fetch = FetchType.EAGER)
-    private Set<Ticket> ticket;
-
     //Bảng ticketType qhe 1-n với VisitorType
     @OneToMany(mappedBy = "ticketType")
     private Set<VisitorType> visitorType;
