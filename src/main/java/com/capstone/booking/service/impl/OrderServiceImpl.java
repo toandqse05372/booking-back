@@ -62,8 +62,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<?> findByStatus(String status, Long limit, Long page) {
-        Output results = orderRepository.findByStatus(status, limit, page);
+    public ResponseEntity<?> findByStatus(String status, String code) {
+        Output results = orderRepository.findByStatus(status, code);
         return ResponseEntity.ok(results);
     }
 }

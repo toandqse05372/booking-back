@@ -17,9 +17,6 @@ import java.util.Map;
 
 public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
-    private Integer totalItem;
-    private long totalPage;
-    private boolean searched = false;
 
     @PersistenceContext
     EntityManager entityManager;
@@ -29,12 +26,11 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
 
     @Override
-    public Output findByStatus(String status, Long limit, Long page) {
+    public Output findByStatus(String status, String code) {
         boolean addedWhere = false;
         String queryStr = "select o.* from t_order o ";
         String where = "";
         Integer stack = 1;
-        int pageInt = Math.toIntExact(page);
 
         Map<String, Object> params = new HashMap<>();
 
@@ -48,24 +44,22 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
             stack++;
         }
 
+        if (code != null && !code.equals("")) {
+            if (stack > 1) {
+                where += " and ";
+            }
+            where += "o.order_code like :code ";
+            addedWhere = true;
+            params.put("code", code);
+            stack++;
+        }
+
         if (addedWhere) {
             queryStr += " where ";
         }
-        if (!searched) {
-            totalItem = queryOrder(params, queryStr + where).size();
-            totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
-        }
-        params.put("from", (page - 1) * limit);
-        stack++;
-        params.put("limit", limit);
-        stack++;
-        where += " limit :from, :limit";
 
         Output output = new Output();
         output.setListResult(convertList(queryOrder(params, queryStr + where)));
-        output.setPage(pageInt);
-        output.setTotalItems(totalItem);
-        output.setTotalPage((int) totalPage);
         return output;
     }
 
@@ -84,10 +78,10 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            if (key.equals("from") || key.equals("limit")) {
-                query.setParameter(key, value);
+            if (key.equals("code")) {
+                query.setParameter(key, "%"+ value + "%");
             } else
-                query.setParameter(key, value + "%");
+                query.setParameter(key,  value + "%");
         }
         return query.getResultList();
     }

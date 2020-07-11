@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class ExcelHelper {
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADERs = {"Id", "Title", "Description", "Published"};
+    static String[] HEADERs = {"Id", "Product_Code", "Code"};
     static String SHEET = "Sheet1";
 
     public static boolean hasExcelFormat(MultipartFile file) {

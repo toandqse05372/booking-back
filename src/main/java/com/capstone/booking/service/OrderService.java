@@ -14,6 +14,6 @@ public interface OrderService {
     ResponseEntity<?> delete(long id);
 
     //tim kiem Order theo status, & paging
-    ResponseEntity<?> findByStatus(String status, Long limit, Long page);
+    ResponseEntity<?> findByStatus(String status, String code);
 
 }

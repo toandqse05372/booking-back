@@ -21,9 +21,8 @@ public class OrderController {
     //tim kiem Order theo status, & paging
     @GetMapping("/order/searchByStatus")
     public ResponseEntity<?> searchByStatus(@RequestParam(value = "status", required = false) String status,
-                                       @RequestParam(value = "limit", required = false) Long limit,
-                                       @RequestParam(value = "page", required = false) Long page) {
-        return orderService.findByStatus(status, limit, page);
+                                            @RequestParam(value = "code", required = false) String code) {
+        return orderService.findByStatus(status, code);
     }
 
     //add
@@ -35,6 +34,12 @@ public class OrderController {
     //edit
     @PutMapping("/order/{id}")
     public ResponseEntity<?> updateMethod(@RequestBody OrderDTO model, @PathVariable("id") long id) {
+        model.setId(id);
+        return orderService.update(model);
+    }
+
+    @PostMapping("/order/sendTicket")
+    public ResponseEntity<?> sendTicket(@RequestBody OrderDTO model, @PathVariable("id") long id) {
         model.setId(id);
         return orderService.update(model);
     }
