@@ -9,6 +9,6 @@ import java.util.Set;
 @EqualsAndHashCode
 public class CategoryDTO extends BaseDTO{
     private String categoryName;
-    private String typeKey;
+   // private String typeKey;
     private String iconLink;
 }
