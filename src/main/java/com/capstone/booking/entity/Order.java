@@ -36,12 +36,12 @@ public class Order extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
-    //Bảng Order qhe 1-n với Ticket
+    //Bảng Order qhe 1-n với OrderItem
     @OneToMany(mappedBy = "order")
-    Set<Ticket> ticket = new HashSet<>();
-
+    Set<OrderItem> orderItem;
 
     //Bảng Order qhe 1-n với PaymentMethods
     @OneToMany(mappedBy = "order")
-    private Set<PaymentMethods> paymentMethods = new HashSet<>();
+    private Set<PaymentMethods> paymentMethods;
+
 }

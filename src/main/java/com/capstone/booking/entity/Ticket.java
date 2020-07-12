@@ -17,14 +17,9 @@ public class Ticket extends BaseEntity{
     private Date redemptionDate;
 
 
-    //Bảng Order qhe 1-n với Ticket
+    //Bảng OrderItem qhe 1-n với Ticket
     @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
-
-    //Bảng VisitorType qhe 1-n với Ticket
-    @ManyToOne
-    @JoinColumn(name = "visitor_type_id")
-    private VisitorType visitorType;
+    @JoinColumn(name = "order_item_id")
+    private OrderItem orderItem;
 
 }
