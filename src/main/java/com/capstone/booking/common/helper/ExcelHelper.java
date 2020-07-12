@@ -9,14 +9,26 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.capstone.booking.entity.Code;
+import com.capstone.booking.entity.VisitorType;
+import com.capstone.booking.repository.VisitorTypeRepository;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+@Component
 public class ExcelHelper {
+
+    private static VisitorTypeRepository visitorTypeRepository;
+
+    @Autowired
+    public ExcelHelper(VisitorTypeRepository visitorTypeRepository){
+        ExcelHelper.visitorTypeRepository = visitorTypeRepository;
+    }
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static String[] HEADERs = {"Id", "Product_Code", "Code"};
     static String SHEET = "Sheet1";
@@ -61,48 +73,37 @@ public class ExcelHelper {
     public static List<Code> excelToTutorials(InputStream is) {
         try {
             Workbook workbook = new XSSFWorkbook(is);
-
             Sheet sheet = workbook.getSheet(SHEET);
             Iterator<Row> rows = sheet.iterator();
-
             List<Code> codes = new ArrayList<>();
-
             int rowNumber = 0;
             while (rows.hasNext()) {
                 Row currentRow = rows.next();
-
                 // skip header
                 if (rowNumber == 0) {
                     rowNumber++;
                     continue;
                 }
-
                 Iterator<Cell> cellsInRow = currentRow.iterator();
-
                 Code code = new Code();
-
                 int cellIdx = 0;
                 while (cellsInRow.hasNext()) {
                     Cell currentCell = cellsInRow.next();
-
                     switch (cellIdx) {
                         case 1:
-                            //   code.setTicketType(currentCell.getStringCellValue());
+                            code.setVisitorType(visitorTypeRepository.
+                                    findByTypeKey(currentCell.getStringCellValue()));
                             break;
                         case 2:
-                            code.setCode(currentCell.getStringCellValue());
+                            code.setCode(currentCell.getNumericCellValue()+"");
                             break;
-
                         default:
                             break;
                     }
-
                     cellIdx++;
                 }
-
                 codes.add(code);
             }
-
             workbook.close();
 
             return codes;

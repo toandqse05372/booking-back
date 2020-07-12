@@ -48,7 +48,7 @@ public class CityController {
     //add
     @PostMapping("/city")
     @PreAuthorize("hasAnyAuthority('CITY_EDIT')")
-    public ResponseEntity<?> createCity(@RequestPart(value = "file") MultipartFile file,
+    public ResponseEntity<?> createCity(@RequestPart(value = "file", required = false) MultipartFile file,
                                         @RequestPart(value = "city") String model) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         CityDTO cityDTO = mapper.readValue(model, CityDTO.class);
@@ -58,7 +58,7 @@ public class CityController {
     //edit
     @PutMapping("/city/{id}")
     @PreAuthorize("hasAnyAuthority('CITY_EDIT')")
-    public ResponseEntity<?> updateCity(@RequestPart(value = "file") MultipartFile file,
+    public ResponseEntity<?> updateCity(@RequestPart(value = "file", required = false) MultipartFile file,
                                         @RequestPart(value = "city") String model,
                                         @PathVariable("id") long id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();

@@ -11,4 +11,5 @@ public class VisitorTypeDTO extends BaseDTO{
     private Long ticketTypeId;
     private int price;
     private boolean isBasicType;
+    private int remaining;
 }

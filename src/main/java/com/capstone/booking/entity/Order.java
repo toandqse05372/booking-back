@@ -13,8 +13,7 @@ import java.util.Set;
 @Setter
 @Getter
 public class Order extends BaseEntity{
-    private int totalTicket;
-    private int ticketTypeId;
+    private Long ticketTypeId;
     @Column(length = 50)
     private String firstName;
     @Column(length = 50)

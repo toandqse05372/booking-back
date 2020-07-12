@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface GameRepository extends JpaRepository<Game, Long>, GameRepositoryCustom {
 
-    List<Game> findByGameName(String name);
-
     List<Game> findByPlaceId(Long placeId);
+
+    Game findByGameNameAndPlace(String name, Place place);
 
     @Query("select g from Game g where g.status like 'ACTIVE' and g.place.status like 'ACTIVE'")
     List<Game> findAll();

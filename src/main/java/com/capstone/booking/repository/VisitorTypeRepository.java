@@ -11,5 +11,5 @@ public interface VisitorTypeRepository extends JpaRepository<VisitorType, Long> 
 
     List<VisitorType> findByTypeName(String name);
 
-    List<VisitorType> findByTicketTypeId(Long ticketTypeId);
+    VisitorType findByTypeKey(String key);
 }

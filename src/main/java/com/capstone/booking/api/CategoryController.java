@@ -43,7 +43,7 @@ public class CategoryController {
     //them
     @PostMapping("/category")
     @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
-    public ResponseEntity<?> create(@RequestPart(value = "file") MultipartFile file,
+    public ResponseEntity<?> create(@RequestPart(value = "file", required = false) MultipartFile file,
                                     @RequestPart(value = "category") String model) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         CategoryDTO categoryDTO = mapper.readValue(model, CategoryDTO.class);
@@ -53,7 +53,7 @@ public class CategoryController {
     //sua
     @PutMapping("/category/{id}")
     @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
-    public ResponseEntity<?> update(@RequestPart(value = "file") MultipartFile file,
+    public ResponseEntity<?> update(@RequestPart(value = "file",required = false) MultipartFile file,
                                     @RequestPart(value = "category") String model,
                                     @PathVariable("id") long id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();

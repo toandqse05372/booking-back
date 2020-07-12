@@ -30,7 +30,7 @@ public class PlaceController {
     //thêm place
     @PostMapping("/place")
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
-    public ResponseEntity<?> createPlace(@RequestPart(value = "file") MultipartFile[] files,
+    public ResponseEntity<?> createPlace(@RequestPart(value = "file", required = false) MultipartFile[] files,
                                          @RequestPart(value = "place") String model)
             throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -41,7 +41,7 @@ public class PlaceController {
     //sửa place
     @PutMapping("/place/{id}")
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
-    public ResponseEntity<?> updatePlace(@RequestPart(value = "file") MultipartFile[] files,
+    public ResponseEntity<?> updatePlace(@RequestPart(value = "file", required = false) MultipartFile[] files,
                                          @RequestPart(value = "place") String model,
                                          @PathVariable("id") long id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();

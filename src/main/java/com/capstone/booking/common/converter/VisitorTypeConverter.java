@@ -4,11 +4,16 @@ import com.capstone.booking.entity.TicketType;
 import com.capstone.booking.entity.VisitorType;
 import com.capstone.booking.entity.dto.TicketTypeDTO;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
+import com.capstone.booking.repository.CodeRepository;
+import com.capstone.booking.repository.VisitorTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class VisitorTypeConverter {
+
+    @Autowired
+    CodeRepository codeRepository;
 
     public VisitorType toVisitorType(VisitorTypeDTO dto) {
         VisitorType visitorType = new VisitorType();
@@ -36,10 +41,8 @@ public class VisitorTypeConverter {
         dto.setTypeKey(visitorType.getTypeKey());
         dto.setPrice(visitorType.getPrice());
         dto.setBasicType(visitorType.isBasicType());
-
+        dto.setRemaining(codeRepository.findByVisitorType(visitorType).size());
         dto.setTicketTypeId(visitorType.getTicketType().getId());
-//        TicketTypeDTO typeDTO = new TicketTypeDTO();
-//        TicketType type = visitorType.getTicketType();
 
         return dto;
     }

@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
@@ -59,6 +60,9 @@ public class PlaceServiceImpl implements PlaceService {
     //them place
     @Override
     public ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile[] files) {
+        if (placeRepository.findByName(placeDTO.getName()) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PLACE_EXISTED");
+        }
         Place place = placeConverter.toPlace(placeDTO);
         place.setStatus(PlaceAndGameStatus.ACTIVE.toString());
         placeRepository.save(place);
@@ -72,6 +76,10 @@ public class PlaceServiceImpl implements PlaceService {
     //sưa place
     @Override
     public ResponseEntity<?> update(PlaceDTO placeDTO, MultipartFile[] files) {
+        Place existedPlace = placeRepository.findByName(placeDTO.getName());
+        if (existedPlace != null && existedPlace.getId() != placeDTO.getId()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PLACE_EXISTED");
+        }
         Place place = new Place();
         Place oldPlace = placeRepository.findById(placeDTO.getId()).get();
         place = placeConverter.toPlace(placeDTO, oldPlace);
@@ -85,6 +93,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     //xóa place
     @Override
+    @Transactional
     public ResponseEntity<?> delete(long id) {
         if (!placeRepository.findById(id).isPresent()) {
             return new ResponseEntity("PLACE_NOT_FOUND", HttpStatus.BAD_REQUEST);

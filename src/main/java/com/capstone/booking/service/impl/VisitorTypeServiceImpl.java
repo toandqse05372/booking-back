@@ -1,10 +1,13 @@
 package com.capstone.booking.service.impl;
 
 import com.capstone.booking.common.converter.VisitorTypeConverter;
+import com.capstone.booking.common.helper.ExcelHelper;
+import com.capstone.booking.entity.Code;
 import com.capstone.booking.entity.Game;
 import com.capstone.booking.entity.TicketType;
 import com.capstone.booking.entity.VisitorType;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
+import com.capstone.booking.repository.CodeRepository;
 import com.capstone.booking.repository.TicketTypeRepository;
 import com.capstone.booking.repository.VisitorTypeRepository;
 import com.capstone.booking.service.VisitorTypeService;
@@ -12,7 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +35,8 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     @Autowired
     TicketTypeRepository ticketTypeRepository;
 
+    @Autowired
+    CodeRepository codeRepository;
 
     //thêm
     @Override
@@ -75,10 +83,12 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
 
     //xóa
     @Override
+    @Transactional
     public ResponseEntity<?> delete(long id) {
         if (!visitorTypeRepository.findById(id).isPresent()) {
             return new ResponseEntity("VISITOR_TYPE_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
+        codeRepository.deleteByVisitorType(visitorTypeRepository.findById(id).get());
         visitorTypeRepository.deleteById(id);
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
@@ -96,5 +106,21 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     public ResponseEntity<?> getById(long id) {
         VisitorType type = visitorTypeRepository.findById(id).get();
         return ResponseEntity.ok(visitorTypeConverter.toDTO(type));
+    }
+
+    @Override
+    public ResponseEntity<?> addCodeForTicketType(MultipartFile file, String codeType){
+        if (ExcelHelper.hasExcelFormat(file)) {
+            try {
+                List<Code> tutorials = ExcelHelper.excelToTutorials(file.getInputStream());
+                codeRepository.saveAll(tutorials);
+                int reaming = codeRepository.findByVisitorType(visitorTypeRepository.findByTypeKey(codeType)).size();
+                return ResponseEntity.ok(reaming);
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("COULD_NOT_UPLOAD_FILE");
+            }
+        }else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT_EXCEL_FILE");
+
     }
 }

@@ -45,9 +45,7 @@ public class PlaceConverter {
         }
         place.setCategories(categories);
         place.setPhoneNumber(dto.getPhoneNumber());
-        if(dto.getCityId() != null){
-            place.setCity(cityRepository.findById(dto.getCityId()).get());
-        }
+        place.setCity(cityRepository.findById(dto.getCityId()).get());
         place.setOpeningHours(dto.getOpeningHours());
         String weekdays = "";
         List<Integer> dayList = dto.getWeekDays();
@@ -124,9 +122,7 @@ public class PlaceConverter {
             categories.add(categoryRepository.findById(categoryId).get());
         }
         place.setCategories(categories);
-        if(dto.getCityId() != null){
-            place.setCity(cityRepository.findById(dto.getCityId()).get());
-        }
+        place.setCity(cityRepository.findById(dto.getCityId()).get());
         place.setOpeningHours(dto.getOpeningHours());
         String weekdays = "";
         List<Integer> dayList = dto.getWeekDays();

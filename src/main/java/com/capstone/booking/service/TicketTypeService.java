@@ -23,7 +23,5 @@ public interface TicketTypeService {
     //tim kiem theo tên loại vé
     ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page);
 
-    ResponseEntity<?> addCodeForTicketType(MultipartFile file, String codeType);
-
     ResponseEntity<?> getTicketType(Long id);
 }

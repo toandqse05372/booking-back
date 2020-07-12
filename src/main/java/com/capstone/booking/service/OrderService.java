@@ -16,4 +16,6 @@ public interface OrderService {
     //tim kiem Order theo status, & paging
     ResponseEntity<?> findByStatus(String status, String code);
 
+    ResponseEntity<?> findByOrderId(Long id);
+
 }

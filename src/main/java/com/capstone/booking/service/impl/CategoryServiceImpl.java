@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     //xoa
     @Override
+    @Transactional
     public ResponseEntity<?> delete(long id) {
         if (!categoryRepository.findById(id).isPresent()) {
             return new ResponseEntity("CATEGORY_NOT_FOUND", HttpStatus.BAD_REQUEST);
@@ -60,24 +62,23 @@ public class CategoryServiceImpl implements CategoryService {
     //thêm
     @Override
     public ResponseEntity<?> create(CategoryDTO categoryDTO, MultipartFile file) {
-        Category category = categoryConverter.toCategory(categoryDTO);
-        if (categoryRepository.findByTypeName(category.getTypeName()) != null) {
+        if (categoryRepository.findByTypeName(categoryDTO.getCategoryName()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
         }
+        Category category = categoryConverter.toCategory(categoryDTO);
         return setImageAndReturn(file, category);
     }
 
     //sửa
     @Override
     public ResponseEntity<?> update(CategoryDTO categoryDTO, MultipartFile file) {
+        Category existedCategory = categoryRepository.findByTypeName(categoryDTO.getCategoryName());
+        if (existedCategory != null && existedCategory.getId() != categoryDTO.getId()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
+        }
         Category category = new Category();
         Category categoryOld = categoryRepository.findById(categoryDTO.getId()).get();
         category = categoryConverter.toCategory(categoryDTO, categoryOld);
-
-        Category existedCategory = categoryRepository.findByTypeName(category.getTypeName());
-        if (existedCategory != null && existedCategory.getId() != category.getId()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
-        }
         return setImageAndReturn(file, category);
     }
 

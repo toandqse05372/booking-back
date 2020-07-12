@@ -4,15 +4,21 @@ import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.OrderConverter;
 import com.capstone.booking.common.key.OrderStatus;
 import com.capstone.booking.entity.Order;
+import com.capstone.booking.entity.OrderItem;
 import com.capstone.booking.entity.User;
 import com.capstone.booking.entity.dto.OrderDTO;
 import com.capstone.booking.repository.OrderRepository;
+import com.capstone.booking.repository.TicketTypeRepository;
 import com.capstone.booking.repository.UserRepository;
 import com.capstone.booking.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -53,6 +59,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> delete(long id) {
         if (!orderRepository.findById(id).isPresent()) {
             return new ResponseEntity("ORDER_NOT_FOUND", HttpStatus.BAD_REQUEST);
@@ -65,5 +72,11 @@ public class OrderServiceImpl implements OrderService {
     public ResponseEntity<?> findByStatus(String status, String code) {
         Output results = orderRepository.findByStatus(status, code);
         return ResponseEntity.ok(results);
+    }
+
+    @Override
+    public ResponseEntity<?> findByOrderId(Long id) {
+        Order order = orderRepository.findById(id).get();
+        return ResponseEntity.ok(orderConverter.toDTO(order));
     }
 }

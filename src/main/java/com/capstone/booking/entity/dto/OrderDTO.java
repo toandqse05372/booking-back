@@ -1,15 +1,17 @@
 package com.capstone.booking.entity.dto;
 
+import com.capstone.booking.entity.OrderItem;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode
 public class OrderDTO extends BaseDTO{
-    private int totalTicket;
-    private int ticketTypeId;
+    private Long ticketTypeId;
+    private String ticketTypeName;
     private Long userId;
     private String firstName;
     private String lastName;
@@ -19,4 +21,5 @@ public class OrderDTO extends BaseDTO{
     private String orderCode;
     private int totalPayment;
     private Date purchaseDay;
+    private Set<OrderItemDTO> orderItems;
 }

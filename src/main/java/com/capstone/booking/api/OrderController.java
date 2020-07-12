@@ -43,4 +43,9 @@ public class OrderController {
         model.setId(id);
         return orderService.update(model);
     }
+
+    @GetMapping("/order/{id}")
+    public ResponseEntity<?> getOrderById(@PathVariable("id") long id) {
+        return orderService.findByOrderId(id);
+    }
 }

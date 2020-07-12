@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 
@@ -38,31 +39,15 @@ public class GameServiceImpl implements GameService {
     //create
     @Override
     public ResponseEntity<?> create(GameDTO gameDTO) {
-        if(gameDTO.getPlaceId() == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT_CHOOSE_DATE");
-        }
-        Game game = gameConverter.toGame(gameDTO);
-        List<Game> gameTemp = gameRepository.findByGameName(game.getGameName());
-        if (gameTemp.size() > 0) {
-            for (Game g : gameTemp) {
-                if (g.getPlace().getId().equals(gameDTO.getPlaceId())) {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
-                }
-            }
-        }
-
-//        Set<TicketType> typeSet = new HashSet<>();
-//        for (String type : gameDTO.getTicketTypeName()) {
-//            typeSet.add(ticketTypeRepository.findOneByTypeName(type));
-//        }
-//        game.setTicketTypes(typeSet);
-
-        Optional<Place> placeOptional = placeRepository.findById(gameDTO.getPlaceId());
-        if (!placeOptional.isPresent()) {
+        Place place = placeRepository.findById(gameDTO.getPlaceId()).get();
+        if (place == null) {
             return new ResponseEntity("PLACE_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
-        game.setPlace(placeOptional.get());
-
+        if (gameRepository.findByGameNameAndPlace(gameDTO.getGameName(), place) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
+        }
+        Game game = gameConverter.toGame(gameDTO);
+        game.setPlace(place);
         game.setStatus(PlaceAndGameStatus.ACTIVE.toString());
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
@@ -71,26 +56,21 @@ public class GameServiceImpl implements GameService {
     //edit
     @Override
     public ResponseEntity<?> update(GameDTO gameDTO) {
+        Place place = placeRepository.findById(gameDTO.getPlaceId()).get();
+        if (place == null) {
+            return new ResponseEntity("PLACE_NOT_FOUND", HttpStatus.BAD_REQUEST);
+        }
+        Game existedGame = gameRepository.findByGameNameAndPlace(gameDTO.getGameName(), place);
+        if (existedGame != null && existedGame.getId() != gameDTO.getId()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
+        }
         Game game = new Game();
         Game oldGame = gameRepository.findById(gameDTO.getId()).get();
         game = gameConverter.toGame(gameDTO, oldGame);
 
         Set<TicketType> typeSet = new HashSet<>();
         game.setTicketTypes(typeSet);
-
-        Optional<Place> placeOptional = placeRepository.findById(gameDTO.getPlaceId());
-        if (!placeOptional.isPresent()) {
-            return new ResponseEntity("PLACE_NOT_FOUND", HttpStatus.BAD_REQUEST);
-        }
-        game.setPlace(placeOptional.get());
-        List<Game> gameTemp = gameRepository.findByGameName(game.getGameName());
-        if (gameTemp.size() > 0) {
-            for (Game g : gameTemp) {
-                if (g.getPlace().getId().equals(game.getPlace().getId()) && !g.getId().equals(game.getId())) {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
-                }
-            }
-        }
+        game.setPlace(place);
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
     }
@@ -98,6 +78,7 @@ public class GameServiceImpl implements GameService {
 
     //delete GAme
     @Override
+    @Transactional
     public ResponseEntity<?> delete(long id) {
         if (!gameRepository.findById(id).isPresent()) {
             return new ResponseEntity("GAME_NOT_FOUND", HttpStatus.BAD_REQUEST);

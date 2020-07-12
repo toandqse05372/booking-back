@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,10 +66,10 @@ public class CityServiceImpl implements CityService {
     //thêm
     @Override
     public ResponseEntity<?> create(CityDTO cityDTO, MultipartFile file) {
-        City city = cityConverter.toCity(cityDTO);
-        if (cityRepository.findByName(city.getName()) != null) {
+        if (cityRepository.findByName(cityDTO.getName()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CITY_EXISTED");
         }
+        City city = cityConverter.toCity(cityDTO);
         cityRepository.save(city);
         return setImageAndReturn(file, city);
     }
@@ -76,13 +77,13 @@ public class CityServiceImpl implements CityService {
     //sửa
     @Override
     public ResponseEntity<?> update(CityDTO cityDTO, MultipartFile file) {
+        City existedCity = cityRepository.findByName(cityDTO.getName());
+        if (existedCity != null && existedCity.getId() != cityDTO.getId()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CITY_EXISTED");
+        }
         City city = new City();
         City oldCity = cityRepository.findById(cityDTO.getId()).get();
         city = cityConverter.toCity(cityDTO, oldCity);
-        City existedCity = cityRepository.findByName(city.getName());
-        if (existedCity != null && existedCity.getId() != city.getId()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CITY_EXISTED");
-        }
         cityRepository.save(city);
         return setImageAndReturn(file, city);
     }
@@ -100,6 +101,7 @@ public class CityServiceImpl implements CityService {
 
     //xóa
     @Override
+    @Transactional
     public ResponseEntity<?> delete(long id) {
         if (!cityRepository.findById(id).isPresent()) {
             return new ResponseEntity("CITY_NOT_FOUND", HttpStatus.BAD_REQUEST);

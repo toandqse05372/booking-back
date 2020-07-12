@@ -58,13 +58,6 @@ public class TicketTypeController {
         return ticketTypeService.update(model);
     }
 
-    @PostMapping("/upload")
-    @PreAuthorize("hasAnyAuthority('TICKET_TYPE_EDIT')")
-    public ResponseEntity<?> uploadFile(@RequestPart(value = "file") MultipartFile file,
-                                        @RequestPart(value = "codeType") String codeType) {
-        return ticketTypeService.addCodeForTicketType(file, codeType);
-    }
-
     //search by Id
     @GetMapping("/ticketType/{id}")
     public ResponseEntity<?> getTicketType(@PathVariable Long id) {

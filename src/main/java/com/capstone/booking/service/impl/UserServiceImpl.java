@@ -17,6 +17,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 //nghiệp vụ user
@@ -154,6 +155,7 @@ public class UserServiceImpl implements UserService {
 
     //delete user
     @Override
+    @Transactional
     public ResponseEntity<?> delete(long id) {
         if (!userRepository.findById(id).isPresent()) {
             return new ResponseEntity("USER_NOT_FOUND", HttpStatus.BAD_REQUEST);

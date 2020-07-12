@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
 
@@ -31,9 +32,6 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     @Autowired
     GameRepository gameRepository;
 
-    @Autowired
-    CodeRepository codeRepository;
-
     @Override
     public ResponseEntity<?> findAll() {
         List<TicketTypeDTO> results = new ArrayList<>();
@@ -48,6 +46,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 
     //xoa
     @Override
+    @Transactional
     public ResponseEntity<?> delete(long id) {
         if (!ticketTypeRepository.findById(id).isPresent()) {
             return new ResponseEntity("TICKET_TYPE_NOT_FOUND", HttpStatus.BAD_REQUEST);
@@ -106,20 +105,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         return ResponseEntity.ok(results);
     }
 
-    @Override
-    public ResponseEntity<?> addCodeForTicketType(MultipartFile file, String codeType){
-        if (ExcelHelper.hasExcelFormat(file)) {
-            try {
-                List<Code> tutorials = ExcelHelper.excelToTutorials(file.getInputStream());
-                codeRepository.saveAll(tutorials);
-                return ResponseEntity.ok("SUCCESS");
-            } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("COULD_NOT_UPLOAD_FILE");
-            }
-        }else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT_EXCEL_FILE");
 
-    }
 
     @Override
     public ResponseEntity<?> getTicketType(Long id) {

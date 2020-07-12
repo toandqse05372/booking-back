@@ -1,14 +1,27 @@
 package com.capstone.booking.common.converter;
 
 import com.capstone.booking.entity.Order;
+import com.capstone.booking.entity.OrderItem;
 import com.capstone.booking.entity.dto.OrderDTO;
+import com.capstone.booking.entity.dto.OrderItemDTO;
+import com.capstone.booking.repository.TicketTypeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class OrderConverter {
+
+    @Autowired
+    OrderItemConverter orderItemConverter;
+
+    @Autowired
+    private TicketTypeRepository ticketTypeRepository;
+
     public Order toOrder(OrderDTO dto) {
         Order order = new Order();
-        order.setTotalTicket(dto.getTotalTicket());
         order.setTicketTypeId(dto.getTicketTypeId());
 
         order.setFirstName(dto.getFirstName());
@@ -23,7 +36,6 @@ public class OrderConverter {
     }
 
     public Order toOrder(OrderDTO dto, Order order) {
-        order.setTotalTicket(dto.getTotalTicket());
         order.setTicketTypeId(dto.getTicketTypeId());
         order.setFirstName(dto.getFirstName());
         order.setLastName(dto.getLastName());
@@ -40,7 +52,6 @@ public class OrderConverter {
         if (order.getId() != null) {
             dto.setId(order.getId());
         }
-        dto.setTotalTicket(order.getTotalTicket());
         dto.setTicketTypeId(order.getTicketTypeId());
 
         dto.setUserId(order.getUser().getId());
@@ -53,6 +64,14 @@ public class OrderConverter {
         dto.setTotalPayment(order.getTotalPayment());
         dto.setPurchaseDay(order.getPurchaseDay());
         dto.setStatus(order.getStatus());
+
+        dto.setTicketTypeName(ticketTypeRepository.findById(order.getTicketTypeId()).get().getTypeName());
+
+        Set<OrderItemDTO> orderItemDTOS = new HashSet<>();
+        for (OrderItem orderItem : order.getOrderItem()) {
+            orderItemDTOS.add(orderItemConverter.toDTO(orderItem));
+        }
+        dto.setOrderItems(orderItemDTOS);
         return dto;
     }
 }
