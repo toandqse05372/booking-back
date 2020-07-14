@@ -4,18 +4,19 @@ import com.capstone.booking.entity.dto.OrderDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface OrderService {
-    //Thêm
+    //add
     ResponseEntity<?> create(OrderDTO orderDTO);
 
-    //sửa
+    //edit
     ResponseEntity<?> update(OrderDTO orderDTO);
 
     //delete
     ResponseEntity<?> delete(long id);
 
-    //tim kiem Order theo status, & paging
+    //search Order by status, & paging
     ResponseEntity<?> findByStatus(String status, String code);
 
+    //search by Id
     ResponseEntity<?> findByOrderId(Long id);
 
 }

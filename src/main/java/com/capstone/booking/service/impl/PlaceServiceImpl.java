@@ -39,9 +39,8 @@ public class PlaceServiceImpl implements PlaceService {
     @Autowired
     private ImagePlaceRepository imagePlaceRepository;
 
-    @Autowired
-    private ImagePlaceRepository imageRepository;
-    //tim kiem place theo ten & address, description, cityId, categoryId, & paging
+
+    //search place by ten & address, cityId, categoryId, & paging
     @Override
     public ResponseEntity<?> findByMultipleParam(String name, String address, Long cityId,
                                                  Long categoryId, Long limit, Long page){
@@ -57,7 +56,7 @@ public class PlaceServiceImpl implements PlaceService {
         return ResponseEntity.ok(placeConverter.toDTO(place));
     }
 
-    //them place
+    //add place
     @Override
     public ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile[] files) {
         if (placeRepository.findByName(placeDTO.getName()) != null) {
@@ -73,7 +72,7 @@ public class PlaceServiceImpl implements PlaceService {
         return ResponseEntity.ok(placeConverter.toDTO(place));
     }
 
-    //sưa place
+    //edit place
     @Override
     public ResponseEntity<?> update(PlaceDTO placeDTO, MultipartFile[] files) {
         Place existedPlace = placeRepository.findByName(placeDTO.getName());
@@ -91,7 +90,7 @@ public class PlaceServiceImpl implements PlaceService {
         return ResponseEntity.ok(placeConverter.toDTO(place));
     }
 
-    //xóa place
+    //delete place
     @Override
     @Transactional
     public ResponseEntity<?> delete(long id) {
@@ -119,6 +118,7 @@ public class PlaceServiceImpl implements PlaceService {
         return ResponseEntity.ok(placeConverter.toDTO(place));
     }
 
+    //getAll place
     @Override
     public ResponseEntity<?> getAll() {
         List<Place> placeList = placeRepository.findAll();

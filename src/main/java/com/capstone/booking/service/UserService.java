@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserService {
 
-    //tạo customer mới
+    //normal register
     ResponseEntity<?> register(UserDTO userDTO);
 
     ResponseEntity<?> resendEmailVerify(String mail);
@@ -13,19 +13,19 @@ public interface UserService {
 
     ResponseEntity<?> verifyEmail(String verificationToken);
 
-    //sửa
+    //edit
     ResponseEntity<?> update(UserDTO userDTO);
 
     //createUserCMS
     ResponseEntity<?> createUserCMS(UserDTO user);
 
-    //search by first_name & mail, lname, phoneNumber, role
+    //search by firstName, mail, lastName, phoneNumber, role & paging
     ResponseEntity<?> findByMultiParam(String fname, String mail, String lastName, String phoneNumber, Long roleId, Long limit, Long page);
 
-    //xóa
+    //delete
     ResponseEntity<?> delete(long id);
 
-    //tim theo id
+    //search by id
     ResponseEntity<?> getUser(Long id);
 
     ResponseEntity<?> findAllRoles();

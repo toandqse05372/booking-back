@@ -26,7 +26,7 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
     @Autowired
     private PaymentMethodsConverter methodsConverter;
 
-    //thêm
+    //add
     @Override
     public ResponseEntity<?> create(PaymentMethodsDTO methodDTO) {
         PaymentMethods method = methodsConverter.toMethod(methodDTO);
@@ -39,7 +39,7 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
     }
 
 
-    //sửa
+    //edit
     @Override
     public ResponseEntity<?> update(PaymentMethodsDTO methodDTO) {
         PaymentMethods method = new PaymentMethods();
@@ -54,6 +54,7 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
     }
 
 
+    //delete
     @Override
     public ResponseEntity<?> delete(long id) {
         if (!methodsRepository.findById(id).isPresent()) {
@@ -63,12 +64,14 @@ public class PaymentMethodsServiceIml implements PaymentMethodsService {
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
+    //search PaymentMethods by name & paging
     @Override
     public ResponseEntity<?> findByName(String methodName, Long limit, Long page) {
         Output results = methodsRepository.findByMulParam(methodName, limit, page);
         return ResponseEntity.ok(results);
     }
 
+    //search by Id
     @Override
     public ResponseEntity<?> getMethod(Long id) {
         PaymentMethodsDTO dto = methodsConverter.toDTO(methodsRepository.findById(id).get());

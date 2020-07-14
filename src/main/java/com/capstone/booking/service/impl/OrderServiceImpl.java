@@ -33,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderConverter orderConverter;
 
+    //add
     @Override
     public ResponseEntity<?> create(OrderDTO orderDTO) {
         Order order = orderConverter.toOrder(orderDTO);
@@ -45,6 +46,7 @@ public class OrderServiceImpl implements OrderService {
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
 
+    //edit
     @Override
     public ResponseEntity<?> update(OrderDTO orderDTO) {
         Order order = new Order();
@@ -58,6 +60,7 @@ public class OrderServiceImpl implements OrderService {
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
 
+    //delete
     @Override
     @Transactional
     public ResponseEntity<?> delete(long id) {
@@ -68,12 +71,14 @@ public class OrderServiceImpl implements OrderService {
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
+    //search Order by status, & paging
     @Override
     public ResponseEntity<?> findByStatus(String status, String code) {
         Output results = orderRepository.findByStatus(status, code);
         return ResponseEntity.ok(results);
     }
 
+    //search by Id
     @Override
     public ResponseEntity<?> findByOrderId(Long id) {
         Order order = orderRepository.findById(id).get();

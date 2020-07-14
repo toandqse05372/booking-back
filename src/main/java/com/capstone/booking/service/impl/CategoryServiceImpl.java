@@ -48,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
         return ResponseEntity.ok(results);
     }
 
-    //xoa
+    //delete
     @Override
     @Transactional
     public ResponseEntity<?> delete(long id) {
@@ -59,7 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
-    //thêm
+    //add
     @Override
     public ResponseEntity<?> create(CategoryDTO categoryDTO, MultipartFile file) {
         if (categoryRepository.findByTypeName(categoryDTO.getCategoryName()) != null) {
@@ -69,7 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
         return setImageAndReturn(file, category);
     }
 
-    //sửa
+    //edit
     @Override
     public ResponseEntity<?> update(CategoryDTO categoryDTO, MultipartFile file) {
         Category existedCategory = categoryRepository.findByTypeName(categoryDTO.getCategoryName());
@@ -93,6 +93,7 @@ public class CategoryServiceImpl implements CategoryService {
         return ResponseEntity.ok(categoryConverter.toDTO(category));
     }
 
+    //search category by categoryName & paging
     @Override
     public ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page) {
         Output results = categoryRepository.findByMulParam(typeName, limit, page);

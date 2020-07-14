@@ -5,17 +5,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface VisitorTypeService {
-    //them
+    //add
     ResponseEntity<?> create(VisitorTypeDTO model);
 
-    //sửa
+    //edit
     ResponseEntity<?> update(VisitorTypeDTO model);
 
-    //xoa
+    //delete
     ResponseEntity<?> delete(long id);
 
+    //search by ticketTypeId
     ResponseEntity<?> findByTicketTypeId(long id);
 
+    //search by Id
     ResponseEntity<?> getById(long id);
 
     ResponseEntity<?> addCodeForTicketType(MultipartFile file, String codeType);

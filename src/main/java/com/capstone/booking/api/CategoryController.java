@@ -1,7 +1,6 @@
 package com.capstone.booking.api;
 
 import com.capstone.booking.entity.dto.CategoryDTO;
-import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.service.CategoryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +16,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    //tim kiem category theo name & paging
+    //search category by categoryName & paging
     @GetMapping("/category/searchByName")
     @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "categoryName", required = false) String categoryName,
@@ -33,14 +32,14 @@ public class CategoryController {
         return categoryService.getAllCategories();
     }
 
-    //xóa
+    //delete
     @DeleteMapping("/category/{id}")
     @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         return categoryService.delete(id);
     }
 
-    //them
+    //add
     @PostMapping("/category")
     @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
     public ResponseEntity<?> create(@RequestPart(value = "file", required = false) MultipartFile file,
@@ -50,7 +49,7 @@ public class CategoryController {
         return categoryService.create(categoryDTO, file);
     }
 
-    //sua
+    //edit
     @PutMapping("/category/{id}")
     @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
     public ResponseEntity<?> update(@RequestPart(value = "file",required = false) MultipartFile file,

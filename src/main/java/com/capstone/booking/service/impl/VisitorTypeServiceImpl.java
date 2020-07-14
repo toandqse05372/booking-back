@@ -38,7 +38,7 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     @Autowired
     CodeRepository codeRepository;
 
-    //thêm
+    //add
     @Override
     public ResponseEntity<?> create(VisitorTypeDTO model) {
         VisitorType visitorType = visitorTypeConverter.toVisitorType(model);
@@ -58,7 +58,7 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         return ResponseEntity.ok(visitorTypeConverter.toDTO(visitorType));
     }
 
-    //sửa
+    //edit
     @Override
     public ResponseEntity<?> update(VisitorTypeDTO model) {
         VisitorType visitorType = new VisitorType();
@@ -81,7 +81,7 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         return ResponseEntity.ok(visitorTypeConverter.toDTO(visitorType));
     }
 
-    //xóa
+    //delete
     @Override
     @Transactional
     public ResponseEntity<?> delete(long id) {
@@ -93,6 +93,7 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
+    //search by ticketTypeId
     @Override
     public ResponseEntity<?> findByTicketTypeId(long id) {
         List<VisitorTypeDTO> list = new ArrayList<>();
@@ -102,6 +103,7 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         return ResponseEntity.ok(list);
     }
 
+    //search by Id
     @Override
     public ResponseEntity<?> getById(long id) {
         VisitorType type = visitorTypeRepository.findById(id).get();

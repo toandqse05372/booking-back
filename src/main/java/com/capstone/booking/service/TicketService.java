@@ -5,10 +5,10 @@ import org.springframework.http.ResponseEntity;
 
 public interface TicketService {
 
-    //Thêm
+    //edd
     ResponseEntity<?> create(TicketDTO ticketDTO);
 
-    //sửa
+    //edit
     ResponseEntity<?> update(TicketDTO ticketDTO);
 
     //delete

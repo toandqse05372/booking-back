@@ -50,7 +50,7 @@ public class UserController {
         return userService.update(model);
     }
 
-    //search by first_name & mail, lname, phoneNumber, role
+    //search by firstName, mail, lastName, phoneNumber, role & paging
     @GetMapping("/user/searchMul")
     @PreAuthorize("hasAnyAuthority('USER_EDIT')")
     public ResponseEntity<?> findByMultiParam(@RequestParam(value = "firstName", required = false) String firstName,

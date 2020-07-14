@@ -13,20 +13,20 @@ public class TicketController {
     private TicketService ticketService;
 
 
-    //them
+    //add
     @PostMapping("/ticket")
     public ResponseEntity<?> create(@RequestBody TicketDTO model) {
         return ticketService.create(model);
     }
 
-    //sửa
+    //edit
     @PutMapping("/ticket/{id}")
     public ResponseEntity<?> update(@RequestBody TicketDTO model, @PathVariable("id") long id){
         model.setId(id);
         return ticketService.update(model);
     }
 
-    //xóa
+    //delete
     @DeleteMapping("/ticket/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         return ticketService.delete(id);

@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordResetTokenRepository passwordTokenRepository;
 
-    //tạo customer mới
+    //normal register
     @Override
     public ResponseEntity<?> register(UserDTO userDTO) {
         User user = userConverter.toUser(userDTO);
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    //sửa user
+    //edit user
     @Override
     public ResponseEntity<?> update(UserDTO userDTO) {
         User user = new User();
@@ -139,6 +139,7 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(user);
     }
 
+    //createUserCMS
     @Override
     public ResponseEntity<?> createUserCMS(UserDTO userDTO) {
         User user = userConverter.toUser(userDTO);
@@ -154,7 +155,7 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(user);
     }
 
-    //search by first_name and mail, lastName, phoneNumber, roleId & paging
+    //search by firstName, mail, lastName, phoneNumber, roleId & paging
     @Override
     public ResponseEntity<?> findByMultiParam(String firstName, String mail, String lastName, String phoneNumber, Long roleId, Long limit, Long page) {
 

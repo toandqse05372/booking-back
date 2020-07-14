@@ -20,7 +20,7 @@ public class TicketTypeController {
         return ticketTypeService.findAll();
     }
 
-    //tim kiem theo TicketTypeName & paging
+    //search ticketType by typeName & paging
     @GetMapping("/ticketType/searchTypeName")
     @PreAuthorize("hasAnyAuthority('TICKET_TYPE_EDIT')")
     public ResponseEntity<?> searchTypeName(@RequestParam(value = "typeName", required = false) String typeName,
@@ -29,7 +29,7 @@ public class TicketTypeController {
         return ticketTypeService.findByTypeName(typeName, limit, page);
     }
 
-    //tim kiem theo PlaceId
+    //search ticketType by PlaceId
     @GetMapping("/ticketType")
     public ResponseEntity<?> searchByPlaceId(@RequestParam(value = "placeId", required = false) Long placeId){
         return ticketTypeService.findByPlaceId(placeId);

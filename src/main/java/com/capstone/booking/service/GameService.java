@@ -5,10 +5,10 @@ import org.springframework.http.ResponseEntity;
 
 public interface GameService {
 
-    //Thêm
+    //add
     ResponseEntity<?> create(GameDTO gameDTO);
 
-    //sửa
+    //edit
     ResponseEntity<?> update(GameDTO gameDTO);
 
     //delete game
@@ -20,13 +20,13 @@ public interface GameService {
     //GetAllGame
     ResponseEntity<?> findAll();
 
-    //tim kiem Game theo name & placeName, & paging ============================
+    //search Game by name & placeName, & paging
     ResponseEntity<?> findByMulParam(String gameName, String placeName, Long limit, Long page);
 
     //change status
     ResponseEntity<?> changeStatus(Long id);
 
-    //tim kiem Game theo placeId & paging
+    //search Game by placeId & paging
     ResponseEntity<?> findByPlaceId(Long placeId, Long limit, Long page);
 
     ResponseEntity<?> listOptionByPlace(long id);

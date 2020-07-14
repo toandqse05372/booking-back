@@ -21,14 +21,14 @@ public class VisitorTypeController {
     @Autowired
     VisitorTypeService visitorTypeService;
 
-    //them
+    //add
     @PostMapping("/visitorType")
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
     public ResponseEntity<?> create(@RequestBody VisitorTypeDTO model) {
         return visitorTypeService.create(model);
     }
 
-    //sửa
+    //edit
     @PutMapping("/visitorType/{id}")
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
     public ResponseEntity<?> update(@RequestBody VisitorTypeDTO model, @PathVariable("id") long id) {
@@ -36,7 +36,7 @@ public class VisitorTypeController {
         return visitorTypeService.update(model);
     }
 
-    //xóa
+    //delete
     @DeleteMapping("/visitorType/{id}")
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
