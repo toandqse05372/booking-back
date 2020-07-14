@@ -24,4 +24,6 @@ public interface TicketTypeService {
     ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page);
 
     ResponseEntity<?> getTicketType(Long id);
+
+    ResponseEntity<?> addCodeForTicketType(MultipartFile file);
 }

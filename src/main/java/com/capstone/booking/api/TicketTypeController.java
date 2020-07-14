@@ -64,4 +64,9 @@ public class TicketTypeController {
         return ticketTypeService.getTicketType(id);
     }
 
+    @PostMapping("/upload")
+    @PreAuthorize("hasAnyAuthority('TICKET_TYPE_EDIT')")
+    public ResponseEntity<?> uploadFile(@RequestPart(value = "file") MultipartFile file){
+        return ticketTypeService.addCodeForTicketType(file);
+    }
 }

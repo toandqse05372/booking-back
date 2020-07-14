@@ -1,6 +1,7 @@
 package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
+import com.capstone.booking.api.output.OutputExcel;
 import com.capstone.booking.common.converter.TicketTypeConverter;
 import com.capstone.booking.common.helper.ExcelHelper;
 import com.capstone.booking.entity.*;
@@ -8,6 +9,7 @@ import com.capstone.booking.entity.dto.TicketTypeDTO;
 import com.capstone.booking.repository.CodeRepository;
 import com.capstone.booking.repository.GameRepository;
 import com.capstone.booking.repository.TicketTypeRepository;
+import com.capstone.booking.repository.VisitorTypeRepository;
 import com.capstone.booking.service.TicketTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,12 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 
     @Autowired
     GameRepository gameRepository;
+
+    @Autowired
+    CodeRepository codeRepository;
+
+    @Autowired
+    VisitorTypeRepository visitorTypeRepository;
 
     @Override
     public ResponseEntity<?> findAll() {
@@ -92,10 +100,20 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     public ResponseEntity<?> findByPlaceId(long placeId) {
         List<TicketTypeDTO> list = new ArrayList<>();
         List<TicketType> ticketTypes = ticketTypeRepository.findByPlaceId(placeId);
+        OutputExcel output = new OutputExcel();
+        if(ticketTypes.size() > 0){
+            for(TicketType ticketType: ticketTypes){
+                if(visitorTypeRepository.findAllByTicketType(ticketType).size() > 0){
+                    output.setImportExcel(true);
+                    break;
+                }
+            }
+        }
         for(TicketType type: ticketTypes){
             list.add(ticketTypeConverter.toDTO(type));
         }
-        return ResponseEntity.ok(list);
+        output.setListResult(list);
+        return ResponseEntity.ok(output);
     }
 
     //tim kiem theo tên loại vé
@@ -111,5 +129,20 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     public ResponseEntity<?> getTicketType(Long id) {
         TicketTypeDTO dto = ticketTypeConverter.toDTO(ticketTypeRepository.findById(id).get());
         return ResponseEntity.ok(dto);
+    }
+
+    @Override
+    public ResponseEntity<?> addCodeForTicketType(MultipartFile file){
+        if (ExcelHelper.hasExcelFormat(file)) {
+            try {
+                List<Code> tutorials = ExcelHelper.excelToCode(file.getInputStream());
+                codeRepository.saveAll(tutorials);
+                return ResponseEntity.ok("OK");
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("COULD_NOT_UPLOAD_FILE");
+            }
+        }else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT_EXCEL_FILE");
+
     }
 }

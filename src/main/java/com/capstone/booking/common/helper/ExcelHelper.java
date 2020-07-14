@@ -11,10 +11,7 @@ import java.util.List;
 import com.capstone.booking.entity.Code;
 import com.capstone.booking.entity.VisitorType;
 import com.capstone.booking.repository.VisitorTypeRepository;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,7 +67,7 @@ public class ExcelHelper {
         }
     }
 
-    public static List<Code> excelToTutorials(InputStream is) {
+    public static List<Code> excelToCode(InputStream is) {
         try {
             Workbook workbook = new XSSFWorkbook(is);
             Sheet sheet = workbook.getSheet(SHEET);
@@ -95,7 +92,8 @@ public class ExcelHelper {
                                     findByTypeKey(currentCell.getStringCellValue()));
                             break;
                         case 2:
-                            code.setCode(currentCell.getNumericCellValue()+"");
+                            currentCell.setCellType(CellType.STRING);
+                            code.setCode(currentCell.getStringCellValue());
                             break;
                         default:
                             break;

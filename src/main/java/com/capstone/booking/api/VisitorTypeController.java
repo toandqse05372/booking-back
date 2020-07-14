@@ -55,7 +55,7 @@ public class VisitorTypeController {
         return visitorTypeService.findByTicketTypeId(ticketTypeId);
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/uploadVisitorFile")
     @PreAuthorize("hasAnyAuthority('TICKET_TYPE_EDIT')")
     public ResponseEntity<?> uploadFile(@RequestPart(value = "file") MultipartFile file,
                                         @RequestPart(value = "codeType") String codeType) {

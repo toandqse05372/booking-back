@@ -12,5 +12,4 @@ public class Output {
     private int totalPage;
     private List<?> listResult;
     private int totalItems;
-
 }

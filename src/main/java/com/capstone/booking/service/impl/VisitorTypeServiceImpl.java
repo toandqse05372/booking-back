@@ -112,7 +112,7 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     public ResponseEntity<?> addCodeForTicketType(MultipartFile file, String codeType){
         if (ExcelHelper.hasExcelFormat(file)) {
             try {
-                List<Code> tutorials = ExcelHelper.excelToTutorials(file.getInputStream());
+                List<Code> tutorials = ExcelHelper.excelToCode(file.getInputStream());
                 codeRepository.saveAll(tutorials);
                 int reaming = codeRepository.findByVisitorType(visitorTypeRepository.findByTypeKey(codeType)).size();
                 return ResponseEntity.ok(reaming);
