@@ -3,9 +3,11 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.api.output.OutputExcel;
 import com.capstone.booking.common.converter.TicketTypeConverter;
+import com.capstone.booking.common.converter.VisitorTypeConverter;
 import com.capstone.booking.common.helper.ExcelHelper;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.TicketTypeDTO;
+import com.capstone.booking.entity.dto.VisitorTypeDTO;
 import com.capstone.booking.repository.CodeRepository;
 import com.capstone.booking.repository.GameRepository;
 import com.capstone.booking.repository.TicketTypeRepository;
@@ -36,6 +38,9 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 
     @Autowired
     CodeRepository codeRepository;
+
+    @Autowired
+    VisitorTypeConverter visitorTypeConverter;
 
     @Autowired
     VisitorTypeRepository visitorTypeRepository;
@@ -103,14 +108,18 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         OutputExcel output = new OutputExcel();
         if(ticketTypes.size() > 0){
             for(TicketType ticketType: ticketTypes){
-                if(visitorTypeRepository.findAllByTicketType(ticketType).size() > 0){
+                TicketTypeDTO ticketTypeDTO = ticketTypeConverter.toDTO(ticketType);
+                List<VisitorType> visitorTypes = visitorTypeRepository.findAllByTicketType(ticketType);
+                if(visitorTypes.size() > 0){
                     output.setImportExcel(true);
-                    break;
+                    Set<VisitorTypeDTO> visitorTypeDTOS = new HashSet<>();
+                    for(VisitorType type: visitorTypes){
+                        visitorTypeDTOS.add(visitorTypeConverter.toDTO(type));
+                    }
+                    ticketTypeDTO.setVisitorTypes(visitorTypeDTOS);
                 }
+                list.add(ticketTypeDTO);
             }
-        }
-        for(TicketType type: ticketTypes){
-            list.add(ticketTypeConverter.toDTO(type));
         }
         output.setListResult(list);
         return ResponseEntity.ok(output);

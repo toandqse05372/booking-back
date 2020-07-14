@@ -50,7 +50,6 @@ public class TicketTypeConverter {
         dto.setPlaceId(ticketType.getPlaceId());
 
         Set<Game> gameSet = ticketType.getGame();
-        Set<String> gameString = new HashSet<>();
         Set<Long> gameIdSet = new HashSet<>();
         for (Game game : gameSet) {
             gameIdSet.add(game.getId());

@@ -17,4 +17,5 @@ public class TicketTypeDTO extends BaseDTO{
     private String conversionMethod;
     private Set<Long> gameId;
     private Long placeId;
+    private Set<VisitorTypeDTO> visitorTypes;
 }

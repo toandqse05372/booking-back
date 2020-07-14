@@ -17,30 +17,32 @@ public class UserController {
     @Autowired
     private TokenService tokenService;
 
-    //đăng kí tài khoản bt
+    //normal register
     @PostMapping("/user/register")
     public ResponseEntity<?> register(@RequestBody UserDTO user) {
         return userService.register(user);
     }
 
+    //re sent email
     @PostMapping("/user/resent-email")
     public ResponseEntity<?> resendEmail(@RequestBody String mail) {
         return userService.resendEmailVerify(mail);
     }
 
+    //active email
     @GetMapping("/user/active")
     public ResponseEntity<?> active(@RequestParam("token")String verificationToken) {
         return userService.verifyEmail(verificationToken);
     }
 
-    //đăng kí tài khoản bt
+    //cms create new user
     @PostMapping("/user/createUserCMS")
     @PreAuthorize("hasAnyAuthority('USER_EDIT')")
     public ResponseEntity<?> createUserCMS(@RequestBody UserDTO user) {
         return userService.createUserCMS(user);
     }
 
-    //sửa User
+    //update User
     @PutMapping(value = "/user/{id}")
     @PreAuthorize("hasAnyAuthority('USER_EDIT')")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO model, @PathVariable("id") long id) {
@@ -80,8 +82,13 @@ public class UserController {
     }
 
     @PostMapping("user/resetPassword")
-    public ResponseEntity<?> resetPasswordRequest(@RequestBody String mail){
-        return userService.findAllRoles();
+    public ResponseEntity<?> resetPasswordRequest(@RequestBody Long uid, String oldPassword, String newPassword){
+        return userService.changePassword(uid, oldPassword, newPassword);
+    }
+
+    @GetMapping("user/verifyEmailFb")
+    public ResponseEntity<?> verifyEmailFb(String mail, Long uid){
+        return userService.verifyEmailFb(mail, uid);
     }
 
 

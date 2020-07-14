@@ -75,6 +75,15 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(user);
     }
 
+    @Override
+    public ResponseEntity<?> verifyEmailFb(String mail, Long uid){
+        User user = userRepository.findById(uid).get();
+        user.setMail(mail);
+        userRepository.save(user);
+        sendEmailVerify(user);
+        return ResponseEntity.ok(user);
+    }
+
     //send verify email
     public void sendEmailVerify(User user){
         VerificationToken verificationToken = new VerificationToken();
@@ -216,7 +225,6 @@ public class UserServiceImpl implements UserService {
     }
 
     //create password reset token
-    @Override
     public ResponseEntity<?> createPasswordResetToken(String mail) {
         User user = userRepository.findByMail(mail);
         if (user == null) {

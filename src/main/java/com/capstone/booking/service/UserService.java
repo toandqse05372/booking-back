@@ -9,6 +9,8 @@ public interface UserService {
 
     ResponseEntity<?> resendEmailVerify(String mail);
 
+    ResponseEntity<?> verifyEmailFb(String mail, Long uid);
+
     ResponseEntity<?> verifyEmail(String verificationToken);
 
     //sửa
