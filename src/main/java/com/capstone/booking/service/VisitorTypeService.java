@@ -19,4 +19,6 @@ public interface VisitorTypeService {
     ResponseEntity<?> getById(long id);
 
     ResponseEntity<?> addCodeForTicketType(MultipartFile file, String codeType);
+
+    ResponseEntity<?> markBasicPrice(long id);
 }

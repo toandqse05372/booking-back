@@ -36,6 +36,12 @@ public class VisitorTypeController {
         return visitorTypeService.update(model);
     }
 
+    @PutMapping("/markPrice/{id}")
+    @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
+    public ResponseEntity<?> markBasicPrice(@PathVariable("id") long id) {
+        return visitorTypeService.markBasicPrice(id);
+    }
+
     //xóa
     @DeleteMapping("/visitorType/{id}")
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")

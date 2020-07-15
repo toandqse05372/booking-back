@@ -1,0 +1,2 @@
+Name: namexxx
+Price: pricexxx

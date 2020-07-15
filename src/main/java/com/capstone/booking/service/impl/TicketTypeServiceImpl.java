@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -109,14 +110,19 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         if(ticketTypes.size() > 0){
             for(TicketType ticketType: ticketTypes){
                 TicketTypeDTO ticketTypeDTO = ticketTypeConverter.toDTO(ticketType);
-                List<VisitorType> visitorTypes = visitorTypeRepository.findAllByTicketType(ticketType);
+                List<VisitorType> visitorTypes = visitorTypeRepository.findByTicketType(ticketType);
                 if(visitorTypes.size() > 0){
                     output.setImportExcel(true);
-                    Set<VisitorTypeDTO> visitorTypeDTOS = new HashSet<>();
+                    List<VisitorTypeDTO> visitorTypeDTOS = new ArrayList<>();
                     for(VisitorType type: visitorTypes){
                         visitorTypeDTOS.add(visitorTypeConverter.toDTO(type));
                     }
-                    ticketTypeDTO.setVisitorTypes(visitorTypeDTOS);
+                    ticketTypeDTO.setVisitorTypes(visitorTypeDTOS.stream().sorted(new Comparator<VisitorTypeDTO>() {
+                        @Override
+                        public int compare(VisitorTypeDTO o1, VisitorTypeDTO o2) {
+                            return o1.getId().compareTo(o2.getId());
+                        }
+                    }).collect(Collectors.toList()));
                 }
                 list.add(ticketTypeDTO);
             }

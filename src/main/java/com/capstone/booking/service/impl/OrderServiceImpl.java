@@ -2,21 +2,23 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.OrderConverter;
+import com.capstone.booking.common.helper.PdfPrinter;
+import com.capstone.booking.common.helper.PrintRequest;
 import com.capstone.booking.common.key.OrderStatus;
-import com.capstone.booking.entity.Order;
-import com.capstone.booking.entity.OrderItem;
-import com.capstone.booking.entity.User;
+import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.OrderDTO;
-import com.capstone.booking.repository.OrderRepository;
-import com.capstone.booking.repository.TicketTypeRepository;
-import com.capstone.booking.repository.UserRepository;
+import com.capstone.booking.repository.*;
 import com.capstone.booking.service.OrderService;
+import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +34,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderConverter orderConverter;
+
+    @Autowired
+    private CodeRepository codeRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
+
+    @Autowired
+    private TicketTypeRepository ticketTypeRepository;
+
+    @Autowired
+    private PdfPrinter pdfPrinter;
 
     @Override
     public ResponseEntity<?> create(OrderDTO orderDTO) {
@@ -78,5 +92,34 @@ public class OrderServiceImpl implements OrderService {
     public ResponseEntity<?> findByOrderId(Long id) {
         Order order = orderRepository.findById(id).get();
         return ResponseEntity.ok(orderConverter.toDTO(order));
+    }
+
+    @Override
+    public ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException {
+        Order order = orderRepository.findById(id).get();
+        Set<OrderItem> orderItems = order.getOrderItem();
+        List<PrintRequest> printRequests = new ArrayList<>();
+        for(OrderItem item: orderItems){
+            VisitorType type = item.getVisitorType();
+            List<Code> codeToUse = codeRepository.findByVisitorTypeIdLimitTo(item.getQuantity(), type);
+            List<Ticket> ticketOrder = new ArrayList<>();
+            for(int i = 0; i < item.getQuantity(); i++){
+                Ticket ticket = new Ticket();
+                ticket.setCode(codeToUse.get(i).getCode());
+     //           ticket.setRedemptionDate(order.getRedemptionDate());
+                ticket.setOrderItem(item);
+     //           ticket.setVisitorTypeId(type.getId());
+                ticketOrder.add(ticket);
+            }
+            ticketRepository.saveAll(ticketOrder);
+            codeRepository.deleteAll(codeToUse);
+            PrintRequest printRequest = new PrintRequest();
+            printRequest.setTickets(ticketOrder);
+            printRequest.setVisitorType(type);
+            printRequest.setTicketType(ticketTypeRepository.findById(order.getTicketTypeId()).get());
+            printRequests.add(printRequest);
+        }
+        pdfPrinter.printPDF(printRequests);
+        return null;
     }
 }

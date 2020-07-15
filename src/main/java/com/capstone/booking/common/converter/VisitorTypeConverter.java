@@ -20,7 +20,6 @@ public class VisitorTypeConverter {
         visitorType.setTypeName(dto.getTypeName());
         visitorType.setTypeKey(dto.getTypeKey());
         visitorType.setPrice(dto.getPrice());
-        visitorType.setBasicType(dto.isBasicType());
         return visitorType;
     }
 
@@ -28,7 +27,6 @@ public class VisitorTypeConverter {
         visitorType.setTypeName(dto.getTypeName());
         visitorType.setTypeKey(dto.getTypeKey());
         visitorType.setPrice(dto.getPrice());
-        visitorType.setBasicType(dto.isBasicType());
         return visitorType;
     }
 
@@ -43,6 +41,7 @@ public class VisitorTypeConverter {
         dto.setBasicType(visitorType.isBasicType());
         dto.setRemaining(codeRepository.findByVisitorType(visitorType).size());
         dto.setTicketTypeId(visitorType.getTicketType().getId());
+        dto.setBasicType(visitorType.isBasicType());
 
         return dto;
     }

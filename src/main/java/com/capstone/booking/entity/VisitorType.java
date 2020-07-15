@@ -14,7 +14,7 @@ public class VisitorType extends BaseEntity{
     @Column(length = 50)
     private String typeKey;
     private int price;
-    private boolean isBasicType;
+    private boolean isBasicType = false;
 
 
     //Bảng TicketType qhe 1-n với VisitorType

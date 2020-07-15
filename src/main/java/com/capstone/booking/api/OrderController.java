@@ -2,9 +2,13 @@ package com.capstone.booking.api;
 
 import com.capstone.booking.entity.dto.OrderDTO;
 import com.capstone.booking.service.OrderService;
+import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 @RestController
 public class OrderController {
@@ -38,10 +42,9 @@ public class OrderController {
         return orderService.update(model);
     }
 
-    @PostMapping("/order/sendTicket")
-    public ResponseEntity<?> sendTicket(@RequestBody OrderDTO model, @PathVariable("id") long id) {
-        model.setId(id);
-        return orderService.update(model);
+    @PutMapping("/order/sendTicket/{id}")
+    public ResponseEntity<?> sendTicket(@PathVariable("id") long id) throws DocumentException, IOException, URISyntaxException {
+        return orderService.sendTicket(id);
     }
 
     @GetMapping("/order/{id}")

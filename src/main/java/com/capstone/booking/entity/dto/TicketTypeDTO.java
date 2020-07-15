@@ -3,6 +3,7 @@ package com.capstone.booking.entity.dto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -17,5 +18,5 @@ public class TicketTypeDTO extends BaseDTO{
     private String conversionMethod;
     private Set<Long> gameId;
     private Long placeId;
-    private Set<VisitorTypeDTO> visitorTypes;
+    private List<VisitorTypeDTO> visitorTypes;
 }

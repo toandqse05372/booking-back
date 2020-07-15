@@ -96,7 +96,7 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     @Override
     public ResponseEntity<?> findByTicketTypeId(long id) {
         List<VisitorTypeDTO> list = new ArrayList<>();
-        for (VisitorType type : visitorTypeRepository.findAllByTicketType(ticketTypeRepository.findById(id).get())) {
+        for (VisitorType type : visitorTypeRepository.findByTicketType(ticketTypeRepository.findById(id).get())) {
             list.add(visitorTypeConverter.toDTO(type));
         }
         return ResponseEntity.ok(list);
@@ -122,5 +122,21 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         }else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT_EXCEL_FILE");
 
+    }
+
+    @Override
+    public ResponseEntity<?> markBasicPrice(long id) {
+        VisitorType markType = visitorTypeRepository.findById(id).get();
+        if(markType == null){
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("VISITOR_TYPE_NOT_FOUND");
+        }
+        VisitorType oldMarType = visitorTypeRepository.findByIsBasicType(true);
+        oldMarType.setBasicType(false);
+        visitorTypeRepository.save(oldMarType);
+
+        markType.setBasicType(true);
+        visitorTypeRepository.save(markType);
+
+        return ResponseEntity.status((HttpStatus.OK)).body("UPDATED");
     }
 }
