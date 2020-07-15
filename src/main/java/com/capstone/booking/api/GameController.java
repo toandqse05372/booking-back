@@ -20,7 +20,7 @@ public class GameController {
         return gameService.findAll();
     }
 
-    //tim kiem Game theo name & placeName, & paging
+    //search Game by name & placeName, & paging
     @GetMapping("/game/searchMul")
     @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "gameName", required = false) String gameName,
@@ -51,6 +51,7 @@ public class GameController {
     public ResponseEntity<?> createGame(@RequestBody GameDTO model) {
         return gameService.create(model);
     }
+
     //edit Game
     @PutMapping("/game/{id}")
     @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
@@ -65,7 +66,7 @@ public class GameController {
         return gameService.getGame(id);
     }
 
-    //tim kiem Game theo placeId & paging
+    //search Game by placeId & paging
     @GetMapping("/game/findByPlaceId")
     @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> findByPlaceId(@RequestParam(value = "placeId", required = false) Long placeId,

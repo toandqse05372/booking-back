@@ -37,7 +37,7 @@ public class CityServiceImpl implements CityService {
     @Autowired
     private AmazonS3ClientService amazonS3ClientService;
 
-    //hien thị city
+    //getAllCity
     @Override
     public ResponseEntity<?> findAllCity() {
         List<CityDTO> results = new ArrayList<>();
@@ -49,6 +49,7 @@ public class CityServiceImpl implements CityService {
         return ResponseEntity.ok(results);
     }
 
+    //search By Id
     @Override
     public ResponseEntity<?> getCity(Long id) {
         Optional<City> cities = cityRepository.findById(id);
@@ -56,14 +57,14 @@ public class CityServiceImpl implements CityService {
         return ResponseEntity.ok(cityConverter.toDTO(city));
     }
 
-    //search cityName & paging
+    //search by cityName & paging
     @Override
     public ResponseEntity<?> findByName(String name, Long limit, Long page) {
         Output results = cityRepository.findByName(name, limit, page);
         return ResponseEntity.ok(results);
     }
 
-    //thêm
+    //add
     @Override
     public ResponseEntity<?> create(CityDTO cityDTO, MultipartFile file) {
         if (cityRepository.findByName(cityDTO.getName()) != null) {
@@ -74,7 +75,7 @@ public class CityServiceImpl implements CityService {
         return setImageAndReturn(file, city);
     }
 
-    //sửa
+    //edit
     @Override
     public ResponseEntity<?> update(CityDTO cityDTO, MultipartFile file) {
         City existedCity = cityRepository.findByName(cityDTO.getName());
@@ -99,7 +100,7 @@ public class CityServiceImpl implements CityService {
         return ResponseEntity.ok(cityConverter.toDTO(city));
     }
 
-    //xóa
+    //delete
     @Override
     @Transactional
     public ResponseEntity<?> delete(long id) {

@@ -11,6 +11,7 @@ public class TicketDTO extends BaseDTO{
     private Date redemptionDate;
     private String code;
     private VisitorTypeDTO visitorType;
+    private Long visitorTypeId;
     //private TicketTypeDTO ticketType;
     //private Long orderId;
 }

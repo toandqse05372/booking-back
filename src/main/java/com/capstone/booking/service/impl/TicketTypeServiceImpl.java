@@ -46,6 +46,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     @Autowired
     VisitorTypeRepository visitorTypeRepository;
 
+    //get All
     @Override
     public ResponseEntity<?> findAll() {
         List<TicketTypeDTO> results = new ArrayList<>();
@@ -58,7 +59,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         return ResponseEntity.ok(results);
     }
 
-    //xoa
+    //delete
     @Override
     @Transactional
     public ResponseEntity<?> delete(long id) {
@@ -69,7 +70,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
-    //tao ticketType
+    //add ticketType
     @Override
     public ResponseEntity<?> create(TicketTypeDTO ticketTypeDTO) {
         TicketType ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO);
@@ -84,7 +85,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         return ResponseEntity.ok(ticketTypeConverter.toDTO(ticketType));
     }
 
-    //sua tickType
+    //edit tickType
     @Override
     public ResponseEntity<?> update(TicketTypeDTO ticketTypeDTO) {
         TicketType ticketType = new TicketType();
@@ -131,15 +132,14 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         return ResponseEntity.ok(output);
     }
 
-    //tim kiem theo tên loại vé
+    //search ticketType by typeName & paging
     @Override
     public ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page) {
         Output results = ticketTypeRepository.findByTypeName(typeName, limit, page);
         return ResponseEntity.ok(results);
     }
 
-
-
+    //search by Id
     @Override
     public ResponseEntity<?> getTicketType(Long id) {
         TicketTypeDTO dto = ticketTypeConverter.toDTO(ticketTypeRepository.findById(id).get());

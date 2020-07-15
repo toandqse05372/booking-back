@@ -35,6 +35,7 @@ public class PlaceConverter {
     public Place toPlace(PlaceDTO dto) {
         Place place = new Place();
         place.setName(dto.getName());
+        place.setPlaceKey(dto.getPlaceKey());
         place.setAddress(dto.getAddress());
         place.setShortDescription(dto.getShortDescription());
         place.setDetailDescription(dto.getDetailDescription());
@@ -73,6 +74,7 @@ public class PlaceConverter {
             dto.setId(place.getId());
         }
         dto.setName(place.getName());
+        dto.setPlaceKey(place.getPlaceKey());
         dto.setAddress(place.getAddress());
         dto.setDetailDescription(place.getDetailDescription());
         dto.setMail(place.getMail());
@@ -111,6 +113,7 @@ public class PlaceConverter {
 
     public Place toPlace(PlaceDTO dto, Place place) {
         place.setName(dto.getName());
+        place.setPlaceKey(dto.getPlaceKey());
         place.setAddress(dto.getAddress());
         place.setShortDescription(dto.getShortDescription());
         place.setDetailDescription(dto.getDetailDescription());

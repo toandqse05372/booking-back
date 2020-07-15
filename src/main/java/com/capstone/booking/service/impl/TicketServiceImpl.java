@@ -30,7 +30,7 @@ public class TicketServiceImpl implements TicketService {
     @Autowired
     private OrderRepository orderRepository;
 
-    //them
+    //add
     @Override
     public ResponseEntity<?> create(TicketDTO ticketDTO) {
         Ticket ticket = ticketConverter.toTicket(ticketDTO);
@@ -39,7 +39,7 @@ public class TicketServiceImpl implements TicketService {
         return ResponseEntity.ok(ticketConverter.toDTO(ticket));
     }
 
-    //sua
+    //edit
     @Override
     public ResponseEntity<?> update(TicketDTO ticketDTO) {
         Ticket ticket = new Ticket();
@@ -50,7 +50,7 @@ public class TicketServiceImpl implements TicketService {
         return ResponseEntity.ok(ticketConverter.toDTO(ticket));
     }
 
-    //xóa
+    //delete
     @Override
     @Transactional
     public ResponseEntity<?> delete(long id) {

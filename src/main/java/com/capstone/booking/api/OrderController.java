@@ -22,7 +22,7 @@ public class OrderController {
         return orderService.delete(id);
     }
 
-    //tim kiem Order theo status, & paging
+    //search Order by status, & paging
     @GetMapping("/order/searchByStatus")
     public ResponseEntity<?> searchByStatus(@RequestParam(value = "status", required = false) String status,
                                             @RequestParam(value = "code", required = false) String code) {
@@ -47,6 +47,7 @@ public class OrderController {
         return orderService.sendTicket(id);
     }
 
+    //search by Id
     @GetMapping("/order/{id}")
     public ResponseEntity<?> getOrderById(@PathVariable("id") long id) {
         return orderService.findByOrderId(id);

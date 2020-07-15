@@ -13,7 +13,7 @@ public class PaymentMethodsController {
     @Autowired
     private PaymentMethodsService methodService;
 
-    //tim kiem PaymentMethods theo name & paging
+    //search PaymentMethods by name & paging
     @GetMapping("/method/searchByName")
     @PreAuthorize("hasAnyAuthority('PAYMENT_METHOD_EDIT')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "methodName", required = false) String methodName,

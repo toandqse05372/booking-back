@@ -19,12 +19,14 @@ public class TicketConverter {
         Ticket ticket = new Ticket();
         ticket.setCode(dto.getCode());
         ticket.setRedemptionDate(dto.getRedemptionDate());
+        ticket.setVisitorTypeId(dto.getVisitorTypeId());
         return ticket;
     }
 
     public Ticket toTicket(TicketDTO dto, Ticket ticket) {
         ticket.setCode(dto.getCode());
         ticket.setRedemptionDate(dto.getRedemptionDate());
+        ticket.setVisitorTypeId(dto.getVisitorTypeId());
         return ticket;
     }
 
@@ -35,7 +37,7 @@ public class TicketConverter {
         }
         dto.setCode(ticket.getCode());
         dto.setRedemptionDate(ticket.getRedemptionDate());
-
+        dto.setVisitorTypeId(ticket.getVisitorTypeId());
         //dto.setOrderId(ticket.getOrder().getId());
 
 //        TicketTypeDTO typeDTO = new TicketTypeDTO();

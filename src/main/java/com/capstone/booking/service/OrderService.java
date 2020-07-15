@@ -8,18 +8,19 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 public interface OrderService {
-    //Thêm
+    //add
     ResponseEntity<?> create(OrderDTO orderDTO);
 
-    //sửa
+    //edit
     ResponseEntity<?> update(OrderDTO orderDTO);
 
     //delete
     ResponseEntity<?> delete(long id);
 
-    //tim kiem Order theo status, & paging
+    //search Order by status, & paging
     ResponseEntity<?> findByStatus(String status, String code);
 
+    //search by Id
     ResponseEntity<?> findByOrderId(Long id);
 
     ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException;

@@ -8,21 +8,22 @@ public interface TicketTypeService {
     //get All
     ResponseEntity<?> findAll();
 
-    //xóa
+    //delete
     ResponseEntity<?> delete(long id);
 
-    //them
+    //add
     ResponseEntity<?> create(TicketTypeDTO ticketTypeDTO);
 
-    //sưa
+    //edit
     ResponseEntity<?> update(TicketTypeDTO ticketTypeDTO);
 
     //search by placeId
     ResponseEntity<?> findByPlaceId(long placeId);
 
-    //tim kiem theo tên loại vé
+    //search ticketType by typeName & paging
     ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page);
 
+    //search by Id
     ResponseEntity<?> getTicketType(Long id);
 
     ResponseEntity<?> addCodeForTicketType(MultipartFile file);

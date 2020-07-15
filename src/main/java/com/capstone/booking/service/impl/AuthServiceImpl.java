@@ -89,6 +89,7 @@ public class AuthServiceImpl implements AuthService {
             return ResponseEntity.ok(returnToken(setPermission(user)).getToken());
     }
 
+    //logout
     @Override
     public ResponseEntity<?> logout(String tokenStr){
         Token token = tokenRepository.findByToken(tokenStr.substring(6));

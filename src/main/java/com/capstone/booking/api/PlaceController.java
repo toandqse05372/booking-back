@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Set;
 
 
 @RestController
@@ -21,13 +20,13 @@ public class PlaceController {
     @Autowired
     private PlaceService placeService;
 
-    //getAll
+    //getAll place
     @GetMapping("/places")
     public ResponseEntity<?> getAllPlace() {
         return placeService.getAll();
     }
 
-    //thêm place
+    //add place
     @PostMapping("/place")
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> createPlace(@RequestPart(value = "file", required = false) MultipartFile[] files,
@@ -38,7 +37,7 @@ public class PlaceController {
         return placeService.create(placeDTO, files);
     }
 
-    //sửa place
+    //edit place
     @PutMapping("/place/{id}")
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> updatePlace(@RequestPart(value = "file", required = false) MultipartFile[] files,
@@ -64,7 +63,7 @@ public class PlaceController {
     }
 
 
-    //tim kiem place theo ten & address, cityId, categoryId, & paging
+    //search place by ten & address, cityId, categoryId, & paging
     @GetMapping("/place/searchMul")
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "name", required = false) String name,
@@ -87,14 +86,12 @@ public class PlaceController {
         return placeService.searchPlaceForClient(name, minValue, maxValue, cityId, categoryId, limit, page);
     }
 
-    //xoa place
+    //delete place
     @DeleteMapping("/place/{id}")
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> deletePlace(@PathVariable("id") long id) {
         placeService.delete(id);
         return new ResponseEntity("Delete Successful", HttpStatus.OK);
     }
-
-
 
 }

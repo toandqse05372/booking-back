@@ -5,18 +5,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 public interface CityService {
-
+    //getAllCity
     ResponseEntity<?> findAllCity();
-    //search ById
+
+    //search By Id
     ResponseEntity<?> getCity(Long id);
 
     //search cityName & paging
     ResponseEntity<?> findByName(String name, Long limit, Long page);
 
-    //Thêm
+    //add
     ResponseEntity<?> create(CityDTO cityDTO, MultipartFile file);
 
-    //sửa
+    //edit
     ResponseEntity<?> update(CityDTO cityDTO, MultipartFile file);
 
     //delete city

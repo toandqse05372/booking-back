@@ -15,19 +15,20 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    //login tk bt
+    //normal login
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDTO user,
                                    @RequestParam(value = "page", required = false) String page) {
         return authService.findByEmail(user, page);
     }
 
-    //login tk fb
+    //login fb
     @PostMapping("/login/fb")
     public ResponseEntity<?> loginFb(@RequestBody FBLoginDTO fbForm) throws IOException {
         return authService.loginFb(fbForm);
     }
 
+    //logout
     @PostMapping(value = "/login/logout")
     public ResponseEntity<?> logout(@RequestHeader(value = "Authorization") String token){
         return authService.logout(token);

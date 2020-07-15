@@ -9,25 +9,26 @@ import java.util.Set;
 
 public interface PlaceService {
 
-    //tim kiem Place theo ten & address, description, cityId, categoryId, & paging
+    //search place by ten & address, cityId, categoryId, & paging
     ResponseEntity<?> findByMultipleParam(String name, String address, Long cityId,
                                           Long categoryId, Long limit, Long page);
 
     //search ById
     ResponseEntity<?> getPlace(Long id);
 
-    //them place
+    //add place
     ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile[] files) ;
 
-    //sưa place
+    //edit place
     ResponseEntity<?> update(PlaceDTO placeDTO, MultipartFile[] files) ;
 
-    //xóa
+    //delete
     ResponseEntity<?> delete(long id);
 
     //change status
     ResponseEntity<?> changeStatus(Long id);
 
+    //getAll place
     ResponseEntity<?> getAll();
 
     ResponseEntity<?> searchPlaceForClient(String name, Long minValue, Long maxValue, List<Long> cityId,

@@ -36,7 +36,7 @@ public class GameServiceImpl implements GameService {
     private PlaceRepository placeRepository;
 
 
-    //create
+    //add
     @Override
     public ResponseEntity<?> create(GameDTO gameDTO) {
         Place place = placeRepository.findById(gameDTO.getPlaceId()).get();
@@ -76,7 +76,7 @@ public class GameServiceImpl implements GameService {
     }
 
 
-    //delete GAme
+    //delete Game
     @Override
     @Transactional
     public ResponseEntity<?> delete(long id) {
@@ -97,7 +97,7 @@ public class GameServiceImpl implements GameService {
     }
 
 
-    //tim kiem Game theo name & placeName, & paging
+    //search Game by name & placeName, & paging
     @Override
     public ResponseEntity<?> findByMulParam(String gameName, String placeName, Long limit, Long page) {
         Output results = gameRepository.findByMulParam(gameName, placeName, limit, page);
@@ -130,7 +130,7 @@ public class GameServiceImpl implements GameService {
         return ResponseEntity.ok(gameConverter.toDTO(game));
     }
 
-    //tim kiem Game theo placeId & paging
+    //search Game by placeId & paging
     @Override
     public ResponseEntity<?> findByPlaceId(Long placeId, Long limit, Long page) {
         Output results = gameRepository.findByPlaceId(placeId, limit, page);

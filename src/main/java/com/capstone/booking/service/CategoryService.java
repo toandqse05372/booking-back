@@ -8,16 +8,16 @@ public interface CategoryService {
     //find all
     ResponseEntity<?> getAllCategories();
 
-    //xóa
+    //delete
     ResponseEntity<?> delete(long id);
 
-    //them
+    //add
     ResponseEntity<?> create(CategoryDTO categoryDTO, MultipartFile file);
 
-    //sưa
+    //edit
     ResponseEntity<?> update(CategoryDTO categoryDTO, MultipartFile file);
 
-    //tim kiem Category theo name  & paging
+    //search category by categoryName & paging
     ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page);
 
     //search by Id
