@@ -11,6 +11,7 @@ import java.util.Set;
 @EqualsAndHashCode
 public class PlaceDTO extends BaseDTO{
     private String name;
+    private String placeKey;
     private String address;
     private String shortDescription;
     private String detailDescription;

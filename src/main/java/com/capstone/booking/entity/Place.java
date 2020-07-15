@@ -14,6 +14,7 @@ import java.util.Set;
 @Setter
 public class Place extends BaseEntity {
     private String name;
+    private String placeKey;
     private String address;
     @Length(max = 1000)
     private String detailDescription;

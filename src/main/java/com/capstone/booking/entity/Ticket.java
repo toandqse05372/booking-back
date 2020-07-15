@@ -15,6 +15,7 @@ public class Ticket extends BaseEntity{
     @Column(length = 50)
     private String code;
     private Date redemptionDate;
+    private Long visitorTypeId;
 
 
     //Bảng OrderItem qhe 1-n với Ticket
