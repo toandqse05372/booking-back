@@ -32,6 +32,7 @@ public class OrderConverter {
 
         order.setTotalPayment(dto.getTotalPayment());
         order.setPurchaseDay(dto.getPurchaseDay());
+        order.setRedemptionDate(dto.getRedemptionDate());
         return order;
     }
 
@@ -43,6 +44,7 @@ public class OrderConverter {
         order.setPhoneNumber(dto.getPhoneNumber());
         order.setTotalPayment(dto.getTotalPayment());
         order.setPurchaseDay(dto.getPurchaseDay());
+        order.setRedemptionDate(dto.getRedemptionDate());
         return order;
     }
 
@@ -62,6 +64,7 @@ public class OrderConverter {
         dto.setOrderCode(order.getOrderCode());
         dto.setTotalPayment(order.getTotalPayment());
         dto.setPurchaseDay(order.getPurchaseDay());
+        dto.setRedemptionDate(order.getRedemptionDate());
         dto.setStatus(order.getStatus());
 
         dto.setTicketTypeName(ticketTypeRepository.findById(order.getTicketTypeId()).get().getTypeName());
