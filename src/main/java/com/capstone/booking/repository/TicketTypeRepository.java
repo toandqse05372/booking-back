@@ -14,4 +14,6 @@ public interface TicketTypeRepository extends JpaRepository<TicketType, Long>, T
 
     List<TicketType> findByPlaceId(Long placeId);
 
+    TicketType findByTypeNameAndPlaceId(String name, Long id);
+
 }

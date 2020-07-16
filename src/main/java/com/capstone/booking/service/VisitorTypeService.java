@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface VisitorTypeService {
     //add
-    ResponseEntity<?> create(VisitorTypeDTO model);
+    ResponseEntity<?> create(VisitorTypeDTO model, Long placeId);
 
     //edit
     ResponseEntity<?> update(VisitorTypeDTO model);

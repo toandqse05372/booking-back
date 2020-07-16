@@ -2,9 +2,12 @@ package com.capstone.booking.api;
 
 import com.capstone.booking.common.helper.ExcelHelper;
 import com.capstone.booking.entity.Code;
+import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
 import com.capstone.booking.repository.CodeRepository;
 import com.capstone.booking.service.VisitorTypeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +27,12 @@ public class VisitorTypeController {
     //them
     @PostMapping("/visitorType")
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
-    public ResponseEntity<?> create(@RequestBody VisitorTypeDTO model) {
-        return visitorTypeService.create(model);
+    public ResponseEntity<?> create(@RequestPart(value = "placeId") String placeIdStr,
+                                    @RequestPart(value = "visitorType") String model) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        VisitorTypeDTO visitorTypeDTO = mapper.readValue(model, VisitorTypeDTO.class);
+        Long placeId = Long.parseLong(placeIdStr);
+        return visitorTypeService.create(visitorTypeDTO, placeId);
     }
 
     //sửa

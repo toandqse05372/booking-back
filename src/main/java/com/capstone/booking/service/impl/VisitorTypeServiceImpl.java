@@ -3,7 +3,6 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.common.converter.VisitorTypeConverter;
 import com.capstone.booking.common.helper.ExcelHelper;
 import com.capstone.booking.entity.Code;
-import com.capstone.booking.entity.Game;
 import com.capstone.booking.entity.TicketType;
 import com.capstone.booking.entity.VisitorType;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
@@ -40,9 +39,8 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
 
     //add
     @Override
-    public ResponseEntity<?> create(VisitorTypeDTO model) {
+    public ResponseEntity<?> create(VisitorTypeDTO model, Long placeId) {
         VisitorType visitorType = visitorTypeConverter.toVisitorType(model);
-
         List<VisitorType> typeList = visitorTypeRepository.findByTypeName(visitorType.getTypeName());
         if (typeList.size() > 0) {
             for (VisitorType t : typeList) {
@@ -52,8 +50,21 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
             }
         }
 
+        boolean hasBasic = false;
+        List<TicketType> ticketTypes = ticketTypeRepository.findByPlaceId(placeId);
+        for(TicketType ticketType: ticketTypes){
+            for(VisitorType type: ticketType.getVisitorType()){
+                if(type.isBasicType()){ hasBasic = true;
+                    break;
+                }
+            }
+            if(hasBasic){ break; }
+        }
         TicketType ticketType = ticketTypeRepository.findById(model.getTicketTypeId()).get();
         visitorType.setTicketType(ticketType);
+        if(!hasBasic){
+            visitorType.setBasicType(true);
+        }
         visitorTypeRepository.save(visitorType);
         return ResponseEntity.ok(visitorTypeConverter.toDTO(visitorType));
     }

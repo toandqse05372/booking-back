@@ -73,6 +73,10 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     //add ticketType
     @Override
     public ResponseEntity<?> create(TicketTypeDTO ticketTypeDTO) {
+        if(null != ticketTypeRepository.
+                findByTypeNameAndPlaceId(ticketTypeDTO.getTypeName(), ticketTypeDTO.getPlaceId())){
+            return new ResponseEntity("TICKET_TYPE_EXISTED", HttpStatus.BAD_REQUEST);
+        }
         TicketType ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO);
 
         Set<Game> gameSet = new HashSet<>();
@@ -88,6 +92,11 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     //edit tickType
     @Override
     public ResponseEntity<?> update(TicketTypeDTO ticketTypeDTO) {
+        TicketType existedTicketType = ticketTypeRepository.
+                findByTypeNameAndPlaceId(ticketTypeDTO.getTypeName(), ticketTypeDTO.getPlaceId());
+        if(null != existedTicketType && existedTicketType.getId() != ticketTypeDTO.getId()){
+            return new ResponseEntity("TICKET_TYPE_EXISTED", HttpStatus.BAD_REQUEST);
+        }
         TicketType ticketType = new TicketType();
         TicketType oldTicketType = ticketTypeRepository.findById(ticketTypeDTO.getId()).get();
         ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO, oldTicketType);

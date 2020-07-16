@@ -4,6 +4,7 @@ import com.capstone.booking.entity.Order;
 import com.capstone.booking.entity.OrderItem;
 import com.capstone.booking.entity.dto.OrderDTO;
 import com.capstone.booking.entity.dto.OrderItemDTO;
+import com.capstone.booking.repository.OrderItemRepository;
 import com.capstone.booking.repository.TicketTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,6 @@ public class OrderConverter {
         order.setMail(dto.getMail());
         order.setPhoneNumber(dto.getPhoneNumber());
 
-        order.setOrderCode(dto.getOrderCode());
         order.setTotalPayment(dto.getTotalPayment());
         order.setPurchaseDay(dto.getPurchaseDay());
         return order;
@@ -41,7 +41,6 @@ public class OrderConverter {
         order.setLastName(dto.getLastName());
         order.setMail(dto.getMail());
         order.setPhoneNumber(dto.getPhoneNumber());
-        order.setOrderCode(dto.getOrderCode());
         order.setTotalPayment(dto.getTotalPayment());
         order.setPurchaseDay(dto.getPurchaseDay());
         return order;
