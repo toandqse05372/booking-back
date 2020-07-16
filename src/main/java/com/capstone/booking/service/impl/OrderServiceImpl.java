@@ -55,6 +55,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private PdfPrinter pdfPrinter;
 
+    //create order
     @Override
     public ResponseEntity<?> create(OrderDTO orderDTO) {
         Order order = orderConverter.toOrder(orderDTO);
@@ -64,13 +65,17 @@ public class OrderServiceImpl implements OrderService {
 
         order.setOrderCode("ORDER"+(orderRepository.findTopByOrderById().getId()+1));
         order.setStatus(OrderStatus.UNPAID.toString());
-
+        orderRepository.save(order);
+        List<OrderItem> orderItems = new ArrayList<>();
         for(OrderItemDTO dto: orderDTO.getOrderItems()){
             OrderItem orderItem = orderItemConverter.toItem(dto);
+            orderItems.add(orderItem);
         }
+        orderItemRepository.saveAll(orderItems);
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
 
+    //not use
     @Override
     public ResponseEntity<?> update(OrderDTO orderDTO) {
         Order order = new Order();
@@ -84,6 +89,7 @@ public class OrderServiceImpl implements OrderService {
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
 
+    //delete order
     @Override
     @Transactional
     public ResponseEntity<?> delete(long id) {
@@ -94,6 +100,7 @@ public class OrderServiceImpl implements OrderService {
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
+    //find order by status
     @Override
     public ResponseEntity<?> findByStatus(String status, String code) {
         Output results = orderRepository.findByStatus(status, code);
@@ -106,7 +113,9 @@ public class OrderServiceImpl implements OrderService {
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
 
+    //send ticket
     @Override
+    @Transactional
     public ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException {
         Order order = orderRepository.findById(id).get();
         Set<OrderItem> orderItems = order.getOrderItem();

@@ -29,7 +29,6 @@ public class OrderConverter {
         order.setLastName(dto.getLastName());
         order.setMail(dto.getMail());
         order.setPhoneNumber(dto.getPhoneNumber());
-
         order.setTotalPayment(dto.getTotalPayment());
         order.setPurchaseDay(dto.getPurchaseDay());
         order.setRedemptionDate(dto.getRedemptionDate());
