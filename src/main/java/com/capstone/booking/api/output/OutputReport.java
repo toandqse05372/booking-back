@@ -11,4 +11,5 @@ public class OutputReport {
     Long endDate;
     Long reportType;
     Long placeId;
+    int totalRevenue;
 }

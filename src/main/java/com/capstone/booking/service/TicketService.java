@@ -1,7 +1,12 @@
 package com.capstone.booking.service;
 
+import com.capstone.booking.api.output.OutputReport;
 import com.capstone.booking.entity.dto.TicketDTO;
 import org.springframework.http.ResponseEntity;
+
+import javax.mail.MessagingException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public interface TicketService {
 
@@ -15,4 +20,6 @@ public interface TicketService {
     ResponseEntity<?> delete(long id);
 
     ResponseEntity<?> getReport(Long placeId, Long reportType, Long startDate, Long endDate);
+
+    ResponseEntity<?> sendReport(OutputReport report) throws IOException, MessagingException;
 }

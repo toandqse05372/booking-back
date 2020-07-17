@@ -3,10 +3,12 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.common.converter.VisitorTypeConverter;
 import com.capstone.booking.common.helper.ExcelHelper;
 import com.capstone.booking.entity.Code;
+import com.capstone.booking.entity.Place;
 import com.capstone.booking.entity.TicketType;
 import com.capstone.booking.entity.VisitorType;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
 import com.capstone.booking.repository.CodeRepository;
+import com.capstone.booking.repository.PlaceRepository;
 import com.capstone.booking.repository.TicketTypeRepository;
 import com.capstone.booking.repository.VisitorTypeRepository;
 import com.capstone.booking.service.VisitorTypeService;
@@ -37,6 +39,9 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     @Autowired
     CodeRepository codeRepository;
 
+    @Autowired
+    PlaceRepository placeRepository;
+
     //add
     @Override
     public ResponseEntity<?> create(VisitorTypeDTO model, Long placeId) {
@@ -66,6 +71,9 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
             visitorType.setBasicType(true);
         }
         visitorTypeRepository.save(visitorType);
+        Place place = placeRepository.findById(placeId).get();
+        place.setBasicPrice(visitorType.getPrice());
+        placeRepository.save(place);
         return ResponseEntity.ok(visitorTypeConverter.toDTO(visitorType));
     }
 
@@ -153,6 +161,10 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
 
         markType.setBasicType(true);
         visitorTypeRepository.save(markType);
+
+        Place place = placeRepository.findById(placeId).get();
+        place.setBasicPrice(markType.getPrice());
+        placeRepository.save(place);
 
         return ResponseEntity.status((HttpStatus.OK)).body("UPDATED");
     }

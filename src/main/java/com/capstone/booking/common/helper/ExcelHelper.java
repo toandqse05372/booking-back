@@ -1,16 +1,15 @@
 package com.capstone.booking.common.helper;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.capstone.booking.api.output.ReportItem;
 import com.capstone.booking.entity.Code;
 import com.capstone.booking.entity.VisitorType;
 import com.capstone.booking.repository.VisitorTypeRepository;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class ExcelHelper {
         ExcelHelper.visitorTypeRepository = visitorTypeRepository;
     }
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADERs = {"Id", "Product_Code", "Code"};
+    static String[] HEADER_REPORT = {"#", "Ticket Type Name", "Quantity", "Total"};
     static String SHEET = "Sheet1";
 
     public static boolean hasExcelFormat(MultipartFile file) {
@@ -39,31 +38,26 @@ public class ExcelHelper {
         return true;
     }
 
-    public static ByteArrayInputStream tutorialsToExcel(List<Code> codes) {
+    public static void writeExcel(List<ReportItem> reportItems, String excelFilePath) throws IOException {
+        Workbook workbook = new HSSFWorkbook();
+        Sheet sheet = workbook.createSheet();
 
-        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream();) {
-            Sheet sheet = workbook.createSheet(SHEET);
+        int rowCount = 0;
 
-            // Header
-            Row headerRow = sheet.createRow(0);
+        for (ReportItem aBook : reportItems) {
+            Row row = sheet.createRow(++rowCount);
+            Cell cell = row.createCell(1);
+            cell.setCellValue(aBook.getTicketTypeName());
 
-            for (int col = 0; col < HEADERs.length; col++) {
-                Cell cell = headerRow.createCell(col);
-                cell.setCellValue(HEADERs[col]);
-            }
+            cell = row.createCell(2);
+            cell.setCellValue(aBook.getQuantity());
 
-            int rowIdx = 1;
-            for (Code code : codes) {
-                Row row = sheet.createRow(rowIdx++);
+            cell = row.createCell(3);
+            cell.setCellValue(aBook.getTotal());
+        }
 
-                row.createCell(0).setCellValue(code.getId());
-
-            }
-
-            workbook.write(out);
-            return new ByteArrayInputStream(out.toByteArray());
-        } catch (IOException e) {
-            throw new RuntimeException("fail to import data to Excel file: " + e.getMessage());
+        try (FileOutputStream outputStream = new FileOutputStream(excelFilePath)) {
+            workbook.write(outputStream);
         }
     }
 
@@ -88,8 +82,7 @@ public class ExcelHelper {
                     Cell currentCell = cellsInRow.next();
                     switch (cellIdx) {
                         case 1:
-                            code.setVisitorType(visitorTypeRepository.
-                                    findByTypeKey(currentCell.getStringCellValue()));
+                            code.setVisitorType(visitorTypeRepository. findByTypeKey(currentCell.getStringCellValue()));
                             break;
                         case 2:
                             currentCell.setCellType(CellType.STRING);

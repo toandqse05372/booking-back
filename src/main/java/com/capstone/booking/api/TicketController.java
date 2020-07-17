@@ -1,11 +1,14 @@
 package com.capstone.booking.api;
 
+import com.capstone.booking.api.output.OutputReport;
 import com.capstone.booking.entity.dto.TicketDTO;
 import com.capstone.booking.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.Date;
 
 @RestController
@@ -40,5 +43,10 @@ public class TicketController {
                                              @RequestParam(value = "startDate", required = false) Long startDate,
                                              @RequestParam(value = "endDate", required = false) Long endDate){
         return ticketService.getReport(placeId, reportType, startDate, endDate);
+    }
+
+    @PostMapping("/sendReport")
+    public ResponseEntity<?> sendReport(@RequestBody OutputReport report) throws IOException, MessagingException {
+        return ticketService.sendReport(report);
     }
 }
