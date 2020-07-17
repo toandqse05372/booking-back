@@ -19,20 +19,12 @@ public class TicketTypeConverter {
     public TicketType toTicketType(TicketTypeDTO dto) {
         TicketType ticketType = new TicketType();
         ticketType.setTypeName(dto.getTypeName());
-        ticketType.setTicketDescription(dto.getTicketDescription());
-        ticketType.setReservationInfo(dto.getReservationInfo());
-        ticketType.setCancelPolicy(dto.getCancelPolicy());
-        ticketType.setConversionMethod(dto.getConversionMethod());
         ticketType.setPlaceId(dto.getPlaceId());
         return ticketType;
     }
 
     public TicketType toTicketType(TicketTypeDTO dto, TicketType ticketType) {
         ticketType.setTypeName(dto.getTypeName());
-        ticketType.setTicketDescription(dto.getTicketDescription());
-        ticketType.setReservationInfo(dto.getReservationInfo());
-        ticketType.setCancelPolicy(dto.getCancelPolicy());
-        ticketType.setConversionMethod(dto.getConversionMethod());
         ticketType.setPlaceId(dto.getPlaceId());
         return ticketType;
     }
@@ -43,10 +35,6 @@ public class TicketTypeConverter {
             dto.setId(ticketType.getId());
         }
         dto.setTypeName(ticketType.getTypeName());
-        dto.setTicketDescription(ticketType.getTicketDescription());
-        dto.setReservationInfo(ticketType.getReservationInfo());
-        dto.setCancelPolicy(ticketType.getCancelPolicy());
-        dto.setConversionMethod(ticketType.getConversionMethod());
         dto.setPlaceId(ticketType.getPlaceId());
 
         Set<Game> gameSet = ticketType.getGame();

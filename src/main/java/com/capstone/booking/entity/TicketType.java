@@ -11,12 +11,8 @@ import java.util.Set;
 @Table(name = "t_ticket_type")
 @Getter
 @Setter
-public class TicketType extends BaseEntity{
+public class TicketType extends BaseEntity {
     private String typeName;
-    private String ticketDescription;
-    private String reservationInfo;
-    private String cancelPolicy;
-    private String conversionMethod;
     private Long placeId;
 
 

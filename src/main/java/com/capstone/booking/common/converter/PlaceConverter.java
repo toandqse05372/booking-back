@@ -46,6 +46,7 @@ public class PlaceConverter {
         }
         place.setCategories(categories);
         place.setPhoneNumber(dto.getPhoneNumber());
+        place.setCancelPolicy(dto.getCancelPolicy());
         place.setCity(cityRepository.findById(dto.getCityId()).get());
         place.setOpeningHours(dto.getOpeningHours());
         String weekdays = "";
@@ -81,7 +82,7 @@ public class PlaceConverter {
         dto.setPhoneNumber(place.getPhoneNumber());
         dto.setOpeningHours(place.getOpeningHours());
         dto.setShortDescription(place.getShortDescription());
-
+        dto.setCancelPolicy(place.getCancelPolicy());
 
         if(place.getImagePlace() != null){
             Set<ImageDTO> imageSet = new HashSet<>();
@@ -119,6 +120,7 @@ public class PlaceConverter {
         place.setDetailDescription(dto.getDetailDescription());
         place.setMail(dto.getMail());
         place.setPhoneNumber(dto.getPhoneNumber());
+        place.setCancelPolicy(dto.getCancelPolicy());
 
         Set<Category> categories = new HashSet<>();
         for(Long categoryId: dto.getCategoryId()){
