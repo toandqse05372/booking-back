@@ -28,8 +28,6 @@ public class Place extends BaseEntity {
     private String status;
     @Length(max = 1000)
     private String location;
-    private String cancelPolicy;
-
 
     private String openingHours;//tu thu 2 den thu 7...
     private String weekDays;//1.2.3.4..

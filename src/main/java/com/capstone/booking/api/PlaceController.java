@@ -83,6 +83,8 @@ public class PlaceController {
                                        @RequestParam(value = "categoryId", required = false) List<Long> categoryId,
                                        @RequestParam(value = "minValue", required = false) Long minValue,
                                        @RequestParam(value = "maxValue", required = false) Long maxValue) {
+        minValue = 0l;
+        maxValue = 1000000l;
         return placeService.searchPlaceForClient(name, minValue, maxValue, cityId, categoryId, limit, page);
     }
 

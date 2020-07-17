@@ -1,2 +1,4 @@
-Name: namexxx
-Price: pricexxx
+Place: PLACEx
+Name: NAMEx
+Price: PRICEx
+Redemption Date: REDEMPTION_DATEx
