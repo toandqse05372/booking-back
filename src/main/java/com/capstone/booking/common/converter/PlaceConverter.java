@@ -83,6 +83,7 @@ public class PlaceConverter {
         dto.setOpeningHours(place.getOpeningHours());
         dto.setShortDescription(place.getShortDescription());
         dto.setCancelPolicy(place.getCancelPolicy());
+        dto.setBasicPrice(place.getBasicPrice());
 
         if(place.getImagePlace() != null){
             Set<ImageDTO> imageSet = new HashSet<>();
@@ -121,7 +122,7 @@ public class PlaceConverter {
         place.setMail(dto.getMail());
         place.setPhoneNumber(dto.getPhoneNumber());
         place.setCancelPolicy(dto.getCancelPolicy());
-
+        dto.setBasicPrice(place.getBasicPrice());
         Set<Category> categories = new HashSet<>();
         for(Long categoryId: dto.getCategoryId()){
             categories.add(categoryRepository.findById(categoryId).get());

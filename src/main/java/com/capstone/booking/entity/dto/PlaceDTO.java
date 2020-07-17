@@ -25,4 +25,5 @@ public class PlaceDTO extends BaseDTO{
     private List<Integer> weekDays;
     private String status;
     private String cancelPolicy;
+    private int basicPrice;
 }
