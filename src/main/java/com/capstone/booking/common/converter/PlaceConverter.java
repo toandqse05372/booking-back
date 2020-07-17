@@ -83,7 +83,9 @@ public class PlaceConverter {
         dto.setOpeningHours(place.getOpeningHours());
         dto.setShortDescription(place.getShortDescription());
         dto.setCancelPolicy(place.getCancelPolicy());
-        dto.setBasicPrice(place.getBasicPrice());
+        if(place.getBasicPrice() != null){
+            dto.setBasicPrice(place.getBasicPrice());
+        }
 
         if(place.getImagePlace() != null){
             Set<ImageDTO> imageSet = new HashSet<>();
