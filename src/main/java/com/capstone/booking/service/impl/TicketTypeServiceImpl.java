@@ -14,6 +14,7 @@ import com.capstone.booking.repository.TicketTypeRepository;
 import com.capstone.booking.repository.VisitorTypeRepository;
 import com.capstone.booking.service.TicketTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -156,12 +158,27 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     }
 
     @Override
-    public ResponseEntity<?> addCodeForTicketType(MultipartFile file){
+    public ResponseEntity<?> addCodeForTicketType(MultipartFile file, long placeId){
         if (ExcelHelper.hasExcelFormat(file)) {
             try {
-                List<Code> tutorials = ExcelHelper.excelToCode(file.getInputStream());
-                codeRepository.saveAll(tutorials);
-                return ResponseEntity.ok("OK");
+                List<Code> codes = ExcelHelper.excelToCode(file.getInputStream());
+                List<VisitorType> visitorTypes = visitorTypeRepository.findByPlaceId(placeId);
+                int failCount = 0;
+                for(Code code: codes){
+                    if(visitorTypes.contains(code.getVisitorType())){
+                        try {
+                            codeRepository.save(code);
+                        } catch (DataIntegrityViolationException e) {
+                            failCount += 1;
+                        }
+                    }else{
+                        failCount += 1;
+                    }
+                }
+                if(failCount > 0){
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Total fail: "+failCount);
+                }else
+                    return ResponseEntity.ok(failCount);
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("COULD_NOT_UPLOAD_FILE");
             }

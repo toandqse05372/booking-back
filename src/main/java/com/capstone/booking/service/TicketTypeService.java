@@ -26,5 +26,5 @@ public interface TicketTypeService {
     //search by Id
     ResponseEntity<?> getTicketType(Long id);
 
-    ResponseEntity<?> addCodeForTicketType(MultipartFile file);
+    ResponseEntity<?> addCodeForTicketType(MultipartFile file, long l);
 }

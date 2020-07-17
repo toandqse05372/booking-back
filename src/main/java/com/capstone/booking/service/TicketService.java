@@ -13,4 +13,6 @@ public interface TicketService {
 
     //delete
     ResponseEntity<?> delete(long id);
+
+    ResponseEntity<?> getReport(Long placeId, Long reportType, Long startDate, Long endDate);
 }

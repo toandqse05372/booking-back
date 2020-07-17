@@ -13,12 +13,16 @@ import com.capstone.booking.repository.*;
 import com.capstone.booking.service.OrderService;
 import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +30,6 @@ import java.util.Set;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-
 
     @Autowired
     private OrderRepository orderRepository;
@@ -53,7 +56,13 @@ public class OrderServiceImpl implements OrderService {
     private OrderItemConverter orderItemConverter;
 
     @Autowired
+    private PlaceRepository placeRepository;
+
+    @Autowired
     private PdfPrinter pdfPrinter;
+
+    @Autowired
+    public JavaMailSender emailSender;
 
     //create order
     @Override
@@ -116,20 +125,26 @@ public class OrderServiceImpl implements OrderService {
     //send ticket
     @Override
     @Transactional
-    public ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException {
+    public ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException, MessagingException {
+
         Order order = orderRepository.findById(id).get();
         Set<OrderItem> orderItems = order.getOrderItem();
+        TicketType ticketType = ticketTypeRepository.findById(order.getTicketTypeId()).get();
+        Place place = placeRepository.findById(ticketType.getPlaceId()).get();
         List<PrintRequest> printRequests = new ArrayList<>();
         for(OrderItem item: orderItems){
             VisitorType type = item.getVisitorType();
             List<Code> codeToUse = codeRepository.findByVisitorTypeIdLimitTo(item.getQuantity(), type);
+            if(codeToUse.size() < item.getQuantity()){
+                return new ResponseEntity("CODE_NOT_ENOUGH", HttpStatus.BAD_REQUEST);
+            }
             List<Ticket> ticketOrder = new ArrayList<>();
             for(int i = 0; i < item.getQuantity(); i++){
                 Ticket ticket = new Ticket();
                 ticket.setCode(codeToUse.get(i).getCode());
-     //           ticket.setRedemptionDate(order.getRedemptionDate());
+                ticket.setRedemptionDate(order.getRedemptionDate());
                 ticket.setOrderItem(item);
-     //           ticket.setVisitorTypeId(type.getId());
+                ticket.setVisitorTypeId(type.getId());
                 ticketOrder.add(ticket);
             }
             ticketRepository.saveAll(ticketOrder);
@@ -137,10 +152,36 @@ public class OrderServiceImpl implements OrderService {
             PrintRequest printRequest = new PrintRequest();
             printRequest.setTickets(ticketOrder);
             printRequest.setVisitorType(type);
-            printRequest.setTicketType(ticketTypeRepository.findById(order.getTicketTypeId()).get());
+            printRequest.setTicketType(ticketType);
+            printRequest.setPlace(place);
             printRequests.add(printRequest);
+            printRequest.setRedemptionDate(order.getRedemptionDate());
         }
-        pdfPrinter.printPDF(printRequests);
-        return null;
+        File file = pdfPrinter.printPDF(printRequests);
+        sendEmail(order, file);
+        order.setStatus(OrderStatus.SENT.toString());
+        orderRepository.save(order);
+        return ResponseEntity.ok(orderConverter.toDTO(order));
     }
+
+    public void sendEmail(Order order, File file) throws MessagingException, IOException {
+        MimeMessage message = emailSender.createMimeMessage();
+
+        boolean multipart = true;
+
+        MimeMessageHelper helper = new MimeMessageHelper(message, multipart);
+
+        helper.setTo(order.getMail());
+        helper.setSubject("Test email with attachments");
+
+        helper.setText("Hello, Im testing email with attachments!");
+
+        String path1 = file.getPath();
+
+        // Attachment 1
+        FileSystemResource file1 = new FileSystemResource(new File(path1));
+        helper.addAttachment(file.getPath(), file1);
+        emailSender.send(message);
+    }
+
 }

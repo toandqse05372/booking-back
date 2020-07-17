@@ -4,6 +4,7 @@ import com.capstone.booking.entity.dto.OrderDTO;
 import com.itextpdf.text.DocumentException;
 import org.springframework.http.ResponseEntity;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -23,5 +24,5 @@ public interface OrderService {
     //search by Id
     ResponseEntity<?> findByOrderId(Long id);
 
-    ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException;
+    ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException, MessagingException;
 }

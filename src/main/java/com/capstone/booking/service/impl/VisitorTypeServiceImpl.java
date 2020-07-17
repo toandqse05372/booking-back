@@ -96,10 +96,14 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     @Override
     @Transactional
     public ResponseEntity<?> delete(long id) {
-        if (!visitorTypeRepository.findById(id).isPresent()) {
+        VisitorType visitorType =visitorTypeRepository.findById(id).get();
+        if (visitorType == null) {
             return new ResponseEntity("VISITOR_TYPE_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
-        codeRepository.deleteByVisitorType(visitorTypeRepository.findById(id).get());
+        if(visitorType.isBasicType()){
+            return new ResponseEntity("VISITOR_TYPE_IS_BASIC", HttpStatus.BAD_REQUEST);
+        }
+        codeRepository.deleteByVisitorType(visitorType);
         visitorTypeRepository.deleteById(id);
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
@@ -138,12 +142,12 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     }
 
     @Override
-    public ResponseEntity<?> markBasicPrice(long id) {
+    public ResponseEntity<?> markBasicPrice(long id, long placeId) {
         VisitorType markType = visitorTypeRepository.findById(id).get();
         if(markType == null){
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("VISITOR_TYPE_NOT_FOUND");
         }
-        VisitorType oldMarType = visitorTypeRepository.findByIsBasicType(true);
+        VisitorType oldMarType = visitorTypeRepository.findByPlaceIdAndBasic(placeId, true);
         oldMarType.setBasicType(false);
         visitorTypeRepository.save(oldMarType);
 

@@ -57,7 +57,7 @@ public class OrderConverter {
         dto.setUserId(order.getUser().getId());
         dto.setFirstName(order.getUser().getFirstName());
         dto.setLastName(order.getUser().getLastName());
-        dto.setMail(order.getUser().getMail());
+        dto.setMail(order.getMail());
         dto.setPhoneNumber(order.getUser().getPhoneNumber());
 
         dto.setOrderCode(order.getOrderCode());

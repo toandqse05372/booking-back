@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -43,7 +44,7 @@ public class OrderController {
     }
 
     @PutMapping("/order/sendTicket/{id}")
-    public ResponseEntity<?> sendTicket(@PathVariable("id") long id) throws DocumentException, IOException, URISyntaxException {
+    public ResponseEntity<?> sendTicket(@PathVariable("id") long id) throws DocumentException, IOException, URISyntaxException, MessagingException {
         return orderService.sendTicket(id);
     }
 

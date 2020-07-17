@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 public class TicketController {
 
@@ -30,5 +32,13 @@ public class TicketController {
     @DeleteMapping("/ticket/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         return ticketService.delete(id);
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<?> searchForReport(@RequestParam(value = "placeId") Long placeId,
+                                             @RequestParam(value = "type") Long reportType,
+                                             @RequestParam(value = "startDate", required = false) Long startDate,
+                                             @RequestParam(value = "endDate", required = false) Long endDate){
+        return ticketService.getReport(placeId, reportType, startDate, endDate);
     }
 }

@@ -45,8 +45,9 @@ public class VisitorTypeController {
 
     @PutMapping("/markPrice/{id}")
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
-    public ResponseEntity<?> markBasicPrice(@PathVariable("id") long id) {
-        return visitorTypeService.markBasicPrice(id);
+    public ResponseEntity<?> markBasicPrice(@PathVariable("id") long id,
+                                            @RequestPart(value = "placeId") String placeId) {
+        return visitorTypeService.markBasicPrice(id, Long.parseLong(placeId));
     }
 
     //xóa
