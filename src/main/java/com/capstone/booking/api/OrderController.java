@@ -23,9 +23,9 @@ public class OrderController {
         return orderService.delete(id);
     }
 
-    //search Order by status, & paging
+    //search Order by status, code
     @GetMapping("/order/searchByStatus")
-    public ResponseEntity<?> searchByStatus(@RequestParam(value = "status", required = false) String status,
+    public ResponseEntity<?> orderFilter(@RequestParam(value = "status", required = false) String status,
                                             @RequestParam(value = "code", required = false) String code) {
         return orderService.findByStatus(status, code);
     }
