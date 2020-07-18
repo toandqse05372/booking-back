@@ -8,6 +8,9 @@ public interface CityService {
     //getAllCity
     ResponseEntity<?> findAllCity();
 
+    //getTop3
+    ResponseEntity<?> getTop3();
+
     //search By Id
     ResponseEntity<?> getCity(Long id);
 

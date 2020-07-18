@@ -49,6 +49,17 @@ public class CityServiceImpl implements CityService {
         return ResponseEntity.ok(results);
     }
 
+    @Override
+    public ResponseEntity<?> getTop3() {
+        List<CityDTO> results = new ArrayList<>();
+        List<City> city = cityRepository.getTop3();
+        for (City item : city) {
+            CityDTO cityDTO = cityConverter.toDTO(item);
+            results.add(cityDTO);
+        }
+        return ResponseEntity.ok(results);
+    }
+
     //search By Id
     @Override
     public ResponseEntity<?> getCity(Long id) {

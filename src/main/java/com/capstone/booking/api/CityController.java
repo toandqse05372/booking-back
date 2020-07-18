@@ -23,6 +23,12 @@ public class CityController {
         return cityService.findAllCity();
     }
 
+    //getAllCity
+    @GetMapping("/topCity")
+    public ResponseEntity<?> getTop3() {
+        return cityService.getTop3();
+    }
+
     //search by Id
     @GetMapping("/city/{id}")
     public ResponseEntity<?> getCity(@PathVariable Long id) {
