@@ -33,4 +33,6 @@ public interface PlaceService {
 
     ResponseEntity<?> searchPlaceForClient(String name, Long minValue, Long maxValue, List<Long> cityId,
                                            List<Long> categoryId, Long limit, Long page);
+
+    ResponseEntity<?> getPlaceClient(Long id);
 }

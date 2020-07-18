@@ -62,6 +62,10 @@ public class PlaceController {
         return placeService.getPlace(id);
     }
 
+    @GetMapping("/placeClient/{id}")
+    public ResponseEntity<?> getPlaceClient(@PathVariable Long id){
+        return placeService.getPlaceClient(id);
+    }
 
     //search place by name & address, cityId, categoryId, & paging
     @GetMapping("/place/searchMul")
@@ -83,8 +87,10 @@ public class PlaceController {
                                        @RequestParam(value = "categoryId", required = false) List<Long> categoryId,
                                        @RequestParam(value = "minValue", required = false) Long minValue,
                                        @RequestParam(value = "maxValue", required = false) Long maxValue) {
-        minValue = 0l;
-        maxValue = 1000000l;
+        if(minValue == null && maxValue == null){
+            minValue = 0l;
+            maxValue = 1000000l;
+        }
         return placeService.searchPlaceForClient(name, minValue, maxValue, cityId, categoryId, limit, page);
     }
 

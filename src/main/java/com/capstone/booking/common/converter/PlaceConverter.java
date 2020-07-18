@@ -69,6 +69,49 @@ public class PlaceConverter {
         return lite;
     }
 
+    public PlaceDTOClient toPlaceClient(Place place){
+        PlaceDTOClient dto = new PlaceDTOClient();
+        dto.setName(place.getName());
+        dto.setPlaceKey(place.getPlaceKey());
+        dto.setAddress(place.getAddress());
+        dto.setDetailDescription(place.getDetailDescription());
+        dto.setMail(place.getMail());
+        dto.setPhoneNumber(place.getPhoneNumber());
+        dto.setOpeningHours(place.getOpeningHours());
+        dto.setShortDescription(place.getShortDescription());
+        dto.setCancelPolicy(place.getCancelPolicy());
+        if(place.getBasicPrice() != null){
+            dto.setBasicPrice(place.getBasicPrice());
+        }
+
+        if(place.getImagePlace() != null){
+            Set<ImageDTO> imageSet = new HashSet<>();
+            for (ImagePlace image : place.getImagePlace()) {
+                imageSet.add(imageConverter.toDTO(image));
+            }
+        }
+
+        City city = place.getCity();
+        dto.setCityId(city.getId());
+        dto.setCityName(city.getName());
+
+        Set<Long> categorySet = new HashSet<>();
+        for (Category category : place.getCategories()) {
+            categorySet.add(category.getId());
+        }
+        dto.setCategoryId(categorySet);
+
+        String weekdayStr = place.getWeekDays();
+        String[] days = weekdayStr.split(",");
+        List<Integer> weekDays = new ArrayList<>();
+        for(String day: days){
+            weekDays.add(Integer.parseInt(day));
+        }
+        dto.setWeekDays(weekDays);
+        dto.setStatus(place.getStatus());
+        return dto;
+    }
+
     public PlaceDTO toDTO(Place place) {
         PlaceDTO dto = new PlaceDTO();
         if (place.getId() != null) {

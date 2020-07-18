@@ -106,6 +106,8 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         Integer stack = 1;
         int pageInt = Math.toIntExact(page);
 
+        stack++;
+        where += " place0_.status like 'ACTIVE' ";
         Map<String, Object> params = new HashMap<>();
         if (categoryId != null && categoryId.size() > 0) {
             queryStr += "INNER join t_place_category ppt on place0_.id = ppt.place_id";
@@ -165,6 +167,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         if (addedWhere) {
             queryStr += " where ";
         }
+
         //String between ="";
         if (!searched) {
             totalItem = queryPlace(params, queryStr + where).size();

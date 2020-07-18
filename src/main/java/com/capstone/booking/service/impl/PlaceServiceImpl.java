@@ -1,12 +1,14 @@
 package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
+import com.capstone.booking.api.output.OutputExcel;
 import com.capstone.booking.common.converter.PlaceConverter;
+import com.capstone.booking.common.converter.TicketTypeConverter;
+import com.capstone.booking.common.converter.VisitorTypeConverter;
 import com.capstone.booking.common.key.PlaceAndGameStatus;
 import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.entity.*;
-import com.capstone.booking.entity.dto.PlaceDTO;
-import com.capstone.booking.entity.dto.PlaceDTOLite;
+import com.capstone.booking.entity.dto.*;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.PlaceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PlaceServiceImpl implements PlaceService {
@@ -31,6 +34,9 @@ public class PlaceServiceImpl implements PlaceService {
     private PlaceRepository placeRepository;
 
     @Autowired
+    private TicketTypeRepository ticketTypeRepository;
+
+    @Autowired
     private PlaceConverter placeConverter;
 
     @Autowired
@@ -39,6 +45,14 @@ public class PlaceServiceImpl implements PlaceService {
     @Autowired
     private ImagePlaceRepository imagePlaceRepository;
 
+    @Autowired
+    private VisitorTypeRepository visitorTypeRepository;
+
+    @Autowired
+    private TicketTypeConverter ticketTypeConverter;
+
+    @Autowired
+    private VisitorTypeConverter visitorTypeConverter;
 
     //search place by name & address, cityId, categoryId, & paging
     @Override
@@ -54,6 +68,35 @@ public class PlaceServiceImpl implements PlaceService {
         Optional<Place> places = placeRepository.findById(id);
         Place place = places.get();
         return ResponseEntity.ok(placeConverter.toDTO(place));
+    }
+
+    @Override
+    public ResponseEntity<?> getPlaceClient(Long id){
+        Place place = placeRepository.findById(id).get();
+        PlaceDTOClient client = placeConverter.toPlaceClient(place);
+        List<TicketTypeDTO> list = new ArrayList<>();
+        List<TicketType> ticketTypes = ticketTypeRepository.findByPlaceId(id);
+        if(ticketTypes.size() > 0){
+            for(TicketType ticketType: ticketTypes){
+                TicketTypeDTO ticketTypeDTO = ticketTypeConverter.toDTO(ticketType);
+                List<VisitorType> visitorTypes = visitorTypeRepository.findByTicketType(ticketType);
+                if(visitorTypes.size() > 0){
+                    List<VisitorTypeDTO> visitorTypeDTOS = new ArrayList<>();
+                    for(VisitorType type: visitorTypes){
+                        visitorTypeDTOS.add(visitorTypeConverter.toDTO(type));
+                    }
+                    ticketTypeDTO.setVisitorTypes(visitorTypeDTOS.stream().sorted(new Comparator<VisitorTypeDTO>() {
+                        @Override
+                        public int compare(VisitorTypeDTO o1, VisitorTypeDTO o2) {
+                            return o1.getId().compareTo(o2.getId());
+                        }
+                    }).collect(Collectors.toList()));
+                }
+                list.add(ticketTypeDTO);
+            }
+        }
+        client.setTicketTypes(list);
+        return ResponseEntity.ok(client);
     }
 
     //add place
