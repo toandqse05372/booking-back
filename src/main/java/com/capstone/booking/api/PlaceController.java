@@ -63,7 +63,7 @@ public class PlaceController {
     }
 
 
-    //search place by ten & address, cityId, categoryId, & paging
+    //search place by name & address, cityId, categoryId, & paging
     @GetMapping("/place/searchMul")
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "name", required = false) String name,

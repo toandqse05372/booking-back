@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface PlaceService {
 
-    //search place by ten & address, cityId, categoryId, & paging
+    //search place by name & address, cityId, categoryId, & paging
     ResponseEntity<?> findByMultipleParam(String name, String address, Long cityId,
                                           Long categoryId, Long limit, Long page);
 

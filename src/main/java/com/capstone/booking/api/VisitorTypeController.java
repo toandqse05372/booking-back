@@ -24,7 +24,7 @@ public class VisitorTypeController {
     @Autowired
     VisitorTypeService visitorTypeService;
 
-    //them
+    //add
     @PostMapping("/visitorType")
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
     public ResponseEntity<?> create(@RequestPart(value = "placeId") String placeIdStr,
@@ -35,7 +35,7 @@ public class VisitorTypeController {
         return visitorTypeService.create(visitorTypeDTO, placeId);
     }
 
-    //sửa
+    //edit
     @PutMapping("/visitorType/{id}")
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
     public ResponseEntity<?> update(@RequestBody VisitorTypeDTO model, @PathVariable("id") long id) {
@@ -50,7 +50,7 @@ public class VisitorTypeController {
         return visitorTypeService.markBasicPrice(id, Long.parseLong(placeId));
     }
 
-    //xóa
+    //delete
     @DeleteMapping("/visitorType/{id}")
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {

@@ -49,6 +49,7 @@ public class CityServiceImpl implements CityService {
         return ResponseEntity.ok(results);
     }
 
+    //getTop3
     @Override
     public ResponseEntity<?> getTop3() {
         List<CityDTO> results = new ArrayList<>();

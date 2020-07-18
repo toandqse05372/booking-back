@@ -23,7 +23,7 @@ public class CityController {
         return cityService.findAllCity();
     }
 
-    //getAllCity
+    //getTop3
     @GetMapping("/topCity")
     public ResponseEntity<?> getTop3() {
         return cityService.getTop3();

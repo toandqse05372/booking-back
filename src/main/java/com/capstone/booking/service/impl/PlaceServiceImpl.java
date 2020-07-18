@@ -40,7 +40,7 @@ public class PlaceServiceImpl implements PlaceService {
     private ImagePlaceRepository imagePlaceRepository;
 
 
-    //search place by ten & address, cityId, categoryId, & paging
+    //search place by name & address, cityId, categoryId, & paging
     @Override
     public ResponseEntity<?> findByMultipleParam(String name, String address, Long cityId,
                                                  Long categoryId, Long limit, Long page){

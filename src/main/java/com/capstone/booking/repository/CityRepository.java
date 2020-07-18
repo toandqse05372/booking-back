@@ -12,6 +12,7 @@ public interface CityRepository extends JpaRepository<City, Long>, CityRepositor
 
     City findByName(String name);
 
+    //getTop3
     @Query(value="SELECT * FROM t_city c ORDER BY c.id ASC LIMIT 3", nativeQuery = true)
     List<City> getTop3();
 
