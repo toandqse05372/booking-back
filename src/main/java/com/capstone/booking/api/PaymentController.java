@@ -27,11 +27,7 @@ public class PaymentController {
                                         @RequestPart(value = "token") String stripetoken) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         OrderDTO order = mapper.readValue(orderRequest, OrderDTO.class);
-        try{
-            stripeService.chargeNewCard(stripetoken, order.getTotalPayment());
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CARD_NOT_INVALID");
-        }
+        stripeService.chargeNewCard(stripetoken, order.getTotalPayment());
         orderService.create(order, OrderStatus.PAID);
         return ResponseEntity.ok().body("ok");
     }

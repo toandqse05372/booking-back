@@ -22,6 +22,9 @@ public class OrderConverter {
     @Autowired
     private TicketTypeRepository ticketTypeRepository;
 
+    @Autowired
+    OrderItemRepository orderItemRepository;
+
     //convert from dto to entity (for add)
     public Order toOrder(OrderDTO dto) {
         Order order = new Order();
@@ -67,7 +70,7 @@ public class OrderConverter {
         dto.setStatus(order.getStatus());
         dto.setTicketTypeName(ticketTypeRepository.findById(order.getTicketTypeId()).get().getTypeName());
         Set<OrderItemDTO> orderItemDTOS = new HashSet<>();
-        for (OrderItem orderItem : order.getOrderItem()) {
+        for (OrderItem orderItem : orderItemRepository.findAllByOrder(order)) {
             orderItemDTOS.add(orderItemConverter.toDTO(orderItem));
         }
         dto.setOrderItems(orderItemDTOS);

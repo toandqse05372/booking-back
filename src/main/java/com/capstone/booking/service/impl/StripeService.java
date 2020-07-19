@@ -15,18 +15,15 @@ import java.util.Map;
 @Service
 public class StripeService {
 
-    @Value("${stripe.keys.secret}")
-    private String secretKeyStrpe;
-
     @Autowired
     public StripeService() {
-        Stripe.apiKey = secretKeyStrpe;
+        Stripe.apiKey = "sk_test_51Gs1CYGtpdysubsW6yWTpHbdN5SZmte1xK1stIvSOIbZKhjabrbj0aCnwOSuHIhrSeVMMHbwg82sg7MUDTcykVFF00quh18j1z";
     }
 
     // check if stripe token is legal
     public Charge chargeNewCard(String token, int amount) throws Exception {
         Map<String, Object> chargeParams = new HashMap<>();
-        chargeParams.put("amount", amount / 23000);
+        chargeParams.put("amount", amount);
         chargeParams.put("currency", "USD");
         chargeParams.put("source", token);
         Charge charge = Charge.create(chargeParams);

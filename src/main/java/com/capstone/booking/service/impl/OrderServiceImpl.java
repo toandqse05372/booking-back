@@ -72,12 +72,18 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findById(orderDTO.getUserId()).get();
         order.setUser(user);
 
-        order.setOrderCode("ORDER"+(orderRepository.findTopByOrderById().getId()+1));
+        Order newestOrder = orderRepository.findTopByOrderById();
+        if(newestOrder != null){
+            order.setOrderCode("ORDER"+(newestOrder.getId()+1));
+        }else{
+            order.setOrderCode("ORDER"+1);
+        }
         order.setStatus(status.toString());
-        orderRepository.save(order);
+        Order saved = orderRepository.save(order);
         List<OrderItem> orderItems = new ArrayList<>();
         for(OrderItemDTO dto: orderDTO.getOrderItems()){
             OrderItem orderItem = orderItemConverter.toItem(dto);
+            orderItem.setOrder(saved);
             orderItems.add(orderItem);
         }
         orderItemRepository.saveAll(orderItems);
