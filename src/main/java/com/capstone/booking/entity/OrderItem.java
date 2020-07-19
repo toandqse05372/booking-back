@@ -14,7 +14,7 @@ public class OrderItem extends BaseEntity{
     private int quantity;
 
     //Bảng VisitorType qhe 1-1 với OrderItem
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "visitor_type_id")
     private VisitorType visitorType;
 
