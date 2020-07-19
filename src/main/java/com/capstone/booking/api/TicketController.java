@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.Date;
 
+//ticket's api
 @RestController
 public class TicketController {
 
@@ -18,25 +18,26 @@ public class TicketController {
     private TicketService ticketService;
 
 
-    //add
+    //add api
     @PostMapping("/ticket")
     public ResponseEntity<?> create(@RequestBody TicketDTO model) {
         return ticketService.create(model);
     }
 
-    //edit
+    //edit api
     @PutMapping("/ticket/{id}")
     public ResponseEntity<?> update(@RequestBody TicketDTO model, @PathVariable("id") long id){
         model.setId(id);
         return ticketService.update(model);
     }
 
-    //delete
+    //delete api
     @DeleteMapping("/ticket/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         return ticketService.delete(id);
     }
 
+    //get report api
     @GetMapping("/report")
     public ResponseEntity<?> searchForReport(@RequestParam(value = "placeId") Long placeId,
                                              @RequestParam(value = "type") Long reportType,
@@ -45,8 +46,9 @@ public class TicketController {
         return ticketService.getReport(placeId, reportType, startDate, endDate);
     }
 
+    //send report api
     @PostMapping("/sendReport")
     public ResponseEntity<?> sendReport(@RequestBody OutputReport report) throws IOException, MessagingException {
-        return ticketService.sendReport(report);
+        return ticketService.createReport(report);
     }
 }

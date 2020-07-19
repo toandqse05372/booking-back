@@ -4,6 +4,7 @@ import com.capstone.booking.entity.PaymentMethods;
 import com.capstone.booking.repository.customRepository.PaymentMethodsCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+//not used
 public interface PaymentMethodsRepository extends JpaRepository<PaymentMethods, Long>, PaymentMethodsCustom {
     PaymentMethods findByMethodName(String name);
 }

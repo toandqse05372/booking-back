@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+//not used
 public interface OpeningHoursRepository extends JpaRepository<OpeningHours, Long> {
     List<OpeningHours> findByPlace(Place place);
 

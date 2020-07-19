@@ -48,7 +48,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     @Autowired
     VisitorTypeRepository visitorTypeRepository;
 
-    //get All
+    //get All (not used)
     @Override
     public ResponseEntity<?> findAll() {
         List<TicketTypeDTO> results = new ArrayList<>();
@@ -61,7 +61,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         return ResponseEntity.ok(results);
     }
 
-    //delete
+    //delete ticket type
     @Override
     @Transactional
     public ResponseEntity<?> delete(long id) {
@@ -72,7 +72,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
-    //add ticketType
+    //add ticket Type for place
     @Override
     public ResponseEntity<?> create(TicketTypeDTO ticketTypeDTO) {
         if(null != ticketTypeRepository.
@@ -80,13 +80,11 @@ public class TicketTypeServiceImpl implements TicketTypeService {
             return new ResponseEntity("TICKET_TYPE_EXISTED", HttpStatus.BAD_REQUEST);
         }
         TicketType ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO);
-
         Set<Game> gameSet = new HashSet<>();
         for (Long id : ticketTypeDTO.getGameId()) {
             gameSet.add(gameRepository.findById(id).get());
         }
         ticketType.setGame(gameSet);
-
         ticketTypeRepository.save(ticketType);
         return ResponseEntity.ok(ticketTypeConverter.toDTO(ticketType));
     }
@@ -102,13 +100,11 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         TicketType ticketType = new TicketType();
         TicketType oldTicketType = ticketTypeRepository.findById(ticketTypeDTO.getId()).get();
         ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO, oldTicketType);
-
         Set<Game> gameSet = new HashSet<>();
         for (Long gameId : ticketTypeDTO.getGameId()) {
             gameSet.add(gameRepository.findById(gameId).get());
         }
         ticketType.setGame(gameSet);
-
         ticketTypeRepository.save(ticketType);
         return ResponseEntity.ok(ticketTypeConverter.toDTO(ticketType));
     }
@@ -157,10 +153,12 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         return ResponseEntity.ok(dto);
     }
 
+    // import code from excel
     @Override
-    public ResponseEntity<?> addCodeForTicketType(MultipartFile file, long placeId){
+    public ResponseEntity<?> addCodeFromExcel(MultipartFile file, long placeId){
         if (ExcelHelper.hasExcelFormat(file)) {
             try {
+                //get code from excel 
                 List<Code> codes = ExcelHelper.excelToCode(file.getInputStream());
                 List<VisitorType> visitorTypes = visitorTypeRepository.findByPlaceId(placeId);
                 int failCount = 0;

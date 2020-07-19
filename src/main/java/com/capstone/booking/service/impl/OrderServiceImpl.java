@@ -3,8 +3,8 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.OrderConverter;
 import com.capstone.booking.common.converter.OrderItemConverter;
-import com.capstone.booking.common.helper.PdfPrinter;
-import com.capstone.booking.common.helper.PrintRequest;
+import com.capstone.booking.common.helper.pdf.PdfPrinter;
+import com.capstone.booking.common.helper.pdf.PrintRequest;
 import com.capstone.booking.common.key.OrderStatus;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.OrderDTO;
@@ -132,12 +132,15 @@ public class OrderServiceImpl implements OrderService {
         TicketType ticketType = ticketTypeRepository.findById(order.getTicketTypeId()).get();
         Place place = placeRepository.findById(ticketType.getPlaceId()).get();
         List<PrintRequest> printRequests = new ArrayList<>();
+        // create tickets for each order item
         for(OrderItem item: orderItems){
             VisitorType type = item.getVisitorType();
             List<Code> codeToUse = codeRepository.findByVisitorTypeIdLimitTo(item.getQuantity(), type);
+            // ccheck if number of code remaining in db is enough
             if(codeToUse.size() < item.getQuantity()){
                 return new ResponseEntity("CODE_NOT_ENOUGH", HttpStatus.BAD_REQUEST);
             }
+            //create ticket
             List<Ticket> ticketOrder = new ArrayList<>();
             for(int i = 0; i < item.getQuantity(); i++){
                 Ticket ticket = new Ticket();
@@ -157,6 +160,7 @@ public class OrderServiceImpl implements OrderService {
             printRequests.add(printRequest);
             printRequest.setRedemptionDate(order.getRedemptionDate());
         }
+        // create file pdf
         File file = pdfPrinter.printPDF(printRequests);
         sendEmail(order, file);
         order.setStatus(OrderStatus.SENT.toString());
@@ -164,6 +168,7 @@ public class OrderServiceImpl implements OrderService {
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
 
+    // send ticket.pdf file to user
     public void sendEmail(Order order, File file) throws MessagingException, IOException {
         MimeMessage message = emailSender.createMimeMessage();
 

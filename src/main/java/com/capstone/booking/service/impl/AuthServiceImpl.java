@@ -1,9 +1,10 @@
 package com.capstone.booking.service.impl;
 
-import com.capstone.booking.common.RestFB;
+import com.capstone.booking.config.facebook.RestFB;
 import com.capstone.booking.common.converter.UserConverter;
 import com.capstone.booking.common.key.CMSRoles;
 import com.capstone.booking.common.key.RoleKey;
+import com.capstone.booking.common.key.UserType;
 import com.capstone.booking.config.security.JwtUtil;
 import com.capstone.booking.config.security.UserPrincipal;
 import com.capstone.booking.entity.Role;
@@ -22,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private RoleRepository roleRepository;
 
-    //tìm user theo mail
+    //find existed user by email
     @Override
     public ResponseEntity<?> findByEmail(UserDTO userDTO, String page) {
         User user = userRepository.findByMail(userDTO.getMail());
@@ -57,6 +57,7 @@ public class AuthServiceImpl implements AuthService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("WRONG_USERNAME_PASSWORD");
         }
         if(page != null){
+            // check if user logging in from cms site
             if(page.equals("CMS")){
                 boolean cmsAble = false;
                 Set<Role> userRoles = user.getRoles();
@@ -72,12 +73,11 @@ public class AuthServiceImpl implements AuthService {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("NO_PERMISSION_HERE");
                 }
             }
-
         }
         return ResponseEntity.ok(returnToken(setPermission(user)).getToken());
     }
 
-    //đăng kí/đăng nhập bằng fb
+    //register/login by fb
     @Override
     public ResponseEntity<?> loginFb(FBLoginDTO fbForm){
         String accessToken = fbForm.getAccessToken();
@@ -98,10 +98,9 @@ public class AuthServiceImpl implements AuthService {
         }
         tokenRepository.delete(token);
         return new ResponseEntity("LOGOUT_SUCCESSFUL", HttpStatus.OK);
-//        }else
-//            return ResponseEntity.ok(returnToken(setPermission(user)).getToken());
     }
 
+    //check if token valid
     @Override
     public ResponseEntity<?> checkToken(String tokenStr){
         Token token = tokenRepository.findByToken(tokenStr.substring(6));
@@ -115,7 +114,7 @@ public class AuthServiceImpl implements AuthService {
         return new ResponseEntity("OK", HttpStatus.OK);
     }
 
-    //đặt permission cho user tương ứng vs role
+    //set permission and sub info into token
     public UserPrincipal setPermission(User user){
         UserPrincipal userPrincipal = new UserPrincipal();
         Set<String> authorities = new HashSet<>();
@@ -130,28 +129,10 @@ public class AuthServiceImpl implements AuthService {
         userPrincipal.setLastName(user.getLastName());
         userPrincipal.setPassword(user.getPassword());
         userPrincipal.setAuthorities(authorities);
-     //   userPrincipal.setPermissions(getUserPermission(user.getRoles()));
         return userPrincipal;
     }
 
-//    public List<String> getUserPermission(Set<Role> rolesSet){
-//        List<String> result = new ArrayList<>();
-//        for(Role role : rolesSet){
-//            if(role.getRoleKey().equals(RoleKey.ADMIN)){
-//                for(PermissionKey.AdminPermissionKey permission: PermissionKey.AdminPermissionKey.values()){
-//                    result.add(permission.toString());
-//                }
-//            }
-//            if(role.getRoleKey().equals(RoleKey.USER)){
-//                for(PermissionKey.UserPermission permission: PermissionKey.UserPermission.values()){
-//                    result.add(permission.toString());
-//                }
-//            }
-//        }
-//        return result;
-//    }
-
-    //trả token để remember tk
+    //return token to remember user
     public Token returnToken(UserPrincipal userPrincipal){
         Token token = new Token();
         token.setToken(jwtUtil.generateToken(userPrincipal));
@@ -161,8 +142,10 @@ public class AuthServiceImpl implements AuthService {
         return token;
     }
 
+    //save fb user if it'd not in db
     private User saveFbUser(UserDTO userDTO) {
         User user = userConverter.toUser(userDTO);
+        user.setUserType(UserType.FACEBOOK.toString());
         Set<Role> roleSet = new HashSet<>();
         roleSet.add(roleRepository.findByRoleKey(RoleKey.USER.toString()));
         user.setRoles(roleSet);

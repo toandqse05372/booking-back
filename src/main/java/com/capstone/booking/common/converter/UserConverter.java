@@ -8,15 +8,16 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
-
+//conver user
 @Component
 public class UserConverter {
+
+    //convert from entity to dto
     public UserDTO toDTO(User user) {
         UserDTO dto = new UserDTO();
         if (user.getId() != null) {
             dto.setId(user.getId());
         }
-
         dto.setPassword(user.getPassword());
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
@@ -24,6 +25,7 @@ public class UserConverter {
         dto.setDob(user.getDob());
         dto.setPhoneNumber(user.getPhoneNumber());
         dto.setStatus(user.getStatus());
+        dto.setUserType(user.getUserType());
         Set<Role> roleKeySet = user.getRoles();
         Set<String> roleKeyString = new HashSet<>();
         for(Role role: roleKeySet){
@@ -33,6 +35,7 @@ public class UserConverter {
         return dto;
     }
 
+    //convert from dto to entity (for add)
     public User toUser(UserDTO dto) {
         User user = new User();
         if(dto.getPassword() != null){
@@ -47,6 +50,7 @@ public class UserConverter {
         return user;
     }
 
+    //convert from dto to entity (for update)
     public User toUser(UserDTO dto, User user) {
         if(!dto.getPassword().equals(user.getPassword())) {
             user.setPassword(new BCryptPasswordEncoder().encode(dto.getPassword()));

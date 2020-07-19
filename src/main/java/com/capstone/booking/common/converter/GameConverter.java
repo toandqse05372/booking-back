@@ -9,10 +9,11 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
-
+//convert game
 @Component
 public class GameConverter {
 
+    //convert from dto to entity (for add)
     public Game toGame(GameDTO dto) {
         Game game = new Game();
         game.setGameName(dto.getGameName());
@@ -20,12 +21,14 @@ public class GameConverter {
         return game;
     }
 
+    //convert from dto to entity (for update)
     public Game toGame(GameDTO dto, Game game) {
         game.setGameName(dto.getGameName());
         game.setGameDescription(dto.getGameDescription());
         return game;
     }
 
+    //convert from entity to dto
     public GameDTO toDTO(Game game) {
         GameDTO dto = new GameDTO();
         if (game.getId() != null) {
@@ -51,6 +54,7 @@ public class GameConverter {
         return dto;
     }
 
+    //convert from game to dto (id and name only)
     public GameDTOLite toGameLite(Game game){
         GameDTOLite lite = new GameDTOLite();
         lite.setId(game.getId());

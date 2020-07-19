@@ -1,4 +1,4 @@
-package com.capstone.booking.common;
+package com.capstone.booking.config.stripe;
 
 import lombok.Data;
 

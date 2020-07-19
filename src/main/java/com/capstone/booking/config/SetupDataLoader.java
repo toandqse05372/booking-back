@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.*;
 import java.util.*;
 
+//generate data when first run
 @Component
 public class SetupDataLoader implements
         ApplicationListener<ContextRefreshedEvent> {
@@ -39,7 +40,6 @@ public class SetupDataLoader implements
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
-//        alreadySetup = checkDBExisted();
         if (alreadySetup)
             return;
         initPermission();
@@ -47,7 +47,7 @@ public class SetupDataLoader implements
         alreadySetup = true;
     }
 
-
+    //add first category
     public void initCategory(){
         if(categoryRepository.findOneByTypeKey("PARK") == null){
             Category category = new Category("Khu vui chơi", "PARK");
@@ -55,6 +55,7 @@ public class SetupDataLoader implements
         }
     }
 
+    //add admin account, roles and permission
     public void initPermission(){
         Set<Permission> adminPermission =
                 createPermissionIfNotFound(Arrays.asList(PermissionKey.AdminPermissionKey.values()));
@@ -82,6 +83,7 @@ public class SetupDataLoader implements
         }
     }
 
+    //create permission if db hasn't it
     @Transactional
     public Set<Permission> createPermissionIfNotFound(List<Enum> keyList) {
         Set<Permission> permissionsList = new HashSet<>();
@@ -96,7 +98,8 @@ public class SetupDataLoader implements
         }
         return permissionsList;
     }
- 
+
+    //create role if db hasn't it
     @Transactional
     public Role createRoleIfNotFound(String key, Set<Permission> privileges) {
         Role role = roleRepository.findByRoleKey(key);
@@ -109,6 +112,7 @@ public class SetupDataLoader implements
         return role;
     }
 
+    //add permission for role
     @Transactional
     public void addPermissionForRoleIfNew(String key) {
         Role role = roleRepository.findByRoleKey(key);

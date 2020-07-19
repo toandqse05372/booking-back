@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+//working with excel
 @Component
 public class ExcelHelper {
 
@@ -25,10 +26,12 @@ public class ExcelHelper {
     public ExcelHelper(VisitorTypeRepository visitorTypeRepository){
         ExcelHelper.visitorTypeRepository = visitorTypeRepository;
     }
+
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static String[] HEADER_REPORT = {"#", "Ticket Type Name", "Quantity", "Total"};
     static String SHEET = "Sheet1";
 
+    //check excel format
     public static boolean hasExcelFormat(MultipartFile file) {
 
         if (!TYPE.equals(file.getContentType())) {
@@ -38,6 +41,7 @@ public class ExcelHelper {
         return true;
     }
 
+    //write data to excel file
     public static void writeExcel(List<ReportItem> reportItems, String excelFilePath) throws IOException {
         Workbook workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet();
@@ -61,6 +65,7 @@ public class ExcelHelper {
         }
     }
 
+    //get data from excel
     public static List<Code> excelToCode(InputStream is) {
         try {
             Workbook workbook = new XSSFWorkbook(is);

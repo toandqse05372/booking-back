@@ -70,6 +70,7 @@ public class PlaceServiceImpl implements PlaceService {
         return ResponseEntity.ok(placeConverter.toDTO(place));
     }
 
+    //find place by id for client
     @Override
     public ResponseEntity<?> getPlaceClient(Long id){
         Place place = placeRepository.findById(id).get();
@@ -173,14 +174,16 @@ public class PlaceServiceImpl implements PlaceService {
         return ResponseEntity.ok(liteList);
     }
 
+    //search place for client only
     @Override
     public ResponseEntity<?> searchPlaceForClient(String name, Long minValue, Long maxValue, List<Long> cityId,
                                                   List<Long> categoryId, Long limit, Long page) {
-        Output results = placeRepository.findByMultiParamForClient(name, minValue, maxValue, cityId,
+        Output results = placeRepository.findByMultiParamForClient(name.trim(), minValue, maxValue, cityId,
                 categoryId, limit, page);
         return ResponseEntity.ok(results);
     }
 
+    //upload file to amazon s3
     public void uploadFile(MultipartFile[] files, Long placeId){
         int location = 1;
         for (MultipartFile file: files) {

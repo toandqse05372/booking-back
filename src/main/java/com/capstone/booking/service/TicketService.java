@@ -21,5 +21,5 @@ public interface TicketService {
 
     ResponseEntity<?> getReport(Long placeId, Long reportType, Long startDate, Long endDate);
 
-    ResponseEntity<?> sendReport(OutputReport report) throws IOException, MessagingException;
+    ResponseEntity<?> createReport(OutputReport report) throws IOException, MessagingException;
 }

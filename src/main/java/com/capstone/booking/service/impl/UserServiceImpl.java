@@ -2,6 +2,7 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.UserConverter;
 import com.capstone.booking.common.key.RoleKey;
+import com.capstone.booking.common.key.UserType;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.UserDTO;
 import com.capstone.booking.repository.PasswordResetTokenRepository;
@@ -54,10 +55,11 @@ public class UserServiceImpl implements UserService {
     //normal register
     @Override
     public ResponseEntity<?> register(UserDTO userDTO) {
-        User user = userConverter.toUser(userDTO);
-        if (userRepository.findByMail(user.getMail()) != null) {
+        if (userRepository.findByMail(userDTO.getMail()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EMAIL_EXISTED");
         }
+        User user = userConverter.toUser(userDTO);
+        user.setUserType(UserType.BASIC.toString());
         Set<Role> roleSet = new HashSet<>();
         roleSet.add(roleRepository.findByRoleKey(RoleKey.USER.toString()));
         user.setRoles(roleSet);
@@ -89,38 +91,32 @@ public class UserServiceImpl implements UserService {
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setUser(user);
         verificationToken.setConfirmationToken(UUID.randomUUID().toString());
-
         tokenRepository.save(verificationToken);
-
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(user.getMail()); //user email
         mailMessage.setSubject("Complete Registration!");
         mailMessage.setFrom(fromMail);
         mailMessage.setText("To confirm your account, please click here : "
                 +hostFrontEnd+"confirmMail?token="+verificationToken.getConfirmationToken());
-
         emailSenderService.sendEmail(mailMessage);
     }
 
+    //verify email user entered
     @Override
     public ResponseEntity<?> verifyEmail(String verificationToken) {
         VerificationToken token = tokenRepository.findByConfirmationToken(verificationToken);
-
-        if(token != null)
-        {
+        if(token != null){
             User user = userRepository.findByMail(token.getUser().getMail());
             user.setStatus("ACTIVATED");
             userRepository.save(user);
             return ResponseEntity.ok(authService.returnToken(authService.setPermission(user)));
         }
-        else
-        {
+        else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("INVALID_TOKEN");
         }
-
     }
 
-    //edit user
+    //edit user CMS
     @Override
     public ResponseEntity<?> update(UserDTO userDTO) {
         User user = new User();
@@ -129,7 +125,6 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.findByMail(user.getMail()).getId().equals(oldUser.getId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EMAIL_EXISTED");
         }
-
         Set<Role> roleSet = new HashSet<>();
         for(String role: userDTO.getRoleKey()){
             roleSet.add(roleRepository.findByRoleKey(role));
@@ -139,13 +134,14 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(user);
     }
 
-    //createUserCMS
+    //create User by CMS
     @Override
     public ResponseEntity<?> createUserCMS(UserDTO userDTO) {
-        User user = userConverter.toUser(userDTO);
-        if (userRepository.findByMail(user.getMail()) != null) {
+        if (userRepository.findByMail(userDTO.getMail()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EMAIL_EXISTED");
         }
+        User user = userConverter.toUser(userDTO);
+        user.setUserType(UserType.BASIC.toString());
         Set<Role> roleSet = new HashSet<>();
         for(String roleKey: userDTO.getRoleKey()){
             roleSet.add(roleRepository.findByRoleKey(roleKey));

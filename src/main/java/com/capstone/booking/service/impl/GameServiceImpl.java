@@ -30,9 +30,6 @@ public class GameServiceImpl implements GameService {
     private GameConverter gameConverter;
 
     @Autowired
-    private TicketTypeRepository ticketTypeRepository;
-
-    @Autowired
     private PlaceRepository placeRepository;
 
 
@@ -104,7 +101,7 @@ public class GameServiceImpl implements GameService {
         return ResponseEntity.ok(results);
     }
 
-    //getAllGame  //game nào mà place còn active thì mới select
+    //get all game from active places
     @Override
     public ResponseEntity<?> findAll() {
         List<GameDTO> results = new ArrayList<>();
@@ -117,7 +114,7 @@ public class GameServiceImpl implements GameService {
         return ResponseEntity.ok(results);
     }
 
-    //change status
+    //change status of game
     @Override
     public ResponseEntity<?> changeStatus(Long id) {
         Game game = gameRepository.findById(id).get();
@@ -137,6 +134,7 @@ public class GameServiceImpl implements GameService {
         return ResponseEntity.ok(results);
     }
 
+    // get all game by place id
     @Override
     public ResponseEntity<?> listOptionByPlace(long id) {
         List<Game> gameList = gameRepository.findByPlaceId(id);

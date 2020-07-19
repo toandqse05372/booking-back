@@ -20,7 +20,9 @@ public interface VisitorTypeService {
     //search by Id
     ResponseEntity<?> getById(long id);
 
+    //not used
     ResponseEntity<?> addCodeForTicketType(MultipartFile file, String codeType);
 
+    //set visitor type's price as basic place
     ResponseEntity<?> markBasicPrice(long id, long placeId);
 }

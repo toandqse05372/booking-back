@@ -9,9 +9,11 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
+//convert order item
 @Component
 public class OrderItemConverter {
 
+    //convert from entity to dto
     @Autowired
     VisitorTypeRepository visitorTypeRepository;
     public OrderItemDTO toDTO(OrderItem orderItem) {
@@ -23,6 +25,7 @@ public class OrderItemConverter {
         return dto;
     }
 
+    //convert from dto to entity
     public OrderItem toItem(OrderItemDTO dto) {
         OrderItem item = new OrderItem();
         item.setQuantity(dto.getQuantity());

@@ -5,6 +5,8 @@ import com.capstone.booking.entity.VisitorType;
 
 import java.util.List;
 
+//customer query to code table
 public interface CodeCustom {
+    //find by visitor type limit by quantity from order item
     List<Code> findByVisitorTypeIdLimitTo(int limit, VisitorType visitorType);
 }

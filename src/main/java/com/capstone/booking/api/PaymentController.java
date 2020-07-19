@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+//payment api
 @Controller
 public class PaymentController {
     // Reading the value from the application.properties file

@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-
+//not use
 @Getter
 @Setter
 public class Payload<T> {

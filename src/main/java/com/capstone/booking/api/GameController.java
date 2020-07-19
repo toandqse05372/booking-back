@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-
+//Game's api
 @RestController
 public class GameController {
 
@@ -30,14 +30,14 @@ public class GameController {
         return gameService.findByMulParam(gameName, placeName, limit, page);
     }
 
-    //delete Game
+    //delete Game api
     @DeleteMapping("/game/{id}")
     @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> deleteGame(@PathVariable("id") long id) {
         return gameService.delete(id);
     }
 
-    //change status Game
+    //change status Game api
     @PutMapping("/changeGame/{id}")
     @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> changeStatusGame(@PathVariable("id") long id) {
@@ -45,14 +45,14 @@ public class GameController {
         return new ResponseEntity("Change Successful", HttpStatus.OK);
     }
 
-    //add Game
+    //add Game api
     @PostMapping("/game")
     @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> createGame(@RequestBody GameDTO model) {
         return gameService.create(model);
     }
 
-    //edit Game
+    //edit Game api
     @PutMapping("/game/{id}")
     @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> updateGame(@RequestBody GameDTO model, @PathVariable("id") long id) {
@@ -60,13 +60,13 @@ public class GameController {
         return gameService.update(model);
     }
 
-    //search by Id
+    //search by Id api
     @GetMapping("/game/{id}")
     public ResponseEntity<?> getGame(@PathVariable Long id) {
         return gameService.getGame(id);
     }
 
-    //search Game by placeId & paging
+    //search Game by placeId & paging api
     @GetMapping("/game/findByPlaceId")
     @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> findByPlaceId(@RequestParam(value = "placeId", required = false) Long placeId,
@@ -75,6 +75,7 @@ public class GameController {
         return gameService.findByPlaceId(placeId, limit, page);
     }
 
+    //get game by place api
     @GetMapping("/game/listOption")
     public ResponseEntity<?> listOptionByPlace(@RequestParam(value = "placeId", required = false) Long id){
         return gameService.listOptionByPlace(id);

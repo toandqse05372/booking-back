@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.swing.text.html.Option;
 import java.util.Optional;
 
-//tìm đối tượng đang có token
+//find out who's having token
 @Component
 public class SpringSecurityAuditorAware implements AuditorAware<Long> {
 

@@ -13,20 +13,20 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-
+//place api
 @RestController
 public class PlaceController {
 
     @Autowired
     private PlaceService placeService;
 
-    //getAll place
+    //getAll place api (not used)
     @GetMapping("/places")
     public ResponseEntity<?> getAllPlace() {
         return placeService.getAll();
     }
 
-    //add place
+    //add place api
     @PostMapping("/place")
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> createPlace(@RequestPart(value = "file", required = false) MultipartFile[] files,
@@ -37,7 +37,7 @@ public class PlaceController {
         return placeService.create(placeDTO, files);
     }
 
-    //edit place
+    //edit place api
     @PutMapping("/place/{id}")
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> updatePlace(@RequestPart(value = "file", required = false) MultipartFile[] files,
@@ -49,14 +49,14 @@ public class PlaceController {
         return placeService.update(placeDTO, files);
     }
 
-    //change status Place
+    //change status Place api
     @PutMapping("/changePlace/{id}")
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> changeStatusPlace(@PathVariable("id") long id)  {
         return placeService.changeStatus(id);
     }
 
-    //search By Id
+    //search By Id api
     @GetMapping("/place/{id}")
     public ResponseEntity<?> getPlace(@PathVariable Long id){
         return placeService.getPlace(id);
@@ -67,7 +67,7 @@ public class PlaceController {
         return placeService.getPlaceClient(id);
     }
 
-    //search place by name & address, cityId, categoryId, & paging
+    //search place by name & address, cityId, categoryId, & paging api
     @GetMapping("/place/searchMul")
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "name", required = false) String name,
@@ -79,6 +79,7 @@ public class PlaceController {
         return placeService.findByMultipleParam(name, address, cityId, categoryId, limit, page);
     }
 
+    //search place for client api
     @GetMapping("/place/searchClient")
     public ResponseEntity<?> searchPlaceForClient(@RequestParam(value = "name", required = false) String name,
                                        @RequestParam(value = "limit", required = false) Long limit,
@@ -94,7 +95,7 @@ public class PlaceController {
         return placeService.searchPlaceForClient(name, minValue, maxValue, cityId, categoryId, limit, page);
     }
 
-    //delete place
+    //delete place api
     @DeleteMapping("/place/{id}")
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> deletePlace(@PathVariable("id") long id) {

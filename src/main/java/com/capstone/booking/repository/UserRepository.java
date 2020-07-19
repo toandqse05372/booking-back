@@ -9,8 +9,13 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+//customer query to user table
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
+
+    //find user by exact mail
     User findByMail(String mail);
+
+    //find user by role
     List<User> findByRoles(Role role);
 
 

@@ -21,6 +21,7 @@ public class JwtUtil {
     private static final String USER = "user";
     private static final String SECRET = "daycaidaynaychinhlachukycuabandungdelorangoaidaynhenguyhiemchetnguoidayhihihi";
 
+    //generate token
     public String generateToken(UserPrincipal user) {
         String token = null;
         try {
@@ -38,6 +39,7 @@ public class JwtUtil {
         return token;
     }
 
+    //set token expiration date
     public Date generateExpirationDate() {
         return new Date(System.currentTimeMillis() + 172800000);
     }
@@ -56,6 +58,7 @@ public class JwtUtil {
         return claims;
     }
 
+    //get info of user from token
     public UserPrincipal getUserFromToken(String token) {
         UserPrincipal user = null;
         try {

@@ -29,7 +29,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-
 @Service
 public class TicketServiceImpl implements TicketService {
 
@@ -79,6 +78,7 @@ public class TicketServiceImpl implements TicketService {
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
+    // calculate number of sale tickets of a place
     @Override
     public ResponseEntity<?> getReport(Long placeId, Long reportType, Long startDateL, Long endDateL) {
         Date endDate = new Date();
@@ -94,12 +94,15 @@ public class TicketServiceImpl implements TicketService {
             startDate = new Date(startDateL);
         }
         List<ReportItem> reportItems = new ArrayList<>();
+        // get all ticket type of place
         List<TicketType> ticketTypes = ticketTypeRepository.findByPlaceId(placeId);
         int totalRevenue = 0;
         for (TicketType ticketType : ticketTypes) {
+            //get all visitor type of a ticket type
             for (VisitorType visitorType : visitorTypeRepository.findByTicketType(ticketType)) {
                 ReportItem reportItem = new ReportItem();
-                reportItem.setTicketTypeName(ticketType.getTypeName() + "[" + visitorType.getTypeName() + "]");
+                reportItem.setTicketTypeName(ticketType.getTypeName() + " [" + visitorType.getTypeName() + "]");
+                //calculate tickets
                 int quantity = ticketRepository.getAllBetweenDates(visitorType.getId(), startDate, endDate).size();
                 reportItem.setQuantity(quantity);
                 int total = quantity * visitorType.getPrice() * quantity;
@@ -118,8 +121,9 @@ public class TicketServiceImpl implements TicketService {
         return ResponseEntity.ok(outputReport);
     }
 
+    // get report and send to place
     @Override
-    public ResponseEntity<?> sendReport(OutputReport report) throws IOException, MessagingException {
+    public ResponseEntity<?> createReport(OutputReport report) throws IOException, MessagingException {
         Date endDate = new Date();
         Date startDate = new Date();
         if (report.getReportType() == 1) {
@@ -137,12 +141,14 @@ public class TicketServiceImpl implements TicketService {
         return ResponseEntity.ok("OK");
     }
 
+    // get date from past
     private Date setDateBefore(int days) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1*days);
         return cal.getTime();
     }
 
+    //send email
     public void sendEmail(File file) throws MessagingException, IOException {
         MimeMessage message = emailSender.createMimeMessage();
 

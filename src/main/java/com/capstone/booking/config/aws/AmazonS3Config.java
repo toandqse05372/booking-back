@@ -10,6 +10,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 
+//configuration for my amazon s3 bucket
 @Configuration
 public class AmazonS3Config 
 {

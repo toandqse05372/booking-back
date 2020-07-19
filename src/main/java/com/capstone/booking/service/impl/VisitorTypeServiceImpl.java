@@ -133,6 +133,7 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         return ResponseEntity.ok(visitorTypeConverter.toDTO(type));
     }
 
+    //not use
     @Override
     public ResponseEntity<?> addCodeForTicketType(MultipartFile file, String codeType){
         if (ExcelHelper.hasExcelFormat(file)) {
@@ -149,6 +150,7 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
 
     }
 
+    //set chosen visitor type's price as basic type
     @Override
     public ResponseEntity<?> markBasicPrice(long id, long placeId) {
         VisitorType markType = visitorTypeRepository.findById(id).get();

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+//query to image place table
 public interface ImagePlaceRepository extends JpaRepository<ImagePlace, Long> {
-    List<ImagePlace> findByPlace(Place place);
 
     ImagePlace findByImageName(String imageName);
 

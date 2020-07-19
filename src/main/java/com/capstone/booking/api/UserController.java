@@ -8,14 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-
+//user's api
 @RestController
 public class UserController {
-    @Autowired
-    private UserService userService;
 
     @Autowired
-    private TokenService tokenService;
+    private UserService userService;
 
     //normal register
     @PostMapping("/user/register")
@@ -63,29 +61,32 @@ public class UserController {
         return userService.findByMultiParam(firstName, mail, lastName, phoneNumber, roleId, limit, page);
     }
 
-    //delete User
+    //delete User api
     @DeleteMapping("/user/{id}")
     @PreAuthorize("hasAnyAuthority('USER_EDIT')")
     public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
         return userService.delete(id);
     }
 
-    //search by Id
+    //search by Id api
     @GetMapping("/user/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id) {
         return userService.getUser(id);
     }
 
+    //get all role api
     @GetMapping("user/roles")
     public ResponseEntity<?> findAllRoles(){
         return userService.findAllRoles();
     }
 
+    //reset password api
     @PostMapping("user/resetPassword")
     public ResponseEntity<?> resetPasswordRequest(@RequestBody Long uid, String oldPassword, String newPassword){
         return userService.changePassword(uid, oldPassword, newPassword);
     }
 
+    //verify email for fb account api
     @GetMapping("user/verifyEmailFb")
     public ResponseEntity<?> verifyEmailFb(String mail, Long uid){
         return userService.verifyEmailFb(mail, uid);

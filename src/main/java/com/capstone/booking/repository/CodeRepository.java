@@ -8,10 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+//query to code table
 public interface CodeRepository extends JpaRepository<Code, Long>, CodeCustom {
+
+    //find all by visitor type
     List<Code> findByVisitorType(VisitorType type);
 
+    //delete by visitor type
     void deleteByVisitorType(VisitorType type);
-
-    Code findFirstByVisitorType(VisitorType type);
 }

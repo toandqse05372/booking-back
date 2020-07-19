@@ -6,7 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
- 
+
+//config mail host
 @Configuration
 public class MailConfig {
 
@@ -21,7 +22,8 @@ public class MailConfig {
 
     @Value("${spring.mail.port}")
     private int port;
- 
+
+    //create mail sender with created information
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();

@@ -6,8 +6,11 @@ import com.capstone.booking.entity.dto.ImageDTO;
 import com.capstone.booking.entity.dto.OpeningHoursDTO;
 import org.springframework.stereotype.Component;
 
+//convert image link
 @Component
 public class ImageConverter {
+
+    //convert from entity to dto
     public ImageDTO toDTO(ImagePlace imagePlace) {
         ImageDTO dto = new ImageDTO();
         if (imagePlace.getId() != null) {

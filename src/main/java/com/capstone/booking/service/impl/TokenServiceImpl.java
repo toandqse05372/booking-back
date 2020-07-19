@@ -9,18 +9,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
-//nghiệp vụ token
 @Service
 public class TokenServiceImpl implements TokenService {
 
     @Autowired
     private TokenRepository tokenRepository;
 
+    //create token in db
     public ResponseEntity<?> createToken(Token token) {
         return ResponseEntity.ok(tokenRepository.saveAndFlush(token));
 
     }
 
+    //find token in db
     @Override
     public Token findByToken(String tokenStr) {
         Token token = tokenRepository.findByToken(tokenStr);

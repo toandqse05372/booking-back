@@ -1,4 +1,4 @@
-package com.capstone.booking.common.helper;
+package com.capstone.booking.common.helper.pdf;
 
 import com.capstone.booking.entity.Place;
 import com.capstone.booking.entity.Ticket;

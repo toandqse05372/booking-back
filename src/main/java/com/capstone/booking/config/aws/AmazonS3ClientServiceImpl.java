@@ -38,6 +38,7 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
         this.awsS3AudioBucket = awsS3AudioBucket;
     }
 
+    //upload file to s3
     @Async
     public void uploadFileToS3Bucket(Long placeId, MultipartFile multipartFile, String name, String ext, boolean enablePublicReadAccess)
     {

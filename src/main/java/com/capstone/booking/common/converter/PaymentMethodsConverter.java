@@ -4,7 +4,7 @@ import com.capstone.booking.entity.PaymentMethods;
 import com.capstone.booking.entity.dto.PaymentMethodsDTO;
 import org.springframework.stereotype.Component;
 
-
+//not use
 @Component
 public class PaymentMethodsConverter {
     public PaymentMethods toMethod(PaymentMethodsDTO dto) {

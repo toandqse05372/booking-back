@@ -4,6 +4,7 @@ import com.capstone.booking.entity.OpeningHours;
 import com.capstone.booking.entity.dto.OpeningHoursDTO;
 import org.springframework.stereotype.Component;
 
+//not usse
 @Component
 public class OpeningHoursConverter {
 

@@ -37,7 +37,7 @@ public class CityServiceImpl implements CityService {
     @Autowired
     private AmazonS3ClientService amazonS3ClientService;
 
-    //getAllCity
+    //get all city
     @Override
     public ResponseEntity<?> findAllCity() {
         List<CityDTO> results = new ArrayList<>();
@@ -49,7 +49,7 @@ public class CityServiceImpl implements CityService {
         return ResponseEntity.ok(results);
     }
 
-    //getTop3
+    //get Top 3
     @Override
     public ResponseEntity<?> getTop3() {
         List<CityDTO> results = new ArrayList<>();
@@ -76,7 +76,7 @@ public class CityServiceImpl implements CityService {
         return ResponseEntity.ok(results);
     }
 
-    //add
+    //add new city to db
     @Override
     public ResponseEntity<?> create(CityDTO cityDTO, MultipartFile file) {
         if (cityRepository.findByName(cityDTO.getName()) != null) {
@@ -101,6 +101,7 @@ public class CityServiceImpl implements CityService {
         return setImageAndReturn(file, city);
     }
 
+    //set image and save city to db
     private ResponseEntity<?> setImageAndReturn(MultipartFile file, City city) {
         if(file != null){
             City saved = cityRepository.save(city);
@@ -123,6 +124,7 @@ public class CityServiceImpl implements CityService {
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
+    //upload file to s3
     public String uploadFile(MultipartFile file, Long categoryId){
         String ext = "."+ FilenameUtils.getExtension(file.getOriginalFilename());
         String name = "City_"+categoryId;

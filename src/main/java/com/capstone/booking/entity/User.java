@@ -26,7 +26,7 @@ public class User extends BaseEntity {
     private String phoneNumber;
     @Column(length = 20)
     private String status;
-
+    private String userType;
     //nhiều user có nhiều trường, nhiều trường thuộc về nhiều user
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinTable(name = "t_user_role",

@@ -12,44 +12,46 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+//order's api
 @RestController
 public class OrderController {
 
     @Autowired
     private OrderService orderService;
 
-    //delete
+    //delete api
     @DeleteMapping("/order/{id}")
     public ResponseEntity<?> deleteMethod(@PathVariable("id") long id) {
         return orderService.delete(id);
     }
 
-    //search Order by status, code
+    //search Order by status, code api
     @GetMapping("/order/searchByStatus")
     public ResponseEntity<?> orderFilter(@RequestParam(value = "status", required = false) String status,
                                             @RequestParam(value = "code", required = false) String code) {
         return orderService.findByStatus(status, code);
     }
 
-    //add
+    //add api
     @PostMapping("/order")
     public ResponseEntity<?> createMethod(@RequestBody OrderDTO model) {
         return orderService.create(model, OrderStatus.UNPAID);
     }
 
-    //edit
+    //edit api
     @PutMapping("/order/{id}")
     public ResponseEntity<?> updateMethod(@RequestBody OrderDTO model, @PathVariable("id") long id) {
         model.setId(id);
         return orderService.update(model);
     }
 
+    //send ticket to customer api
     @PutMapping("/order/sendTicket/{id}")
     public ResponseEntity<?> sendTicket(@PathVariable("id") long id) throws DocumentException, IOException, URISyntaxException, MessagingException {
         return orderService.sendTicket(id);
     }
 
-    //search by Id
+    //search by Id api
     @GetMapping("/order/{id}")
     public ResponseEntity<?> getOrderById(@PathVariable("id") long id) {
         return orderService.findByOrderId(id);

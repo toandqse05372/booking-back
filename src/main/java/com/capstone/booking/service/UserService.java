@@ -7,10 +7,13 @@ public interface UserService {
     //normal register
     ResponseEntity<?> register(UserDTO userDTO);
 
+    //send verify email
     ResponseEntity<?> resendEmailVerify(String mail);
 
+    //verify email for fb account
     ResponseEntity<?> verifyEmailFb(String mail, Long uid);
 
+    //verify email
     ResponseEntity<?> verifyEmail(String verificationToken);
 
     //edit
@@ -28,13 +31,15 @@ public interface UserService {
     //search by id
     ResponseEntity<?> getUser(Long id);
 
+    //find all
     ResponseEntity<?> findAllRoles();
 
+    //validate password reset token
     ResponseEntity<?> validatePasswordResetToken(String token);
 
+    //change password after reset
     ResponseEntity<?> changePasswordAfterReset(long uid, String newPassword);
 
+    //change password request
     ResponseEntity<?> changePassword(long uid, String oldPassword, String newPassword);
-
-    ResponseEntity<?> createPasswordResetToken(String mail);
 }

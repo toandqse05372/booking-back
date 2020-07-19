@@ -1,20 +1,10 @@
-package com.capstone.booking.common.helper;
+package com.capstone.booking.common.helper.pdf;
 
 import com.capstone.booking.entity.*;
-import com.capstone.booking.repository.OrderItemRepository;
-import com.capstone.booking.service.impl.EmailSenderService;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class PdfPrinter {
@@ -38,11 +27,11 @@ public class PdfPrinter {
         FileOutputStream fos = new FileOutputStream(file);
         PdfWriter pdfWriter = PdfWriter.getInstance(document, fos);
 
-        //mở streaming data vào file
+        //start stream file
         document.open();
 
         for (PrintRequest printRequest : printRequests) {
-            //lấy file
+            //get template file
             Path path = Paths.get(ClassLoader.getSystemResource("test.txt").toURI());
             Charset charset = StandardCharsets.UTF_8;
 
@@ -59,12 +48,12 @@ public class PdfPrinter {
 
             for (Ticket ticket : printRequest.getTickets()) {
                 PdfContentByte pdfContentByte = pdfWriter.getDirectContent();
-                //đưa ảnh vào
+                //enter image
                 Path pathI = Paths.get(ClassLoader.getSystemResource("images.jpg").toURI());
                 Image img = Image.getInstance(pathI.toAbsolutePath().toString());
                 img.scaleAbsolute(200, 40);
                 document.add(img);
-                //đưa chữ vào
+                //enter text
                 Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
                 Chunk chunk1 = new Chunk(content, font);
                 document.add(new Paragraph("\n"));

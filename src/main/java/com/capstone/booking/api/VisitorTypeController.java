@@ -18,13 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+//visitor type api
 @RestController
 public class VisitorTypeController {
 
     @Autowired
     VisitorTypeService visitorTypeService;
 
-    //add
+    //add api
     @PostMapping("/visitorType")
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
     public ResponseEntity<?> create(@RequestPart(value = "placeId") String placeIdStr,
@@ -35,7 +36,7 @@ public class VisitorTypeController {
         return visitorTypeService.create(visitorTypeDTO, placeId);
     }
 
-    //edit
+    //edit api
     @PutMapping("/visitorType/{id}")
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
     public ResponseEntity<?> update(@RequestBody VisitorTypeDTO model, @PathVariable("id") long id) {
@@ -43,6 +44,7 @@ public class VisitorTypeController {
         return visitorTypeService.update(model);
     }
 
+    //mark basic price api
     @PutMapping("/markPrice/{id}")
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
     public ResponseEntity<?> markBasicPrice(@PathVariable("id") long id,
@@ -69,6 +71,7 @@ public class VisitorTypeController {
         return visitorTypeService.findByTicketTypeId(ticketTypeId);
     }
 
+    //not used
     @PostMapping("/uploadVisitorFile")
     @PreAuthorize("hasAnyAuthority('TICKET_TYPE_EDIT')")
     public ResponseEntity<?> uploadFile(@RequestPart(value = "file") MultipartFile file,

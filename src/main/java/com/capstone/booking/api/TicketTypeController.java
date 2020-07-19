@@ -8,13 +8,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+//ticket type api
 @RestController
 public class TicketTypeController {
 
     @Autowired
     private TicketTypeService ticketTypeService;
 
-    //find all
+    //find all (not used)
     @GetMapping("/ticketTypes")
     public ResponseEntity<?> searchAll() {
         return ticketTypeService.findAll();
@@ -64,10 +65,11 @@ public class TicketTypeController {
         return ticketTypeService.getTicketType(id);
     }
 
+    //import code from excel api
     @PostMapping("/upload")
     @PreAuthorize("hasAnyAuthority('TICKET_TYPE_EDIT')")
     public ResponseEntity<?> uploadFile(@RequestPart(value = "file") MultipartFile file,
                                         @RequestPart(value = "placeId") String placeId){
-        return ticketTypeService.addCodeForTicketType(file, Long.parseLong(placeId));
+        return ticketTypeService.addCodeFromExcel(file, Long.parseLong(placeId));
     }
 }

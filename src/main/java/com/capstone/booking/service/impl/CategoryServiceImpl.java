@@ -35,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private AmazonS3ClientService amazonS3ClientService;
 
-    //get All
+    //get all categories
     @Override
     public ResponseEntity<?> getAllCategories() {
         List<CategoryDTO> results = new ArrayList<>();
@@ -59,7 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
 
-    //add
+    //add new category
     @Override
     public ResponseEntity<?> create(CategoryDTO categoryDTO, MultipartFile file) {
         if (categoryRepository.findByTypeName(categoryDTO.getCategoryName()) != null) {
@@ -82,6 +82,7 @@ public class CategoryServiceImpl implements CategoryService {
         return setImageAndReturn(file, category);
     }
 
+    //set image and save category to db
     private ResponseEntity<?> setImageAndReturn(MultipartFile file, Category category) {
         if(file != null){
             Category saved = categoryRepository.save(category);
@@ -107,6 +108,7 @@ public class CategoryServiceImpl implements CategoryService {
         return ResponseEntity.ok(categoryConverter.toDTO(category));
     }
 
+    //upload category icon to s3
     public String uploadFile(MultipartFile file, Long categoryId){
         String ext = "."+ FilenameUtils.getExtension(file.getOriginalFilename());
         String name = "Category_"+categoryId;
