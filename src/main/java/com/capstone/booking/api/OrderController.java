@@ -1,5 +1,6 @@
 package com.capstone.booking.api;
 
+import com.capstone.booking.common.key.OrderStatus;
 import com.capstone.booking.entity.dto.OrderDTO;
 import com.capstone.booking.service.OrderService;
 import com.itextpdf.text.DocumentException;
@@ -33,7 +34,7 @@ public class OrderController {
     //add
     @PostMapping("/order")
     public ResponseEntity<?> createMethod(@RequestBody OrderDTO model) {
-        return orderService.create(model);
+        return orderService.create(model, OrderStatus.UNPAID);
     }
 
     //edit

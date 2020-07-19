@@ -1,5 +1,6 @@
 package com.capstone.booking.service;
 
+import com.capstone.booking.common.key.OrderStatus;
 import com.capstone.booking.entity.dto.OrderDTO;
 import com.itextpdf.text.DocumentException;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import java.net.URISyntaxException;
 
 public interface OrderService {
     //add
-    ResponseEntity<?> create(OrderDTO orderDTO);
+    ResponseEntity<?> create(OrderDTO orderDTO, OrderStatus status);
 
     //edit
     ResponseEntity<?> update(OrderDTO orderDTO);

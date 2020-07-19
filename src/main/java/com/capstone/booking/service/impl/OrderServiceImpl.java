@@ -66,14 +66,14 @@ public class OrderServiceImpl implements OrderService {
 
     //create order
     @Override
-    public ResponseEntity<?> create(OrderDTO orderDTO) {
+    public ResponseEntity<?> create(OrderDTO orderDTO, OrderStatus status) {
         Order order = orderConverter.toOrder(orderDTO);
 
         User user = userRepository.findById(orderDTO.getUserId()).get();
         order.setUser(user);
 
         order.setOrderCode("ORDER"+(orderRepository.findTopByOrderById().getId()+1));
-        order.setStatus(OrderStatus.UNPAID.toString());
+        order.setStatus(status.toString());
         orderRepository.save(order);
         List<OrderItem> orderItems = new ArrayList<>();
         for(OrderItemDTO dto: orderDTO.getOrderItems()){
