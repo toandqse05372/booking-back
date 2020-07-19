@@ -19,7 +19,7 @@ public class CategoryController {
     //search category by categoryName & paging
     @GetMapping("/category/searchByName")
     @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
-    public ResponseEntity<?> searchMUL(@RequestParam(value = "categoryName", required = false) String categoryName,
+    public ResponseEntity<?> searchByName(@RequestParam(value = "categoryName", required = false) String categoryName,
                                        @RequestParam(value = "limit", required = false) Long limit,
                                        @RequestParam(value = "page", required = false) Long page) {
         return categoryService.findByTypeName(categoryName, limit, page);
