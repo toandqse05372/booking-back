@@ -22,9 +22,9 @@ public class TicketTypeRepositoryImpl implements TicketTypeCustom {
     @Override
     public List<TicketType> findByPlaceId(Long placeId) {
         String queryStr = "select type.* from t_ticket_type type " +
-                "INNER join t_game_ticket_type gtt on gtt.ticket_type_id = type.id " +
-                "INNER join t_game g on gtt.game_id = g.id where type.place_id = :placeId " +
-                "AND  g.status like 'ACTIVE' ";
+                "Left join t_game_ticket_type gtt on gtt.ticket_type_id = type.id " +
+                "Left join t_game g on gtt.game_id = g.id where type.place_id = :placeId " +
+                "AND  g.status like 'ACTIVE' group by type.id";
         Query query = entityManager.createNativeQuery(queryStr, TicketType.class);
         query.setParameter("placeId", placeId);
         return query.getResultList();
