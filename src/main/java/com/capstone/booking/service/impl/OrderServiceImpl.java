@@ -25,6 +25,7 @@ import javax.transaction.Transactional;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -134,6 +135,10 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException, MessagingException {
         Order order = orderRepository.findById(id).get();
+        if(order.getRedemptionDate().before(new Date())){
+            order.setStatus(OrderStatus.EXPIRED.toString());
+            return new ResponseEntity("ORDER_EXPIRED", HttpStatus.BAD_REQUEST);
+        }
         Set<OrderItem> orderItems = order.getOrderItem();
         TicketType ticketType = ticketTypeRepository.findById(order.getTicketTypeId()).get();
         Place place = placeRepository.findById(ticketType.getPlaceId()).get();

@@ -21,6 +21,7 @@ public class OrderItemConverter {
         dto.setQuantity(orderItem.getQuantity());
         dto.setVisitorTypeId(orderItem.getVisitorType().getId());
         dto.setVisitorTypeName(orderItem.getVisitorType().getTypeName());
+        dto.setVisitorTypeKey(orderItem.getVisitorType().getTypeKey());
         dto.setId(orderItem.getId());
         return dto;
     }

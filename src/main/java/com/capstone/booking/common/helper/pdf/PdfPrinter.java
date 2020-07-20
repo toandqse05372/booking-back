@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Component
@@ -29,7 +30,7 @@ public class PdfPrinter {
 
         //start stream file
         document.open();
-
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         for (PrintRequest printRequest : printRequests) {
             //get template file
             Path path = Paths.get(ClassLoader.getSystemResource("test.txt").toURI());
@@ -43,7 +44,7 @@ public class PdfPrinter {
                             + "[" + printRequest.getVisitorType().getTypeName() + "]")
                     .replace("PRICEx",
                             String.valueOf(printRequest.getVisitorType().getPrice()) + " VND")
-                    .replace("REDEMPTION_DATEx", printRequest.getRedemptionDate().toString())
+                    .replace("REDEMPTION_DATEx", dateFormat.format(printRequest.getRedemptionDate()))
                     .replace("PLACEx", printRequest.getPlace().getName());
 
             for (Ticket ticket : printRequest.getTickets()) {
@@ -69,7 +70,6 @@ public class PdfPrinter {
         }
 
         document.close();
-//
 //        fos.close();
         return file;
     }
