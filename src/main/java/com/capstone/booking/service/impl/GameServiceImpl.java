@@ -2,14 +2,12 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.GameConverter;
-import com.capstone.booking.common.key.PlaceAndGameStatus;
+import com.capstone.booking.common.key.MonoStatus;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.GameDTO;
 import com.capstone.booking.entity.dto.GameDTOLite;
-import com.capstone.booking.entity.dto.PlaceDTOLite;
 import com.capstone.booking.repository.GameRepository;
 import com.capstone.booking.repository.PlaceRepository;
-import com.capstone.booking.repository.TicketTypeRepository;
 import com.capstone.booking.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,7 +43,7 @@ public class GameServiceImpl implements GameService {
         }
         Game game = gameConverter.toGame(gameDTO);
         game.setPlace(place);
-        game.setStatus(PlaceAndGameStatus.ACTIVE.toString());
+        game.setStatus(MonoStatus.ACTIVE.toString());
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
     }
@@ -118,10 +116,10 @@ public class GameServiceImpl implements GameService {
     @Override
     public ResponseEntity<?> changeStatus(Long id) {
         Game game = gameRepository.findById(id).get();
-        if (game.getStatus().equals(PlaceAndGameStatus.ACTIVE.toString())) {
-            game.setStatus(PlaceAndGameStatus.DEACTIVATE.toString());
+        if (game.getStatus().equals(MonoStatus.ACTIVE.toString())) {
+            game.setStatus(MonoStatus.DEACTIVATE.toString());
         } else {
-            game.setStatus(PlaceAndGameStatus.ACTIVE.toString());
+            game.setStatus(MonoStatus.ACTIVE.toString());
         }
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));
@@ -137,7 +135,7 @@ public class GameServiceImpl implements GameService {
     // get all game by place id
     @Override
     public ResponseEntity<?> listOptionByPlace(long id) {
-        List<Game> gameList = gameRepository.findByPlaceId(id);
+        List<Game> gameList = gameRepository.findByPlaceIdAndStatus(id, MonoStatus.ACTIVE.toString());
         List<GameDTOLite> liteList = new ArrayList<>();
         for (Game game : gameList) {
             GameDTOLite lite = gameConverter.toGameLite(game);

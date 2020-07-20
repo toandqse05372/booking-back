@@ -72,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findById(orderDTO.getUserId()).get();
         order.setUser(user);
 
-        Order newestOrder = orderRepository.findTopByOrderById();
+        Order newestOrder = orderRepository.findTopByOrderByIdDesc();
         if(newestOrder != null){
             order.setOrderCode("ORDER"+(newestOrder.getId()+1));
         }else{
@@ -111,6 +111,7 @@ public class OrderServiceImpl implements OrderService {
         if (!orderRepository.findById(id).isPresent()) {
             return new ResponseEntity("ORDER_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
+        orderItemRepository.deleteAllByOrder(orderRepository.findById(id).get());
         orderRepository.deleteById(id);
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
     }
@@ -142,7 +143,7 @@ public class OrderServiceImpl implements OrderService {
         for(OrderItem item: orderItems){
             VisitorType type = item.getVisitorType();
             List<Code> codeToUse = codeRepository.findByVisitorTypeIdLimitTo(item.getQuantity(), type);
-            // ccheck if number of code remaining in db is enough
+            // check if number of code remaining in db is enough
             if(codeToUse.size() < item.getQuantity()){
                 return new ResponseEntity("CODE_NOT_ENOUGH", HttpStatus.BAD_REQUEST);
             }
@@ -168,9 +169,9 @@ public class OrderServiceImpl implements OrderService {
         }
         // create file pdf
         File file = pdfPrinter.printPDF(printRequests);
-        sendEmail(order, file);
         order.setStatus(OrderStatus.SENT.toString());
         orderRepository.save(order);
+        sendEmail(order, file);
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
 
@@ -183,10 +184,10 @@ public class OrderServiceImpl implements OrderService {
         MimeMessageHelper helper = new MimeMessageHelper(message, multipart);
 
         helper.setTo(order.getMail());
-        helper.setSubject("Test email with attachments");
+        helper.setSubject("Đơn hàng mã #"+order.getOrderCode());
 
-        helper.setText("Hello, Im testing email with attachments!");
-
+        helper.setText("Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi. Để sử dụng," +
+                " hãy xuất trình vé này tại địa điểm đã đặt chỗ");
         String path1 = file.getPath();
 
         // Attachment 1

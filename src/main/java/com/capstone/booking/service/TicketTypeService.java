@@ -20,9 +20,6 @@ public interface TicketTypeService {
     //search by placeId
     ResponseEntity<?> findByPlaceId(long placeId);
 
-    //search ticketType by typeName & paging
-    ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page);
-
     //search by Id
     ResponseEntity<?> getTicketType(Long id);
 

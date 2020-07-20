@@ -9,4 +9,6 @@ import java.util.List;
 public interface PlaceRepository extends JpaRepository<Place, Long>, PlaceRepositoryCustom {
     //find place by exact name
     Place findByName(String name);
+
+    List<Place> findAllByStatus(String status);
 }

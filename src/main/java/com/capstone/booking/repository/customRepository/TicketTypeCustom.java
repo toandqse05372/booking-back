@@ -1,8 +1,11 @@
 package com.capstone.booking.repository.customRepository;
 
 import com.capstone.booking.api.output.Output;
+import com.capstone.booking.entity.TicketType;
 
-//not use
+import java.util.List;
+
+//custom query ticket type table
 public interface TicketTypeCustom {
-    Output findByTypeName(String typeName, Long limit, Long page);
+    List<TicketType> findByPlaceId(Long placeId);
 }

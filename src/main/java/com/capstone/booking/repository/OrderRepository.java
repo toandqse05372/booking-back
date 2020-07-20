@@ -9,5 +9,5 @@ import java.util.List;
 //customer query to order table
 public interface OrderRepository extends JpaRepository<Order, Long>, OrderRepositoryCustom {
     //find newest order
-    Order findTopByOrderById();
+    Order findTopByOrderByIdDesc();
 }

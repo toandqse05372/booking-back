@@ -1,17 +1,15 @@
 package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
-import com.capstone.booking.api.output.OutputExcel;
 import com.capstone.booking.common.converter.PlaceConverter;
 import com.capstone.booking.common.converter.TicketTypeConverter;
 import com.capstone.booking.common.converter.VisitorTypeConverter;
-import com.capstone.booking.common.key.PlaceAndGameStatus;
+import com.capstone.booking.common.key.MonoStatus;
 import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.*;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.PlaceService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -107,7 +105,7 @@ public class PlaceServiceImpl implements PlaceService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PLACE_EXISTED");
         }
         Place place = placeConverter.toPlace(placeDTO);
-        place.setStatus(PlaceAndGameStatus.ACTIVE.toString());
+        place.setStatus(MonoStatus.ACTIVE.toString());
         placeRepository.save(place);
         if(files != null){
             Place saved = placeRepository.save(place);
@@ -153,10 +151,10 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public ResponseEntity<?> changeStatus(Long id) {
         Place place = placeRepository.findById(id).get();
-        if (place.getStatus().equals(PlaceAndGameStatus.ACTIVE.toString())) {
-            place.setStatus(PlaceAndGameStatus.DEACTIVATE.toString());
+        if (place.getStatus().equals(MonoStatus.ACTIVE.toString())) {
+            place.setStatus(MonoStatus.DEACTIVATE.toString());
         } else {
-            place.setStatus(PlaceAndGameStatus.ACTIVE.toString());
+            place.setStatus(MonoStatus.ACTIVE.toString());
         }
         place = placeRepository.save(place);
         return ResponseEntity.ok(placeConverter.toDTO(place));
@@ -165,7 +163,7 @@ public class PlaceServiceImpl implements PlaceService {
     //getAll place
     @Override
     public ResponseEntity<?> getAll() {
-        List<Place> placeList = placeRepository.findAll();
+        List<Place> placeList = placeRepository.findAllByStatus(MonoStatus.ACTIVE.toString());
         List<PlaceDTOLite> liteList = new ArrayList<>();
         for(Place place: placeList){
             PlaceDTOLite lite = placeConverter.toPlaceLite(place);

@@ -21,15 +21,6 @@ public class TicketTypeController {
         return ticketTypeService.findAll();
     }
 
-    //search ticketType by typeName & paging
-    @GetMapping("/ticketType/searchTypeName")
-    @PreAuthorize("hasAnyAuthority('TICKET_TYPE_EDIT')")
-    public ResponseEntity<?> searchTypeName(@RequestParam(value = "typeName", required = false) String typeName,
-                                            @RequestParam(value = "limit", required = false) Long limit,
-                                            @RequestParam(value = "page", required = false) Long page) {
-        return ticketTypeService.findByTypeName(typeName, limit, page);
-    }
-
     //search ticketType by PlaceId
     @GetMapping("/ticketType")
     public ResponseEntity<?> searchByPlaceId(@RequestParam(value = "placeId", required = false) Long placeId){

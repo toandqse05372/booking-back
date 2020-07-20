@@ -139,12 +139,12 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         return ResponseEntity.ok(output);
     }
 
-    //search ticketType by typeName & paging
-    @Override
-    public ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page) {
-        Output results = ticketTypeRepository.findByTypeName(typeName, limit, page);
-        return ResponseEntity.ok(results);
-    }
+//    //search ticketType by typeName & paging
+//    @Override
+//    public ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page) {
+//        Output results = ticketTypeRepository.findByTypeName(typeName, limit, page);
+//        return ResponseEntity.ok(results);
+//    }
 
     //search by Id
     @Override

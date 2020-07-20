@@ -12,7 +12,7 @@ import java.util.List;
 public interface GameRepository extends JpaRepository<Game, Long>, GameRepositoryCustom {
 
     //find all by plae id
-    List<Game> findByPlaceId(Long placeId);
+    List<Game> findByPlaceIdAndStatus(Long placeId, String status);
 
     //find by name and place
     Game findByGameNameAndPlace(String name, Place place);

@@ -9,4 +9,6 @@ import java.util.List;
 //not used
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
     List<OrderItem> findAllByOrder(Order order);
+
+    void deleteAllByOrder(Order order);
 }

@@ -129,6 +129,7 @@ public class AuthServiceImpl implements AuthService {
         userPrincipal.setLastName(user.getLastName());
         userPrincipal.setPassword(user.getPassword());
         userPrincipal.setAuthorities(authorities);
+        userPrincipal.setPhoneNumber(user.getPhoneNumber());
         return userPrincipal;
     }
 
