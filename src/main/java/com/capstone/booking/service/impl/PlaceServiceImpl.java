@@ -91,8 +91,9 @@ public class PlaceServiceImpl implements PlaceService {
                             return o1.getId().compareTo(o2.getId());
                         }
                     }).collect(Collectors.toList()));
+                    //if place has ticket type and visitor type, add to list
+                    list.add(ticketTypeDTO);
                 }
-                list.add(ticketTypeDTO);
             }
         }
         client.setTicketTypes(list);

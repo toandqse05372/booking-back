@@ -29,7 +29,7 @@ public class TicketTypeRepositoryImpl implements TicketTypeCustom {
         String queryStr = "select type.* from t_ticket_type type " +
                 "Left join t_game_ticket_type gtt on gtt.ticket_type_id = type.id " +
                 "Left join t_game g on gtt.game_id = g.id where type.place_id = :placeId " +
-                "AND  g.status like 'ACTIVE' group by type.id AND type.status like ':status'";
+                "AND  g.status like 'ACTIVE' AND type.status like :status group by type.id ";
         Query query = entityManager.createNativeQuery(queryStr, TicketType.class);
         query.setParameter("placeId", placeId);
         query.setParameter("status", status);
