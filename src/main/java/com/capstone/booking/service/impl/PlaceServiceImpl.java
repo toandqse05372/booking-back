@@ -74,11 +74,12 @@ public class PlaceServiceImpl implements PlaceService {
         Place place = placeRepository.findById(id).get();
         PlaceDTOClient client = placeConverter.toPlaceClient(place);
         List<TicketTypeDTO> list = new ArrayList<>();
-        List<TicketType> ticketTypes = ticketTypeRepository.findByPlaceId(id);
+        List<TicketType> ticketTypes = ticketTypeRepository.findByPlaceIdAndStatus(id, MonoStatus.ACTIVE.toString());
         if(ticketTypes.size() > 0){
             for(TicketType ticketType: ticketTypes){
                 TicketTypeDTO ticketTypeDTO = ticketTypeConverter.toDTO(ticketType);
-                List<VisitorType> visitorTypes = visitorTypeRepository.findByTicketType(ticketType);
+                List<VisitorType> visitorTypes = visitorTypeRepository.
+                        findByTicketTypeAndStatus(ticketType, MonoStatus.ACTIVE.toString());
                 if(visitorTypes.size() > 0){
                     List<VisitorTypeDTO> visitorTypeDTOS = new ArrayList<>();
                     for(VisitorType type: visitorTypes){

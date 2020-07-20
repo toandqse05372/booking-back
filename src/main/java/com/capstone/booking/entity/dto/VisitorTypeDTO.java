@@ -12,4 +12,5 @@ public class VisitorTypeDTO extends BaseDTO{
     private int price;
     private boolean isBasicType;
     private int remaining;
+    private String status;
 }

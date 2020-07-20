@@ -36,6 +36,7 @@ public class VisitorTypeConverter {
         if (visitorType.getId() != null) {
             dto.setId(visitorType.getId());
         }
+        dto.setStatus(visitorType.getStatus());
         dto.setTypeName(visitorType.getTypeName());
         dto.setTypeKey(visitorType.getTypeKey());
         dto.setPrice(visitorType.getPrice());

@@ -12,6 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class Ticket extends BaseEntity{
+
     @Column(length = 50)
     private String code;
     private Date redemptionDate;

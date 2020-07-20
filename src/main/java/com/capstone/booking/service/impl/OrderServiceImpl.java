@@ -133,7 +133,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException, MessagingException {
-
         Order order = orderRepository.findById(id).get();
         Set<OrderItem> orderItems = order.getOrderItem();
         TicketType ticketType = ticketTypeRepository.findById(order.getTicketTypeId()).get();
@@ -168,6 +167,32 @@ public class OrderServiceImpl implements OrderService {
             printRequest.setRedemptionDate(order.getRedemptionDate());
         }
         // create file pdf
+        File file = pdfPrinter.printPDF(printRequests);
+        order.setStatus(OrderStatus.SENT.toString());
+        orderRepository.save(order);
+        sendEmail(order, file);
+        return ResponseEntity.ok(orderConverter.toDTO(order));
+    }
+
+    //resent ticket
+    @Override
+    public ResponseEntity<?> resendTicket(long orderId) throws IOException, MessagingException, URISyntaxException, DocumentException {
+        Order order = orderRepository.findById(orderId).get();
+        Set<OrderItem> orderItems = order.getOrderItem();
+        TicketType ticketType = ticketTypeRepository.findById(order.getTicketTypeId()).get();
+        Place place = placeRepository.findById(ticketType.getPlaceId()).get();
+        List<PrintRequest> printRequests = new ArrayList<>();
+        for(OrderItem item: orderItems){
+            VisitorType type = item.getVisitorType();
+            List<Ticket> ticketCreated = ticketRepository.findAllByOrderItem(item);
+            PrintRequest printRequest = new PrintRequest();
+            printRequest.setTickets(ticketCreated);
+            printRequest.setVisitorType(type);
+            printRequest.setTicketType(ticketType);
+            printRequest.setPlace(place);
+            printRequests.add(printRequest);
+            printRequest.setRedemptionDate(order.getRedemptionDate());
+        }
         File file = pdfPrinter.printPDF(printRequests);
         order.setStatus(OrderStatus.SENT.toString());
         orderRepository.save(order);

@@ -15,7 +15,7 @@ public class VisitorType extends BaseEntity{
     private String typeKey;
     private int price;
     private boolean isBasicType = false;
-
+    private String status;
 
     //Bảng TicketType qhe 1-n với VisitorType
     @ManyToOne

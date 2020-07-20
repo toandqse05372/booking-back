@@ -38,6 +38,7 @@ public class TicketTypeConverter {
         if (ticketType.getId() != null) {
             dto.setId(ticketType.getId());
         }
+        dto.setStatus(ticketType.getStatus());
         dto.setTypeName(ticketType.getTypeName());
         dto.setPlaceId(ticketType.getPlaceId());
         Set<Game> gameSet = ticketType.getGame();

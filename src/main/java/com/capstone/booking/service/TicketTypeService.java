@@ -17,6 +17,9 @@ public interface TicketTypeService {
     //edit
     ResponseEntity<?> update(TicketTypeDTO ticketTypeDTO);
 
+    //change status of ticket type
+    ResponseEntity<?> changeStatus(Long id);
+
     //search by placeId
     ResponseEntity<?> findByPlaceId(long placeId);
 

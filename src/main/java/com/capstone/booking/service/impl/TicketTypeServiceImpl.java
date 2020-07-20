@@ -1,10 +1,10 @@
 package com.capstone.booking.service.impl;
 
-import com.capstone.booking.api.output.Output;
 import com.capstone.booking.api.output.OutputExcel;
 import com.capstone.booking.common.converter.TicketTypeConverter;
 import com.capstone.booking.common.converter.VisitorTypeConverter;
 import com.capstone.booking.common.helper.ExcelHelper;
+import com.capstone.booking.common.key.MonoStatus;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.TicketTypeDTO;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
@@ -19,13 +19,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 
 @Service
 public class TicketTypeServiceImpl implements TicketTypeService {
@@ -80,6 +77,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
             return new ResponseEntity("TICKET_TYPE_EXISTED", HttpStatus.BAD_REQUEST);
         }
         TicketType ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO);
+        ticketType.setStatus(MonoStatus.ACTIVE.toString());
         Set<Game> gameSet = new HashSet<>();
         for (Long id : ticketTypeDTO.getGameId()) {
             gameSet.add(gameRepository.findById(id).get());
@@ -106,6 +104,24 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         }
         ticketType.setGame(gameSet);
         ticketTypeRepository.save(ticketType);
+        return ResponseEntity.ok(ticketTypeConverter.toDTO(ticketType));
+    }
+
+    //change status of ticket type
+    @Override
+    public ResponseEntity<?> changeStatus(Long id) {
+        TicketType ticketType = ticketTypeRepository.findById(id).get();
+        for(VisitorType visitorType: visitorTypeRepository.findByTicketType(ticketType)){
+            if(visitorType.isBasicType()){
+                return new ResponseEntity("VISITOR_TYPE_IS_BASIC", HttpStatus.BAD_REQUEST);
+            }
+        }
+        if (ticketType.getStatus().equals(MonoStatus.ACTIVE.toString())) {
+            ticketType.setStatus(MonoStatus.DEACTIVATE.toString());
+        } else {
+            ticketType.setStatus(MonoStatus.ACTIVE.toString());
+        }
+        ticketType = ticketTypeRepository.save(ticketType);
         return ResponseEntity.ok(ticketTypeConverter.toDTO(ticketType));
     }
 
@@ -139,13 +155,6 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         return ResponseEntity.ok(output);
     }
 
-//    //search ticketType by typeName & paging
-//    @Override
-//    public ResponseEntity<?> findByTypeName(String typeName, Long limit, Long page) {
-//        Output results = ticketTypeRepository.findByTypeName(typeName, limit, page);
-//        return ResponseEntity.ok(results);
-//    }
-
     //search by Id
     @Override
     public ResponseEntity<?> getTicketType(Long id) {
@@ -161,22 +170,24 @@ public class TicketTypeServiceImpl implements TicketTypeService {
                 //get code from excel 
                 List<Code> codes = ExcelHelper.excelToCode(file.getInputStream());
                 List<VisitorType> visitorTypes = visitorTypeRepository.findByPlaceId(placeId);
-                int failCount = 0;
+                int uniqle = 0;
+                int wrongKey = 0;
                 for(Code code: codes){
                     if(visitorTypes.contains(code.getVisitorType())){
                         try {
                             codeRepository.save(code);
                         } catch (DataIntegrityViolationException e) {
-                            failCount += 1;
+                            uniqle += 1;
                         }
                     }else{
-                        failCount += 1;
+                        wrongKey += 1;
                     }
                 }
-                if(failCount > 0){
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Total fail: "+failCount);
+                if(wrongKey > 0 || uniqle > 0){
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body("Wrong key: "+wrongKey+"\nDuplicate: "+uniqle);
                 }else
-                    return ResponseEntity.ok(failCount);
+                    return ResponseEntity.ok("OK");
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("COULD_NOT_UPLOAD_FILE");
             }

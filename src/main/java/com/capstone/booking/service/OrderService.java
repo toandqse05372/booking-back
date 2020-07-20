@@ -26,4 +26,6 @@ public interface OrderService {
     ResponseEntity<?> findByOrderId(Long id);
 
     ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException, MessagingException;
+
+    ResponseEntity<?> resendTicket(long orderId) throws IOException, MessagingException, URISyntaxException, DocumentException;
 }
