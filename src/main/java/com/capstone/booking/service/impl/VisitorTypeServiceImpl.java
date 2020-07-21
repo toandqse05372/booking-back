@@ -2,10 +2,8 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.common.converter.VisitorTypeConverter;
 import com.capstone.booking.common.helper.ExcelHelper;
-import com.capstone.booking.entity.Code;
-import com.capstone.booking.entity.Place;
-import com.capstone.booking.entity.TicketType;
-import com.capstone.booking.entity.VisitorType;
+import com.capstone.booking.common.key.MonoStatus;
+import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
 import com.capstone.booking.repository.CodeRepository;
 import com.capstone.booking.repository.PlaceRepository;
@@ -46,6 +44,7 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     @Override
     public ResponseEntity<?> create(VisitorTypeDTO model, Long placeId) {
         VisitorType visitorType = visitorTypeConverter.toVisitorType(model);
+        visitorType.setStatus(MonoStatus.ACTIVE.toString());
         List<VisitorType> typeList = visitorTypeRepository.findByTypeName(visitorType.getTypeName());
         if (typeList.size() > 0) {
             for (VisitorType t : typeList) {
@@ -105,6 +104,9 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     @Transactional
     public ResponseEntity<?> delete(long id) {
         VisitorType visitorType =visitorTypeRepository.findById(id).get();
+        if (visitorType.isBasicType()){
+            return new ResponseEntity("VISITOR_TYPE_IS_BASIC", HttpStatus.BAD_REQUEST);
+        }
         if (visitorType == null) {
             return new ResponseEntity("VISITOR_TYPE_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
@@ -114,6 +116,22 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         codeRepository.deleteByVisitorType(visitorType);
         visitorTypeRepository.deleteById(id);
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);
+    }
+
+    //change status of game
+    @Override
+    public ResponseEntity<?> changeStatus(long id) {
+        VisitorType visitorType = visitorTypeRepository.findById(id).get();
+        if(visitorType.isBasicType()){
+            return new ResponseEntity("VISITOR_TYPE_IS_BASIC", HttpStatus.BAD_REQUEST);
+        }
+        if (visitorType.getStatus().equals(MonoStatus.ACTIVE.toString())) {
+            visitorType.setStatus(MonoStatus.DEACTIVATE.toString());
+        } else {
+            visitorType.setStatus(MonoStatus.ACTIVE.toString());
+        }
+        visitorType = visitorTypeRepository.save(visitorType);
+        return ResponseEntity.ok(visitorTypeConverter.toDTO(visitorType));
     }
 
     //search by ticketTypeId

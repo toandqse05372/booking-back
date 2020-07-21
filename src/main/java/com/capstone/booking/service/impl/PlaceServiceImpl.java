@@ -72,13 +72,17 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public ResponseEntity<?> getPlaceClient(Long id){
         Place place = placeRepository.findById(id).get();
+        if(place == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PLACE_NOT_FOUND");
+        }
         PlaceDTOClient client = placeConverter.toPlaceClient(place);
         List<TicketTypeDTO> list = new ArrayList<>();
-        List<TicketType> ticketTypes = ticketTypeRepository.findByPlaceId(id);
+        List<TicketType> ticketTypes = ticketTypeRepository.findByPlaceIdAndStatus(id, MonoStatus.ACTIVE.toString());
         if(ticketTypes.size() > 0){
             for(TicketType ticketType: ticketTypes){
                 TicketTypeDTO ticketTypeDTO = ticketTypeConverter.toDTO(ticketType);
-                List<VisitorType> visitorTypes = visitorTypeRepository.findByTicketType(ticketType);
+                List<VisitorType> visitorTypes = visitorTypeRepository.
+                        findByTicketTypeAndStatus(ticketType, MonoStatus.ACTIVE.toString());
                 if(visitorTypes.size() > 0){
                     List<VisitorTypeDTO> visitorTypeDTOS = new ArrayList<>();
                     for(VisitorType type: visitorTypes){
@@ -90,8 +94,9 @@ public class PlaceServiceImpl implements PlaceService {
                             return o1.getId().compareTo(o2.getId());
                         }
                     }).collect(Collectors.toList()));
+                    //if place has ticket type and visitor type, add to list
+                    list.add(ticketTypeDTO);
                 }
-                list.add(ticketTypeDTO);
             }
         }
         client.setTicketTypes(list);

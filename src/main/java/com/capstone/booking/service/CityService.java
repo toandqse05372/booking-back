@@ -1,8 +1,8 @@
 package com.capstone.booking.service;
+
 import com.capstone.booking.entity.dto.CityDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
-
 
 public interface CityService {
     //getAllCity

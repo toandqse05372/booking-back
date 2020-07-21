@@ -14,6 +14,9 @@ public interface VisitorTypeService {
     //delete
     ResponseEntity<?> delete(long id);
 
+    //change status of visitor type
+    ResponseEntity<?> changeStatus(long id);
+
     //search by ticketTypeId
     ResponseEntity<?> findByTicketTypeId(long id);
 
@@ -25,4 +28,5 @@ public interface VisitorTypeService {
 
     //set visitor type's price as basic place
     ResponseEntity<?> markBasicPrice(long id, long placeId);
+
 }

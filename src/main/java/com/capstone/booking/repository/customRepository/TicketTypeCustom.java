@@ -8,4 +8,6 @@ import java.util.List;
 //custom query ticket type table
 public interface TicketTypeCustom {
     List<TicketType> findByPlaceId(Long placeId);
+
+    List<TicketType> findByPlaceIdAndStatus(Long placeId, String status);
 }

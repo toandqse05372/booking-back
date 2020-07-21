@@ -14,6 +14,7 @@ import java.util.Set;
 public class TicketType extends BaseEntity {
     private String typeName;
     private Long placeId;
+    private String status;
 
     //Bảng ticketType qhe 1-n với VisitorType
     @OneToMany(mappedBy = "ticketType")

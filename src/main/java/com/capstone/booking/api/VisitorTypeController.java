@@ -1,22 +1,14 @@
 package com.capstone.booking.api;
 
-import com.capstone.booking.common.helper.ExcelHelper;
-import com.capstone.booking.entity.Code;
-import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
-import com.capstone.booking.repository.CodeRepository;
 import com.capstone.booking.service.VisitorTypeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
 
 //visitor type api
 @RestController
@@ -57,6 +49,13 @@ public class VisitorTypeController {
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         return visitorTypeService.delete(id);
+    }
+
+    //change status visitor type api
+    @PutMapping("/changeVisitorType/{id}")
+    @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
+    public ResponseEntity<?> changeVisitorTypeStatus(@PathVariable("id") long id)  {
+        return visitorTypeService.changeStatus(id);
     }
 
     //search by Id

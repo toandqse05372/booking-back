@@ -1,7 +1,6 @@
 package com.capstone.booking.entity.dto;
 
 import lombok.Data;
-
 import java.util.List;
 import java.util.Set;
 

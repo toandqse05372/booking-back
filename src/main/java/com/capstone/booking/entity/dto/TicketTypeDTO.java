@@ -14,4 +14,5 @@ public class TicketTypeDTO extends BaseDTO{
     private Set<Long> gameId;
     private Long placeId;
     private List<VisitorTypeDTO> visitorTypes;
+    private String status;
 }

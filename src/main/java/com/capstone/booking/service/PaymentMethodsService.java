@@ -3,6 +3,7 @@ package com.capstone.booking.service;
 import com.capstone.booking.entity.dto.PaymentMethodsDTO;
 import org.springframework.http.ResponseEntity;
 
+//not used
 public interface PaymentMethodsService {
     //add
     ResponseEntity<?> create(PaymentMethodsDTO methodDTO);

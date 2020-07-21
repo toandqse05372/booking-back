@@ -1,5 +1,6 @@
 package com.capstone.booking.repository;
 
+import com.capstone.booking.entity.OrderItem;
 import com.capstone.booking.entity.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> getAllBetweenDates
             (@Param("visitorTypeId") Long id, @Param("startDate") Date startDate,
              @Param("endDate")Date endDate);
+
+    List<Ticket> findAllByOrderItem(OrderItem orderItem);
 }

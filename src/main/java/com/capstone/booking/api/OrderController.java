@@ -2,12 +2,12 @@ package com.capstone.booking.api;
 
 import com.capstone.booking.common.key.OrderStatus;
 import com.capstone.booking.entity.dto.OrderDTO;
+import com.capstone.booking.common.helper.pdf.PrintTicketRequest;
 import com.capstone.booking.service.OrderService;
 import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -28,7 +28,7 @@ public class OrderController {
     //search Order by status, code api
     @GetMapping("/order/searchByStatus")
     public ResponseEntity<?> orderFilter(@RequestParam(value = "status", required = false) String status,
-                                            @RequestParam(value = "code", required = false) String code) {
+                                         @RequestParam(value = "code", required = false) String code) {
         return orderService.findByStatus(status, code);
     }
 
@@ -46,9 +46,12 @@ public class OrderController {
     }
 
     //send ticket to customer api
-    @PutMapping("/order/sendTicket/{id}")
-    public ResponseEntity<?> sendTicket(@PathVariable("id") long id) throws DocumentException, IOException, URISyntaxException, MessagingException {
-        return orderService.sendTicket(id);
+    @PostMapping("/order/sendTicket")
+    public ResponseEntity<?> sendTicket(@RequestBody PrintTicketRequest request) throws DocumentException, IOException, URISyntaxException, MessagingException {
+        if (request.getType() == 2) {
+            return  orderService.resendTicket(request.getOrderId());
+        } else
+            return orderService.sendTicket(request.getOrderId());
     }
 
     //search by Id api

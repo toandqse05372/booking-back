@@ -50,6 +50,13 @@ public class TicketTypeController {
         return ticketTypeService.update(model);
     }
 
+    //change status ticket type api
+    @PutMapping("/changeTicketType/{id}")
+    @PreAuthorize("hasAnyAuthority('TICKET_TYPE_EDIT')")
+    public ResponseEntity<?> changeTicketTypeStatus(@PathVariable("id") long id)  {
+        return ticketTypeService.changeStatus(id);
+    }
+
     //search by Id
     @GetMapping("/ticketType/{id}")
     public ResponseEntity<?> getTicketType(@PathVariable Long id) {

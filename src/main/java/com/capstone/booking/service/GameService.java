@@ -1,7 +1,7 @@
 package com.capstone.booking.service;
+
 import com.capstone.booking.entity.dto.GameDTO;
 import org.springframework.http.ResponseEntity;
-
 
 public interface GameService {
 

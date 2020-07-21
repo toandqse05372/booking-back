@@ -8,5 +8,6 @@ import lombok.EqualsAndHashCode;
 public class OrderItemDTO extends BaseDTO{
     private Long visitorTypeId;
     private String visitorTypeName;
+    private String visitorTypeKey;
     private int quantity;
 }
