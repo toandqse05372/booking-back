@@ -22,7 +22,7 @@ public class VisitorType extends BaseEntity{
     @JoinColumn(name = "ticket_type_id")
     private TicketType ticketType;
 
-    //Bảng VisitorType qhe 1-1 với OrderItem
+    //Bảng VisitorType qhe 1-n với OrderItem
     @OneToMany(mappedBy = "visitorType")
     private Set<OrderItem> orderItem;
 
