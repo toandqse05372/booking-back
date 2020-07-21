@@ -183,6 +183,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<?> resendTicket(long orderId) throws IOException, MessagingException, URISyntaxException, DocumentException {
         Order order = orderRepository.findById(orderId).get();
+        if(order.getRedemptionDate().before(new Date())){
+            order.setStatus(OrderStatus.EXPIRED.toString());
+            return new ResponseEntity("ORDER_EXPIRED", HttpStatus.BAD_REQUEST);
+        }
         Set<OrderItem> orderItems = order.getOrderItem();
         TicketType ticketType = ticketTypeRepository.findById(order.getTicketTypeId()).get();
         Place place = placeRepository.findById(ticketType.getPlaceId()).get();

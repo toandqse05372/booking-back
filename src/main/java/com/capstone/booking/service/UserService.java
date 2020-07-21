@@ -1,4 +1,5 @@
 package com.capstone.booking.service;
+
 import com.capstone.booking.entity.dto.UserDTO;
 import org.springframework.http.ResponseEntity;
 
@@ -23,7 +24,8 @@ public interface UserService {
     ResponseEntity<?> createUserCMS(UserDTO user);
 
     //search by firstName, mail, lastName, phoneNumber, role & paging
-    ResponseEntity<?> findByMultiParam(String fname, String mail, String lastName, String phoneNumber, Long roleId, Long limit, Long page);
+    ResponseEntity<?> findByMultiParam(String fname, String mail, String lastName, String phoneNumber,
+                                       Long roleId, Long limit, Long page);
 
     //delete
     ResponseEntity<?> delete(long id);

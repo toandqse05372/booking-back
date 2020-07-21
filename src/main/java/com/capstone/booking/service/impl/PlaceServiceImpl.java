@@ -72,6 +72,9 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public ResponseEntity<?> getPlaceClient(Long id){
         Place place = placeRepository.findById(id).get();
+        if(place == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PLACE_NOT_FOUND");
+        }
         PlaceDTOClient client = placeConverter.toPlaceClient(place);
         List<TicketTypeDTO> list = new ArrayList<>();
         List<TicketType> ticketTypes = ticketTypeRepository.findByPlaceIdAndStatus(id, MonoStatus.ACTIVE.toString());
