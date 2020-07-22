@@ -35,6 +35,19 @@ public class UserConverter {
         return dto;
     }
 
+    public UserDTO toDTOClient(User user) {
+        UserDTO dto = new UserDTO();
+        if (user.getId() != null) {
+            dto.setId(user.getId());
+        }
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setMail(user.getMail());
+        dto.setDob(user.getDob());
+        dto.setPhoneNumber(user.getPhoneNumber());
+        return dto;
+    }
+
     //convert from dto to entity (for add)
     public User toUser(UserDTO dto) {
         User user = new User();

@@ -83,13 +83,16 @@ public class TicketServiceImpl implements TicketService {
     public ResponseEntity<?> getReport(Long placeId, Long reportType, Long startDateL, Long endDateL) {
         Date endDate = new Date();
         Date startDate = new Date();
-        if (reportType == 1) {
+        if (reportType == 0) {
+            endDate = new Date();
+            startDate = setDateBefore(1);
+        } else if (reportType == 1) {
             endDate = new Date();
             startDate = setDateBefore(7);
         } else if (reportType == 2) {
             endDate = new Date();
             startDate = setDateBefore(30);
-        }else if(reportType == 3){
+        } else if (reportType == 3) {
             endDate = new Date(endDateL);
             startDate = new Date(startDateL);
         }
@@ -108,7 +111,7 @@ public class TicketServiceImpl implements TicketService {
                 int total = quantity * visitorType.getPrice() * quantity;
                 reportItem.setTotal(total);
                 reportItems.add(reportItem);
-                totalRevenue +=  total;
+                totalRevenue += total;
             }
         }
         OutputReport outputReport = new OutputReport();
@@ -126,17 +129,20 @@ public class TicketServiceImpl implements TicketService {
     public ResponseEntity<?> createReport(OutputReport report) throws IOException, MessagingException {
         Date endDate = new Date();
         Date startDate = new Date();
-        if (report.getReportType() == 1) {
+        if (report.getReportType() == 0) {
+            endDate = new Date();
+            startDate = setDateBefore(1);
+        } else if (report.getReportType() == 1) {
             endDate = new Date();
             startDate = setDateBefore(7);
         } else if (report.getReportType() == 2) {
             endDate = new Date();
             startDate = setDateBefore(30);
-        }else if(report.getReportType() == 3){
+        } else if (report.getReportType() == 3) {
             endDate = new Date(report.getEndDate());
             startDate = new Date(report.getStartDate());
         }
-        ExcelHelper.writeExcel(report.getReportItemList(),"NiceJavaBooks.xls");
+        ExcelHelper.writeExcel(report.getReportItemList(), "NiceJavaBooks.xls");
         sendEmail(new File("NiceJavaBooks.xls"));
         return ResponseEntity.ok("OK");
     }
@@ -144,7 +150,7 @@ public class TicketServiceImpl implements TicketService {
     // get date from past
     private Date setDateBefore(int days) {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1*days);
+        cal.add(Calendar.DATE, -1 * days);
         return cal.getTime();
     }
 

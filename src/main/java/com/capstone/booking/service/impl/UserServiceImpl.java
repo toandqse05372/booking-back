@@ -221,6 +221,13 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity(user.getId(), HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<?> getUserClient(Long id) {
+        Optional<User> users = userRepository.findById(id);
+        User user = users.get();
+        return ResponseEntity.ok(userConverter.toDTOClient(user));
+    }
+
     //create password reset token
     public ResponseEntity<?> createPasswordResetToken(String mail) {
         User user = userRepository.findByMail(mail);

@@ -39,9 +39,4 @@ public class Order extends BaseEntity{
     //Bảng Order qhe 1-n với OrderItem
     @OneToMany(mappedBy = "order")
     Set<OrderItem> orderItem;
-
-    //Bảng Order qhe 1-n với PaymentMethods
-    @OneToMany(mappedBy = "order")
-    private Set<PaymentMethods> paymentMethods;
-
 }

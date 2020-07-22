@@ -35,8 +35,10 @@ public class PlaceConverter {
         place.setDetailDescription(dto.getDetailDescription());
         place.setMail(dto.getMail());
         Set<Category> categories = new HashSet<>();
-        for(Long categoryId: dto.getCategoryId()){
-            categories.add(categoryRepository.findById(categoryId).get());
+        if(dto.getCategoryId() != null){
+            for(Long categoryId: dto.getCategoryId()){
+                categories.add(categoryRepository.findById(categoryId).get());
+            }
         }
         place.setCategories(categories);
         place.setPhoneNumber(dto.getPhoneNumber());
@@ -45,11 +47,13 @@ public class PlaceConverter {
         place.setOpeningHours(dto.getOpeningHours());
         String weekdays = "";
         List<Integer> dayList = dto.getWeekDays();
-        for(int i = 0; i < dayList.size(); i++){
-            if(i < dto.getWeekDays().size() - 1){
-                weekdays = weekdays + dayList.get(i) +",";
-            }else{
-                weekdays = weekdays + dayList.get(i);
+        if(dto.getWeekDays() != null){
+            for(int i = 0; i < dayList.size(); i++){
+                if(i < dto.getWeekDays().size() - 1){
+                    weekdays = weekdays + dayList.get(i) +",";
+                }else{
+                    weekdays = weekdays + dayList.get(i);
+                }
             }
         }
         place.setWeekDays(weekdays);
@@ -66,12 +70,14 @@ public class PlaceConverter {
         place.setMail(dto.getMail());
         place.setPhoneNumber(dto.getPhoneNumber());
         place.setCancelPolicy(dto.getCancelPolicy());
-        dto.setBasicPrice(place.getBasicPrice());
-        Set<Category> categories = new HashSet<>();
-        for(Long categoryId: dto.getCategoryId()){
-            categories.add(categoryRepository.findById(categoryId).get());
+        place.setBasicPrice(place.getBasicPrice());
+        if(dto.getCategoryId() != null){
+            Set<Category> categories = new HashSet<>();
+            for(Long categoryId: dto.getCategoryId()){
+                categories.add(categoryRepository.findById(categoryId).get());
+            }
+            place.setCategories(categories);
         }
-        place.setCategories(categories);
         place.setCity(cityRepository.findById(dto.getCityId()).get());
         place.setOpeningHours(dto.getOpeningHours());
         String weekdays = "";
@@ -121,11 +127,11 @@ public class PlaceConverter {
             }
             dto.setPlaceImageLink(imageLinks);
         }
-
         City city = place.getCity();
-        dto.setCityId(city.getId());
-        dto.setCityName(city.getName());
-
+        if(city != null){
+            dto.setCityId(city.getId());
+            dto.setCityName(city.getName());
+        }
         Set<Long> categorySet = new HashSet<>();
         for (Category category : place.getCategories()) {
             categorySet.add(category.getId());
@@ -138,6 +144,7 @@ public class PlaceConverter {
             weekDays.add(Integer.parseInt(day));
         }
         dto.setWeekDays(weekDays);
+        dto.setCancelPolicy(place.getCancelPolicy());
         dto.setStatus(place.getStatus());
         return dto;
     }
@@ -164,9 +171,13 @@ public class PlaceConverter {
             }
             dto.setPlaceImageLink(imageLinks);
         }
+
         City city = place.getCity();
-        dto.setCityId(city.getId());
-        dto.setCityName(city.getName());
+        if(city != null){
+            dto.setCityId(city.getId());
+            dto.setCityName(city.getName());
+        }
+
 
         Set<Long> categorySet = new HashSet<>();
         for (Category category : place.getCategories()) {
@@ -180,6 +191,7 @@ public class PlaceConverter {
         for(String day: days){
             weekDays.add(Integer.parseInt(day));
         }
+        dto.setCancelPolicy(place.getCancelPolicy());
         dto.setWeekDays(weekDays);
         dto.setStatus(place.getStatus());
         return dto;

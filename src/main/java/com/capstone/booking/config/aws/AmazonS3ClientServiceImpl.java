@@ -30,8 +30,7 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
     private static final Logger logger = LoggerFactory.getLogger(AmazonS3ClientServiceImpl.class);
 
     @Autowired
-    public AmazonS3ClientServiceImpl(Region awsRegion, AWSCredentialsProvider awsCredentialsProvider, String awsS3AudioBucket) 
-    {
+    public AmazonS3ClientServiceImpl(Region awsRegion, AWSCredentialsProvider awsCredentialsProvider, String awsS3AudioBucket) {
         this.amazonS3 = AmazonS3ClientBuilder.standard()
                 .withCredentials(awsCredentialsProvider)
                 .withRegion(awsRegion.getName()).build();
@@ -40,8 +39,7 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
 
     //upload file to s3
     @Async
-    public void uploadFileToS3Bucket(Long placeId, MultipartFile multipartFile, String name, String ext, boolean enablePublicReadAccess)
-    {
+    public void uploadFileToS3Bucket(Long placeId, MultipartFile multipartFile, String name, String ext, boolean enablePublicReadAccess) {
         String fileName = name + ext;
         String bucketLink = "https://toandqse05372-bucket.s3-ap-southeast-1.amazonaws.com/";
         try {
@@ -63,16 +61,6 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
             file.delete();
         } catch (IOException | AmazonServiceException ex) {
             logger.error("error [" + ex.getMessage() + "] occurred while uploading [" + fileName + "] ");
-        }
-    }
-
-    @Async
-    public void deleteFileFromS3Bucket(String fileName) 
-    {
-        try {
-            amazonS3.deleteObject(new DeleteObjectRequest(awsS3AudioBucket, fileName));
-        } catch (AmazonServiceException ex) {
-            logger.error("error [" + ex.getMessage() + "] occurred while removing [" + fileName + "] ");
         }
     }
 }

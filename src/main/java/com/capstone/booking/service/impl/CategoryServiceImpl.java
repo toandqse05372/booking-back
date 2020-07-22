@@ -84,11 +84,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     //set image and save category to db
     private ResponseEntity<?> setImageAndReturn(MultipartFile file, Category category) {
-        if(file != null){
+        if (file != null) {
             Category saved = categoryRepository.save(category);
             saved.setIconLink(uploadFile(file, saved.getId()));
             categoryRepository.save(saved);
-        }else{
+        } else {
             categoryRepository.save(category);
         }
         return ResponseEntity.ok(categoryConverter.toDTO(category));
@@ -109,9 +109,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     //upload category icon to s3
-    public String uploadFile(MultipartFile file, Long categoryId){
-        String ext = "."+ FilenameUtils.getExtension(file.getOriginalFilename());
-        String name = "Category_"+categoryId;
+    public String uploadFile(MultipartFile file, Long categoryId) {
+        String ext = "." + FilenameUtils.getExtension(file.getOriginalFilename());
+        String name = "Category_" + categoryId;
         this.amazonS3ClientService.uploadFileToS3Bucket(categoryId, file, "Category_" + categoryId, ext, true);
         return bucketLink + name + ext;
     }

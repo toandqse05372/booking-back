@@ -21,8 +21,8 @@ public class CategoryController {
     @GetMapping("/category/searchByName")
     @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
     public ResponseEntity<?> searchByName(@RequestParam(value = "categoryName", required = false) String categoryName,
-                                       @RequestParam(value = "limit", required = false) Long limit,
-                                       @RequestParam(value = "page", required = false) Long page) {
+                                          @RequestParam(value = "limit", required = false) Long limit,
+                                          @RequestParam(value = "page", required = false) Long page) {
         return categoryService.findByTypeName(categoryName, limit, page);
     }
 
@@ -53,7 +53,7 @@ public class CategoryController {
     //edit
     @PutMapping("/category/{id}")
     @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
-    public ResponseEntity<?> update(@RequestPart(value = "file",required = false) MultipartFile file,
+    public ResponseEntity<?> update(@RequestPart(value = "file", required = false) MultipartFile file,
                                     @RequestPart(value = "category") String model,
                                     @PathVariable("id") long id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();

@@ -1,85 +1,97 @@
 package com.capstone.booking.api;
 
+import com.capstone.booking.entity.dto.FBLoginDTO;
 import com.capstone.booking.entity.dto.UserDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
+import com.capstone.booking.service.AuthService;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.Assert.*;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+
 public class AuthControllerTest {
 
-    private MockMvc mockMvc;
+    @Mock
+    private AuthService mockAuthService;
 
-    @Autowired
-    private WebApplicationContext context;
-
-    @Autowired
-    private ObjectMapper mapper;
+    @InjectMocks
+    private AuthController authControllerUnderTest;
 
     @Before
-    public void setup(){
-        mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
+    public void setUp() {
+        initMocks(this);
     }
 
     @Test
-    public void testLogin_Existed_User() throws Exception {
-        assertEquals(200, userCase("test@test.com", "test",
-                MockMvcResultMatchers.status().isOk()).getResponse().getStatus());
+    public void testLogin() {
+        // Setup
+        final UserDTO user = new UserDTO();
+        user.setPassword("password");
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
+        user.setMail("mail");
+        user.setDob(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
+        user.setPhoneNumber("phoneNumber");
+        user.setStatus("status");
+        user.setRoleKey(new HashSet<>(Arrays.asList("value")));
+        user.setUserType("userType");
+
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockAuthService).findByEmail(new UserDTO(), "page");
+
+        // Run the test
+        final ResponseEntity<?> result = authControllerUnderTest.login(user, "page");
+
+        // Verify the results
     }
 
     @Test
-    public void testLogin_Wrong_Email() throws Exception {
-        assertEquals(401, userCase("tes222t@test.com", "test",
-            MockMvcResultMatchers.status().isUnauthorized()).getResponse().getStatus());
+    public void testLoginFb() throws Exception {
+        // Setup
+        final FBLoginDTO fbForm = new FBLoginDTO();
+        fbForm.setAccessToken("accessToken");
+        fbForm.setEmail("email");
+        fbForm.setName("name");
+
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockAuthService).loginFb(any(FBLoginDTO.class));
+
+        // Run the test
+        final ResponseEntity<?> result = authControllerUnderTest.loginFb(fbForm);
+
+        // Verify the results
     }
 
     @Test
-    public void testLogin_Wrong_Password() throws Exception {
-        assertEquals(401, userCase("test@test.com", "test999999999",
-                MockMvcResultMatchers.status().isUnauthorized()).getResponse().getStatus());
+    public void testLogout() {
+        // Setup
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockAuthService).logout("token");
+
+        // Run the test
+        final ResponseEntity<?> result = authControllerUnderTest.logout("token");
+
+        // Verify the results
     }
 
+    @Test
+    public void testCheckToken() {
+        // Setup
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockAuthService).checkToken("tokenStr");
 
+        // Run the test
+        final ResponseEntity<?> result = authControllerUnderTest.checkToken("token");
 
-    private MvcResult userCase(String mail, String password, ResultMatcher expert) throws Exception {
-        UserDTO dto = new UserDTO();
-        dto.setPassword(password);
-        dto.setMail(mail);
-        String jsonRequest = mapper.writeValueAsString(dto);
-        return mockMvc.perform(MockMvcRequestBuilders.post("/login")
-                .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(expert).andReturn();
-
-    }
-
-    private MvcResult fbCase(String mail, String password, ResultMatcher expert) throws Exception {
-        UserDTO dto = new UserDTO();
-        dto.setPassword(password);
-        dto.setMail(mail);
-        String jsonRequest = mapper.writeValueAsString(dto);
-        return mockMvc.perform(MockMvcRequestBuilders.post("/login/fb")
-                .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(expert).andReturn();
-
+        // Verify the results
     }
 }

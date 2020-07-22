@@ -1,7 +1,9 @@
 package com.capstone.booking.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -20,8 +22,9 @@ public class TicketType extends BaseEntity {
     @OneToMany(mappedBy = "ticketType")
     private Set<VisitorType> visitorType;
 
-    //Bảng GAme qhe n-n với ticketType
+    //Bảng Game qhe n-n với ticketType
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @EqualsAndHashCode.Exclude @ToString.Exclude
     @JoinTable(name = "t_game_ticketType",
             joinColumns = {@JoinColumn(name = "ticketType_id")},
             inverseJoinColumns = {@JoinColumn(name = "game_id")})
