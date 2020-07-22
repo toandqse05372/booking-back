@@ -19,15 +19,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -74,15 +72,15 @@ public class OrderServiceImpl implements OrderService {
         order.setUser(user);
 
         Order newestOrder = orderRepository.findTopByOrderByIdDesc();
-        if(newestOrder != null){
-            order.setOrderCode("ORDER"+(newestOrder.getId()+1));
-        }else{
-            order.setOrderCode("ORDER"+1);
+        if (newestOrder != null) {
+            order.setOrderCode("ORDER" + (newestOrder.getId() + 1));
+        } else {
+            order.setOrderCode("ORDER" + 1);
         }
         order.setStatus(status.toString());
         Order saved = orderRepository.save(order);
         List<OrderItem> orderItems = new ArrayList<>();
-        for(OrderItemDTO dto: orderDTO.getOrderItems()){
+        for (OrderItemDTO dto : orderDTO.getOrderItems()) {
             OrderItem orderItem = orderItemConverter.toItem(dto);
             orderItem.setOrder(saved);
             orderItems.add(orderItem);
@@ -135,7 +133,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException, MessagingException {
         Order order = orderRepository.findById(id).get();
-        if(order.getRedemptionDate().before(new Date())){
+        if (order.getRedemptionDate().before(new Date())) {
             order.setStatus(OrderStatus.EXPIRED.toString());
             return new ResponseEntity("ORDER_EXPIRED", HttpStatus.BAD_REQUEST);
         }
@@ -144,16 +142,16 @@ public class OrderServiceImpl implements OrderService {
         Place place = placeRepository.findById(ticketType.getPlaceId()).get();
         List<PrintRequest> printRequests = new ArrayList<>();
         // create tickets for each order item
-        for(OrderItem item: orderItems){
+        for (OrderItem item : orderItems) {
             VisitorType type = item.getVisitorType();
             List<Code> codeToUse = codeRepository.findByVisitorTypeIdLimitTo(item.getQuantity(), type);
             // check if number of code remaining in db is enough
-            if(codeToUse.size() < item.getQuantity()){
+            if (codeToUse.size() < item.getQuantity()) {
                 return new ResponseEntity("CODE_NOT_ENOUGH", HttpStatus.BAD_REQUEST);
             }
             //create ticket
             List<Ticket> ticketOrder = new ArrayList<>();
-            for(int i = 0; i < item.getQuantity(); i++){
+            for (int i = 0; i < item.getQuantity(); i++) {
                 Ticket ticket = new Ticket();
                 ticket.setCode(codeToUse.get(i).getCode());
                 ticket.setRedemptionDate(order.getRedemptionDate());
@@ -183,7 +181,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<?> resendTicket(long orderId) throws IOException, MessagingException, URISyntaxException, DocumentException {
         Order order = orderRepository.findById(orderId).get();
-        if(order.getRedemptionDate().before(new Date())){
+        if (order.getRedemptionDate().before(new Date())) {
             order.setStatus(OrderStatus.EXPIRED.toString());
             return new ResponseEntity("ORDER_EXPIRED", HttpStatus.BAD_REQUEST);
         }
@@ -191,7 +189,7 @@ public class OrderServiceImpl implements OrderService {
         TicketType ticketType = ticketTypeRepository.findById(order.getTicketTypeId()).get();
         Place place = placeRepository.findById(ticketType.getPlaceId()).get();
         List<PrintRequest> printRequests = new ArrayList<>();
-        for(OrderItem item: orderItems){
+        for (OrderItem item : orderItems) {
             VisitorType type = item.getVisitorType();
             List<Ticket> ticketCreated = ticketRepository.findAllByOrderItem(item);
             PrintRequest printRequest = new PrintRequest();
@@ -212,13 +210,12 @@ public class OrderServiceImpl implements OrderService {
     // send ticket.pdf file to user
     public void sendEmail(Order order, File file) throws MessagingException, IOException {
         MimeMessage message = emailSender.createMimeMessage();
-
         boolean multipart = true;
 
         MimeMessageHelper helper = new MimeMessageHelper(message, multipart);
 
         helper.setTo(order.getMail());
-        helper.setSubject("Đơn hàng mã #"+order.getOrderCode());
+        helper.setSubject("Đơn hàng mã #" + order.getOrderCode());
 
         helper.setText("Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi. Để sử dụng," +
                 " hãy xuất trình vé này tại địa điểm đã đặt chỗ");

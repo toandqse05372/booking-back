@@ -70,6 +70,7 @@ public class UserController {
 
     //search by Id api
     @GetMapping("/user/{id}")
+    @PreAuthorize("hasAnyAuthority('USER_EDIT')")
     public ResponseEntity<?> getUser(@PathVariable Long id) {
         return userService.getUser(id);
     }
@@ -90,6 +91,12 @@ public class UserController {
     @GetMapping("user/verifyEmailFb")
     public ResponseEntity<?> verifyEmailFb(String mail, Long uid){
         return userService.verifyEmailFb(mail, uid);
+    }
+
+    //get user by Id api for client
+    @GetMapping("/userClient/{id}")
+    public ResponseEntity<?> getUserClient(@PathVariable Long id) {
+        return userService.getUserClient(id);
     }
 
 

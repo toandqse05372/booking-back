@@ -18,7 +18,7 @@ public class UserPrincipal implements UserDetails {
     private String lastName;
     private String mail;
     private String phoneNumber;
- //   private List<String> permissions;
+    //   private List<String> permissions;
 
     @Override
     public boolean isAccountNonExpired() {

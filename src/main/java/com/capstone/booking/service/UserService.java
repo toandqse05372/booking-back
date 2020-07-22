@@ -44,4 +44,6 @@ public interface UserService {
 
     //change password request
     ResponseEntity<?> changePassword(long uid, String oldPassword, String newPassword);
+
+    ResponseEntity<?> getUserClient(Long id);
 }

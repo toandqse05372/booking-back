@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 //payment api
 @Controller
 public class PaymentController {
-    // Reading the value from the application.properties file
+
     @Autowired
     private StripeService stripeService;
 

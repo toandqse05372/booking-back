@@ -52,18 +52,18 @@ public class PlaceController {
     //change status Place api
     @PutMapping("/changePlace/{id}")
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
-    public ResponseEntity<?> changeStatusPlace(@PathVariable("id") long id)  {
+    public ResponseEntity<?> changeStatusPlace(@PathVariable("id") long id) {
         return placeService.changeStatus(id);
     }
 
     //search By Id api
     @GetMapping("/place/{id}")
-    public ResponseEntity<?> getPlace(@PathVariable Long id){
+    public ResponseEntity<?> getPlace(@PathVariable Long id) {
         return placeService.getPlace(id);
     }
 
     @GetMapping("/placeClient/{id}")
-    public ResponseEntity<?> getPlaceClient(@PathVariable Long id){
+    public ResponseEntity<?> getPlaceClient(@PathVariable Long id) {
         return placeService.getPlaceClient(id);
     }
 
@@ -82,16 +82,12 @@ public class PlaceController {
     //search place for client api
     @GetMapping("/place/searchClient")
     public ResponseEntity<?> searchPlaceForClient(@RequestParam(value = "name", required = false) String name,
-                                       @RequestParam(value = "limit", required = false) Long limit,
-                                       @RequestParam(value = "page", required = false) Long page,
-                                       @RequestParam(value = "cityId", required = false) List<Long> cityId,
-                                       @RequestParam(value = "categoryId", required = false) List<Long> categoryId,
-                                       @RequestParam(value = "minValue", required = false) Long minValue,
-                                       @RequestParam(value = "maxValue", required = false) Long maxValue) {
-        if(minValue == null && maxValue == null){
-            minValue = 0l;
-            maxValue = 1000000l;
-        }
+                                                  @RequestParam(value = "limit", required = false) Long limit,
+                                                  @RequestParam(value = "page", required = false) Long page,
+                                                  @RequestParam(value = "cityId", required = false) List<Long> cityId,
+                                                  @RequestParam(value = "categoryId", required = false) List<Long> categoryId,
+                                                  @RequestParam(value = "minValue", required = false) Long minValue,
+                                                  @RequestParam(value = "maxValue", required = false) Long maxValue) {
         return placeService.searchPlaceForClient(name, minValue, maxValue, cityId, categoryId, limit, page);
     }
 

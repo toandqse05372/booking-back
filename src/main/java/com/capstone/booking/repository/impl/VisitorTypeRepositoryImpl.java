@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 public class VisitorTypeRepositoryImpl implements VisitorTypeRepositoryCustom {
+
     @PersistenceContext
     EntityManager entityManager;
 
@@ -27,7 +28,8 @@ public class VisitorTypeRepositoryImpl implements VisitorTypeRepositoryCustom {
         return entityManager.createQuery("SELECT vtINNER FROM  VisitorType vt" +
                         "INNER JOIN TicketType tt ON vtINNER.ticketType = tt.id " +
                         "WHERE tt.placeId = :placeId",
-                VisitorType.class).setParameter("placeId", placeId)
+                VisitorType.class)
+                .setParameter("placeId", placeId)
                 .getResultList();
     }
 }

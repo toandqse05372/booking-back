@@ -16,6 +16,7 @@ public class OrderItemConverter {
     //convert from entity to dto
     @Autowired
     VisitorTypeRepository visitorTypeRepository;
+
     public OrderItemDTO toDTO(OrderItem orderItem) {
         OrderItemDTO dto = new OrderItemDTO();
         dto.setQuantity(orderItem.getQuantity());

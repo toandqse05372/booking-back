@@ -2,10 +2,7 @@ package com.capstone.booking.entity;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,6 +26,6 @@ public class Category extends BaseEntity{
     private String iconLink;
 
     //Bảng Place qhe n-n với Category
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
     private Set<Place> places = new HashSet<>();
 }

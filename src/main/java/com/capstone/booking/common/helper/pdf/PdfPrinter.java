@@ -55,7 +55,8 @@ public class PdfPrinter {
                 img.scaleAbsolute(200, 40);
                 document.add(img);
                 //enter text
-                Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+                Font font = new Font(BaseFont.createFont("src\\main\\resources\\font\\vuArial.ttf",
+                        BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
                 Chunk chunk1 = new Chunk(content, font);
                 document.add(new Paragraph("\n"));
                 document.add(chunk1);
