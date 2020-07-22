@@ -133,7 +133,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException, MessagingException {
         Order order = orderRepository.findById(id).get();
-        if (order.getRedemptionDate().before(new Date())) {
+        if (!order.getRedemptionDate().after(new Date())) {
             order.setStatus(OrderStatus.EXPIRED.toString());
             return new ResponseEntity("ORDER_EXPIRED", HttpStatus.BAD_REQUEST);
         }
@@ -181,7 +181,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<?> resendTicket(long orderId) throws IOException, MessagingException, URISyntaxException, DocumentException {
         Order order = orderRepository.findById(orderId).get();
-        if (order.getRedemptionDate().before(new Date())) {
+        if (!order.getRedemptionDate().after(new Date())) {
             order.setStatus(OrderStatus.EXPIRED.toString());
             return new ResponseEntity("ORDER_EXPIRED", HttpStatus.BAD_REQUEST);
         }
