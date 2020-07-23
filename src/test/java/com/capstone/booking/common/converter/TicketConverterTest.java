@@ -188,15 +188,6 @@ public class TicketConverterTest {
         final TicketDTO expectedResult = new TicketDTO();
         expectedResult.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
         expectedResult.setCode("code");
-        final VisitorTypeDTO visitorType1 = new VisitorTypeDTO();
-        visitorType1.setTypeName("typeName");
-        visitorType1.setTypeKey("typeKey");
-        visitorType1.setTicketTypeId(0L);
-        visitorType1.setPrice(0);
-        visitorType1.setBasicType(false);
-        visitorType1.setRemaining(0);
-        visitorType1.setStatus("status");
-        expectedResult.setVisitorType(visitorType1);
         expectedResult.setVisitorTypeId(0L);
 
         // Run the test

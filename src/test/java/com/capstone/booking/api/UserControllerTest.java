@@ -2,6 +2,7 @@ package com.capstone.booking.api;
 
 import com.capstone.booking.entity.dto.UserDTO;
 import com.capstone.booking.service.UserService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -182,5 +183,17 @@ public class UserControllerTest {
         final ResponseEntity<?> result = userControllerUnderTest.verifyEmailFb("mail", 0L);
 
         // Verify the results
+    }
+
+    @Test
+    public void testGetUserClient() {
+        // Setup
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).getUserClient(0L);
+
+        // Run the test
+        final ResponseEntity<?> result = userControllerUnderTest.getUserClient(0L);
+
+        // Verify the results
+        Assert.assertEquals(100, result.getStatusCodeValue());
     }
 }

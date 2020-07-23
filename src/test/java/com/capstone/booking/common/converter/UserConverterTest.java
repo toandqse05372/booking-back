@@ -7,11 +7,7 @@ import com.capstone.booking.entity.User;
 import com.capstone.booking.entity.dto.UserDTO;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,6 +54,8 @@ public class UserConverterTest {
         user.setOrder(new HashSet<>(Arrays.asList(order)));
 
         final UserDTO expectedResult = new UserDTO();
+        Set<String> roleKeys = new HashSet<>(Arrays.asList("roleKey"));
+        expectedResult.setRoleKey(roleKeys);
         expectedResult.setPassword("password");
         expectedResult.setFirstName("firstName");
         expectedResult.setLastName("lastName");
@@ -65,11 +63,58 @@ public class UserConverterTest {
         expectedResult.setDob(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
         expectedResult.setPhoneNumber("phoneNumber");
         expectedResult.setStatus("status");
-        expectedResult.setRoleKey(new HashSet<>(Arrays.asList("value")));
+        expectedResult.setRoleKey(new HashSet<>(Arrays.asList("roleKey")));
         expectedResult.setUserType("userType");
 
         // Run the test
         final UserDTO result = userConverterUnderTest.toDTO(user);
+
+        // Verify the results
+        assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    public void testToDTOClient() {
+        // Setup
+        final User user = new User();
+        user.setPassword("password");
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
+        user.setMail("mail");
+        user.setDob(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
+        user.setPhoneNumber("phoneNumber");
+        user.setStatus("status");
+        user.setUserType("userType");
+        final Role role = new Role();
+        role.setRoleKey("roleKey");
+        role.setRoleName("roleName");
+        final Permission permission = new Permission();
+        permission.setPermissionKey("permissionKey");
+        permission.setPermissionName("permissionName");
+        role.setPermissions(new HashSet<>(Arrays.asList(permission)));
+        user.setRoles(new HashSet<>(Arrays.asList(role)));
+        final Order order = new Order();
+        order.setTicketTypeId(0L);
+        order.setFirstName("firstName");
+        order.setLastName("lastName");
+        order.setMail("mail");
+        order.setPhoneNumber("phoneNumber");
+        order.setStatus("status");
+        order.setOrderCode("orderCode");
+        order.setTotalPayment(0);
+        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
+        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
+        user.setOrder(new HashSet<>(Arrays.asList(order)));
+
+        final UserDTO expectedResult = new UserDTO();
+        expectedResult.setFirstName("firstName");
+        expectedResult.setLastName("lastName");
+        expectedResult.setMail("mail");
+        expectedResult.setDob(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
+        expectedResult.setPhoneNumber("phoneNumber");
+
+        // Run the test
+        final UserDTO result = userConverterUnderTest.toDTOClient(user);
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);

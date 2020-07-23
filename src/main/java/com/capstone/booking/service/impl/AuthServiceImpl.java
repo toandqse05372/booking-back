@@ -56,20 +56,20 @@ public class AuthServiceImpl implements AuthService {
         if (null == user || !new BCryptPasswordEncoder().matches(userDTO.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("WRONG_USERNAME_PASSWORD");
         }
-        if(page != null){
+        if (page != null) {
             // check if user logging in from cms site
-            if(page.equals("CMS")){
+            if (page.equals("CMS")) {
                 boolean cmsAble = false;
                 Set<Role> userRoles = user.getRoles();
                 List<CMSRoles> cmsRoles = Arrays.asList(CMSRoles.values());
-                for(Role role: userRoles){
-                    for (CMSRoles cmsRole : cmsRoles){
-                        if (cmsRole.toString().equals(role.getRoleKey())){
+                for (Role role : userRoles) {
+                    for (CMSRoles cmsRole : cmsRoles) {
+                        if (cmsRole.toString().equals(role.getRoleKey())) {
                             cmsAble = true;
                         }
                     }
                 }
-                if (!cmsAble){
+                if (!cmsAble) {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("NO_PERMISSION_HERE");
                 }
             }
@@ -79,21 +79,21 @@ public class AuthServiceImpl implements AuthService {
 
     //register/login by fb
     @Override
-    public ResponseEntity<?> loginFb(FBLoginDTO fbForm){
+    public ResponseEntity<?> loginFb(FBLoginDTO fbForm) {
         String accessToken = fbForm.getAccessToken();
         UserDTO userDTO = restFB.getUserInfo(accessToken);
         User user = userRepository.findByMail(userDTO.getMail());
-        if(user == null){
+        if (user == null) {
             return ResponseEntity.ok(returnToken(setPermission(saveFbUser(userDTO))).getToken());
-        }else
+        } else
             return ResponseEntity.ok(returnToken(setPermission(user)).getToken());
     }
 
     //logout
     @Override
-    public ResponseEntity<?> logout(String tokenStr){
+    public ResponseEntity<?> logout(String tokenStr) {
         Token token = tokenRepository.findByToken(tokenStr.substring(6));
-        if(token == null){
+        if (token == null) {
             return new ResponseEntity("BAD_REQUEST", HttpStatus.BAD_REQUEST);
         }
         tokenRepository.delete(token);
@@ -102,12 +102,12 @@ public class AuthServiceImpl implements AuthService {
 
     //check if token valid
     @Override
-    public ResponseEntity<?> checkToken(String tokenStr){
+    public ResponseEntity<?> checkToken(String tokenStr) {
         Token token = tokenRepository.findByToken(tokenStr.substring(6));
-        if(token == null){
+        if (token == null) {
             return new ResponseEntity("TOKEN_ILLEGAL", HttpStatus.BAD_REQUEST);
         }
-        if(!token.getTokenExpDate().after(new Date())){
+        if (!token.getTokenExpDate().after(new Date())) {
             tokenRepository.delete(token);
             return new ResponseEntity("TOKEN_OUT_OF_DATE", HttpStatus.BAD_REQUEST);
         }
@@ -115,7 +115,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     //set permission and sub info into token
-    public UserPrincipal setPermission(User user){
+    public UserPrincipal setPermission(User user) {
         UserPrincipal userPrincipal = new UserPrincipal();
         Set<String> authorities = new HashSet<>();
         if (null != user.getRoles()) user.getRoles().forEach(r -> {
@@ -134,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     //return token to remember user
-    public Token returnToken(UserPrincipal userPrincipal){
+    public Token returnToken(UserPrincipal userPrincipal) {
         Token token = new Token();
         token.setToken(jwtUtil.generateToken(userPrincipal));
         token.setTokenExpDate(jwtUtil.generateExpirationDate());

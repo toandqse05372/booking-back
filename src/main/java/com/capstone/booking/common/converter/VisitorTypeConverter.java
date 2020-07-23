@@ -33,9 +33,7 @@ public class VisitorTypeConverter {
     //convert from entity to dto
     public VisitorTypeDTO toDTO(VisitorType visitorType) {
         VisitorTypeDTO dto = new VisitorTypeDTO();
-        if (visitorType.getId() != null) {
-            dto.setId(visitorType.getId());
-        }
+        dto.setId(visitorType.getId());
         dto.setStatus(visitorType.getStatus());
         dto.setTypeName(visitorType.getTypeName());
         dto.setTypeKey(visitorType.getTypeKey());

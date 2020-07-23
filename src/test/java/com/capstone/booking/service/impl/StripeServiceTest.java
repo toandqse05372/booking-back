@@ -27,14 +27,4 @@ public class StripeServiceTest {
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);
     }
-
-    @Test
-    public void testChargeNewCard_ThrowsException() {
-        // Setup
-
-        // Run the test
-        assertThatThrownBy(() -> {
-            stripeServiceUnderTest.chargeNewCard("token", 0);
-        }).isInstanceOf(Exception.class).hasMessageContaining("message");
-    }
 }

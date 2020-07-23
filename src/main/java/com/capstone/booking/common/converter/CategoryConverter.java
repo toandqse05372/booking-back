@@ -10,9 +10,7 @@ public class CategoryConverter {
     //convert from entity to dto
     public CategoryDTO toDTO(Category category) {
         CategoryDTO dto = new CategoryDTO();
-        if (category.getId() != null) {
-            dto.setId(category.getId());
-        }
+        dto.setId(category.getId());
         dto.setCategoryName(category.getTypeName());
         dto.setTypeKey(category.getTypeKey());
         dto.setIconLink(category.getIconLink());

@@ -34,6 +34,22 @@ public class ExcelHelperTest {
         assertThat(!result).isTrue();
     }
 
+    @SneakyThrows
+    @Test
+    public void testHasWrongFormat() {
+        // Setup
+        File file = new File("NiceJavaBooks.xls");
+        FileInputStream input = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile("file",
+                file.getName(), "text/plain", IOUtils.toByteArray(input));
+
+        // Run the test
+        final boolean result = ExcelHelper.hasExcelFormat(multipartFile);
+
+        // Verify the results
+        assertThat(!result).isTrue();
+    }
+
     @Test
     public void testWriteExcel() throws Exception {
         // Setup

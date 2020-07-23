@@ -117,7 +117,7 @@ public class CategoryControllerTest {
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockCategoryService).getCategory(0L);
 
         // Run the test
-        final ResponseEntity<?> result = categoryControllerUnderTest.getPlace(0L);
+        final ResponseEntity<?> result = categoryControllerUnderTest.getCategry(0L);
 
         // Verify the results
     }

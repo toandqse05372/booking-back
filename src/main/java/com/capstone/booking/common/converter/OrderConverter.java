@@ -54,9 +54,7 @@ public class OrderConverter {
     //convert from entity to dto
     public OrderDTO toDTO(Order order) {
         OrderDTO dto = new OrderDTO();
-        if (order.getId() != null) {
-            dto.setId(order.getId());
-        }
+        dto.setId(order.getId());
         dto.setTicketTypeId(order.getTicketTypeId());
         dto.setUserId(order.getUser().getId());
         dto.setFirstName(order.getUser().getFirstName());

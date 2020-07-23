@@ -30,7 +30,7 @@ public class OutputReportTest {
         final boolean result = outputReportUnderTest.equals("o");
 
         // Verify the results
-        assertThat(result).isTrue();
+        assertThat(result).isFalse();
     }
 
     @Test
@@ -41,7 +41,7 @@ public class OutputReportTest {
         final int result = outputReportUnderTest.hashCode();
 
         // Verify the results
-        assertThat(result).isEqualTo(0);
+        assertThat(result).isEqualTo(1213000816);
     }
 
     @Test
@@ -52,6 +52,6 @@ public class OutputReportTest {
         final String result = outputReportUnderTest.toString();
 
         // Verify the results
-        assertThat(result).isEqualTo("result");
+        assertThat(result).isEqualTo("OutputReport(reportItemList=[ReportItem(ticketTypeName=null, quantity=0, total=0)], startDate=0, endDate=0, reportType=0, placeId=0, totalRevenue=0)");
     }
 }

@@ -18,7 +18,6 @@ import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
@@ -97,7 +96,6 @@ public class OrderServiceImplTest {
 
         // Configure UserRepository.findById(...).
         final User user1 = new User();
-
         user1.setPassword("password");
         user1.setFirstName("firstName");
         user1.setLastName("lastName");

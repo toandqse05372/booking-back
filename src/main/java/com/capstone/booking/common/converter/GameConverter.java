@@ -31,21 +31,9 @@ public class GameConverter {
     //convert from entity to dto
     public GameDTO toDTO(Game game) {
         GameDTO dto = new GameDTO();
-        if (game.getId() != null) {
-            dto.setId(game.getId());
-        }
+        dto.setId(game.getId());
         dto.setGameName(game.getGameName());
         dto.setGameDescription(game.getGameDescription());
-
-//        Set<TicketType> typeSet = game.getTicketTypes();
-//        Set<String> typeString = new HashSet<>();
-//        if(typeSet != null){
-//            for (TicketType ticketType : typeSet) {
-//                typeString.add(ticketType.getTypeName());
-//            }
-//        }
-//        dto.setTicketTypeName(typeString);
-
         if (game.getPlace() != null) {
             dto.setPlaceId(game.getPlace().getId());
             dto.setPlaceName(game.getPlace().getName());

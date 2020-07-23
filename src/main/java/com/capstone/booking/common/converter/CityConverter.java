@@ -28,9 +28,7 @@ public class CityConverter {
     //convert from entity to dto
     public CityDTO toDTO(City city) {
         CityDTO dto = new CityDTO();
-        if (city.getId() != null) {
-            dto.setId(city.getId());
-        }
+        dto.setId(city.getId());
         dto.setName(city.getName());
         dto.setShortDescription(city.getShortDescription());
         dto.setDetailDescription(city.getDetailDescription());

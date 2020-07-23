@@ -37,9 +37,7 @@ public class UserConverter {
 
     public UserDTO toDTOClient(User user) {
         UserDTO dto = new UserDTO();
-        if (user.getId() != null) {
-            dto.setId(user.getId());
-        }
+        dto.setId(user.getId());
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
         dto.setMail(user.getMail());

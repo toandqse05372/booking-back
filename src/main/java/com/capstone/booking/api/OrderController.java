@@ -59,4 +59,9 @@ public class OrderController {
     public ResponseEntity<?> getOrderById(@PathVariable("id") long id) {
         return orderService.findByOrderId(id);
     }
+
+    @GetMapping("/order/user/{id}")
+    public ResponseEntity<?> getOrdersByUid(@PathVariable("id") long id){
+        return orderService.getOrderByUid(id);
+    }
 }

@@ -207,6 +207,19 @@ public class OrderServiceImpl implements OrderService {
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
 
+    @Override
+    public ResponseEntity<?> getOrderByUid(long id) {
+        User user = userRepository.findById(id).get();
+        if(user == null){
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("USER_NOT_EXISTED");
+        }
+        List<OrderDTO> dtoList = new ArrayList<>();
+        for(Order order: orderRepository.findAllByUser(user)){
+            dtoList.add(orderConverter.toDTO(order));
+        }
+        return ResponseEntity.ok(dtoList);
+    }
+
     // send ticket.pdf file to user
     public void sendEmail(Order order, File file) throws MessagingException, IOException {
         MimeMessage message = emailSender.createMimeMessage();

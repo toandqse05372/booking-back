@@ -35,9 +35,7 @@ public class TicketTypeConverter {
     //convert from entity to dto
     public TicketTypeDTO toDTO(TicketType ticketType) {
         TicketTypeDTO dto = new TicketTypeDTO();
-        if (ticketType.getId() != null) {
-            dto.setId(ticketType.getId());
-        }
+        dto.setId(ticketType.getId());
         dto.setStatus(ticketType.getStatus());
         dto.setTypeName(ticketType.getTypeName());
         dto.setPlaceId(ticketType.getPlaceId());

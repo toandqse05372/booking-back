@@ -22,7 +22,7 @@ public class OutputExcelTest {
         final boolean result = outputExcelUnderTest.equals("o");
 
         // Verify the results
-        assertThat(result).isTrue();
+        assertThat(!result).isTrue();
     }
 
     @Test
@@ -33,7 +33,7 @@ public class OutputExcelTest {
         final int result = outputExcelUnderTest.hashCode();
 
         // Verify the results
-        assertThat(result).isEqualTo(0);
+        assertThat(result).isEqualTo(6115);
     }
 
     @Test
@@ -44,6 +44,6 @@ public class OutputExcelTest {
         final String result = outputExcelUnderTest.toString();
 
         // Verify the results
-        assertThat(result).isEqualTo("result");
+        assertThat(result).isEqualTo("OutputExcel(listResult=null, importExcel=false)");
     }
 }

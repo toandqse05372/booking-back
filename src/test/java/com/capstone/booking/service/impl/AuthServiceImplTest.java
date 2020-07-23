@@ -11,14 +11,12 @@ import com.capstone.booking.repository.RoleRepository;
 import com.capstone.booking.repository.TokenRepository;
 import com.capstone.booking.repository.UserRepository;
 import com.capstone.booking.service.TokenService;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.*;
 
@@ -66,9 +64,8 @@ public class AuthServiceImplTest {
         userDTO.setUserType("userType");
 
         // Configure UserRepository.findByMail(...).
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         final User user = new User();
-        user.setPassword(bCryptPasswordEncoder.encode("password"));
+        user.setPassword("password");
         user.setFirstName("firstName");
         user.setLastName("lastName");
         user.setMail("mail");
@@ -77,8 +74,8 @@ public class AuthServiceImplTest {
         user.setStatus("status");
         user.setUserType("userType");
         final Role role = new Role();
-        role.setRoleKey("ADMIN");
-        role.setRoleName("ADMIN");
+        role.setRoleKey("roleKey");
+        role.setRoleName("roleName");
         final Permission permission = new Permission();
         permission.setPermissionKey("permissionKey");
         permission.setPermissionName("permissionName");
@@ -107,10 +104,9 @@ public class AuthServiceImplTest {
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTokenService).createToken(any(Token.class));
 
         // Run the test
-        final ResponseEntity<?> result = authServiceImplUnderTest.findByEmail(userDTO, "CMS");
+        final ResponseEntity<?> result = authServiceImplUnderTest.findByEmail(userDTO, "page");
 
         // Verify the results
-        Assert.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -153,17 +149,6 @@ public class AuthServiceImplTest {
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user.setRoles(new HashSet<>(Arrays.asList(role)));
         final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user.setOrder(new HashSet<>(Arrays.asList(order)));
         when(mockUserRepository.findByMail("mail")).thenReturn(user);
 
         when(mockJwtUtil.generateToken(any(UserPrincipal.class))).thenReturn("result");
@@ -234,18 +219,6 @@ public class AuthServiceImplTest {
         permission3.setPermissionName("permissionName");
         role3.setPermissions(new HashSet<>(Arrays.asList(permission3)));
         user2.setRoles(new HashSet<>(Arrays.asList(role3)));
-        final Order order2 = new Order();
-        order2.setTicketTypeId(0L);
-        order2.setFirstName("firstName");
-        order2.setLastName("lastName");
-        order2.setMail("mail");
-        order2.setPhoneNumber("phoneNumber");
-        order2.setStatus("status");
-        order2.setOrderCode("orderCode");
-        order2.setTotalPayment(0);
-        order2.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user2.setOrder(new HashSet<>(Arrays.asList(order2)));
         when(mockUserRepository.save(any(User.class))).thenReturn(user2);
 
         // Run the test
@@ -266,6 +239,9 @@ public class AuthServiceImplTest {
 
         // Run the test
         final ResponseEntity<?> result = authServiceImplUnderTest.logout("tokenStr");
+
+        // Verify the results
+        verify(mockTokenRepository).delete(any(Token.class));
     }
 
     @Test
@@ -281,6 +257,8 @@ public class AuthServiceImplTest {
         // Run the test
         final ResponseEntity<?> result = authServiceImplUnderTest.checkToken("tokenStr");
 
+        // Verify the results
+        verify(mockTokenRepository).delete(any(Token.class));
     }
 
     @Test

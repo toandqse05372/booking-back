@@ -22,7 +22,7 @@ public class OutputTest {
         final boolean result = outputUnderTest.equals("o");
 
         // Verify the results
-        assertThat(result).isTrue();
+        assertThat(result).isFalse();
     }
 
     @Test
@@ -33,7 +33,7 @@ public class OutputTest {
         final int result = outputUnderTest.hashCode();
 
         // Verify the results
-        assertThat(result).isEqualTo(0);
+        assertThat(result).isEqualTo(12119898);
     }
 
     @Test
@@ -44,6 +44,6 @@ public class OutputTest {
         final String result = outputUnderTest.toString();
 
         // Verify the results
-        assertThat(result).isEqualTo("result");
+        assertThat(result).isEqualTo("Output(page=0, totalPage=0, listResult=null, totalItems=0)");
     }
 }

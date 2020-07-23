@@ -145,8 +145,10 @@ public class PlaceServiceImpl implements PlaceService {
             return new ResponseEntity("PLACE_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
         Set<ImagePlace> imagePlaces = placeRepository.findById(id).get().getImagePlace();
-        for(ImagePlace imagePlace: imagePlaces){
-            imagePlaceRepository.delete(imagePlace);
+        if(imagePlaces != null){
+            for(ImagePlace imagePlace: imagePlaces){
+                imagePlaceRepository.delete(imagePlace);
+            }
         }
         placeRepository.deleteById(id);
         return new ResponseEntity("DELETE_SUCCESSFUL", HttpStatus.OK);

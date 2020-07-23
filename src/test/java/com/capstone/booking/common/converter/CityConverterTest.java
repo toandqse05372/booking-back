@@ -33,19 +33,6 @@ public class CityConverterTest {
         expectedResult.setName("name");
         expectedResult.setShortDescription("shortDescription");
         expectedResult.setDetailDescription("detailDescription");
-        expectedResult.setImageLink("imageLink");
-        final Place place = new Place();
-        place.setName("name");
-        place.setPlaceKey("placeKey");
-        place.setAddress("address");
-        place.setDetailDescription("detailDescription");
-        place.setShortDescription("shortDescription");
-        place.setMail("mail");
-        place.setPhoneNumber("phoneNumber");
-        place.setStatus("status");
-        place.setLocation("location");
-        place.setCancelPolicy("cancelPolicy");
-        expectedResult.setPlaces(new HashSet<>(Arrays.asList(place)));
 
         // Run the test
         final City result = cityConverterUnderTest.toCity(dto);
@@ -59,45 +46,19 @@ public class CityConverterTest {
         // Setup
         final CityDTO dto = new CityDTO();
         dto.setName("name");
-        dto.setShortDescription("shortDescription");
-        dto.setDetailDescription("detailDescription");
+        dto.setShortDescription("shortDescription123");
+        dto.setDetailDescription("detailDescription123");
         dto.setImageLink("imageLink");
 
         final City city = new City();
         city.setName("name");
         city.setShortDescription("shortDescription");
         city.setDetailDescription("detailDescription");
-        city.setImageLink("imageLink");
-        final Place place = new Place();
-        place.setName("name");
-        place.setPlaceKey("placeKey");
-        place.setAddress("address");
-        place.setDetailDescription("detailDescription");
-        place.setShortDescription("shortDescription");
-        place.setMail("mail");
-        place.setPhoneNumber("phoneNumber");
-        place.setStatus("status");
-        place.setLocation("location");
-        place.setCancelPolicy("cancelPolicy");
-        city.setPlaces(new HashSet<>(Arrays.asList(place)));
 
         final City expectedResult = new City();
         expectedResult.setName("name");
-        expectedResult.setShortDescription("shortDescription");
-        expectedResult.setDetailDescription("detailDescription");
-        expectedResult.setImageLink("imageLink");
-        final Place place1 = new Place();
-        place1.setName("name");
-        place1.setPlaceKey("placeKey");
-        place1.setAddress("address");
-        place1.setDetailDescription("detailDescription");
-        place1.setShortDescription("shortDescription");
-        place1.setMail("mail");
-        place1.setPhoneNumber("phoneNumber");
-        place1.setStatus("status");
-        place1.setLocation("location");
-        place1.setCancelPolicy("cancelPolicy");
-        expectedResult.setPlaces(new HashSet<>(Arrays.asList(place1)));
+        expectedResult.setShortDescription("shortDescription123");
+        expectedResult.setDetailDescription("detailDescription123");
 
         // Run the test
         final City result = cityConverterUnderTest.toCity(dto, city);

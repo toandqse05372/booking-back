@@ -1,16 +1,24 @@
 package com.capstone.booking.repository.impl;
 
+import com.capstone.booking.BookingApplication;
 import com.capstone.booking.entity.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = BookingApplication.class, loader = AnnotationConfigContextLoader.class)
 public class VisitorTypeRepositoryImplTest {
 
     private VisitorTypeRepositoryImpl visitorTypeRepositoryImplUnderTest;
@@ -20,6 +28,9 @@ public class VisitorTypeRepositoryImplTest {
         visitorTypeRepositoryImplUnderTest = new VisitorTypeRepositoryImpl();
         visitorTypeRepositoryImplUnderTest.entityManager = mock(EntityManager.class);
     }
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Test
     public void testFindByPlaceIdAndBasic() {
@@ -81,8 +92,7 @@ public class VisitorTypeRepositoryImplTest {
         code.setVisitorType(new VisitorType());
         expectedResult.setCode(new HashSet<>(Arrays.asList(code)));
 
-        when(visitorTypeRepositoryImplUnderTest.entityManager
-                .createQuery("SELECT vt FROM  VisitorType vt",
+        when(visitorTypeRepositoryImplUnderTest.entityManager.createQuery("SELECT vt FROM  VisitorType vt",
                 VisitorType.class).getResultList().get(0)).thenReturn(expectedResult);
 
         // Run the test

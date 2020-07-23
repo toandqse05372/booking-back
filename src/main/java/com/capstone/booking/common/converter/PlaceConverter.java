@@ -104,9 +104,7 @@ public class PlaceConverter {
     //convert from entity to dto
     public PlaceDTO toDTO(Place place) {
         PlaceDTO dto = new PlaceDTO();
-        if (place.getId() != null) {
-            dto.setId(place.getId());
-        }
+        dto.setId(place.getId());
         dto.setName(place.getName());
         dto.setPlaceKey(place.getPlaceKey());
         dto.setAddress(place.getAddress());
@@ -152,6 +150,7 @@ public class PlaceConverter {
     //convert from entity to dto (more information for client)
     public PlaceDTOClient toPlaceClient(Place place){
         PlaceDTOClient dto = new PlaceDTOClient();
+        dto.setId(place.getId());
         dto.setName(place.getName());
         dto.setPlaceKey(place.getPlaceKey());
         dto.setAddress(place.getAddress());

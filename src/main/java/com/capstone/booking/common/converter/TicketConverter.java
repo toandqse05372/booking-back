@@ -28,9 +28,7 @@ public class TicketConverter {
 
     public TicketDTO toDTO(Ticket ticket) {
         TicketDTO dto = new TicketDTO();
-        if (ticket.getId() != null) {
-            dto.setId(ticket.getId());
-        }
+        dto.setId(ticket.getId());
         dto.setCode(ticket.getCode());
         dto.setRedemptionDate(ticket.getRedemptionDate());
         dto.setVisitorTypeId(ticket.getVisitorTypeId());

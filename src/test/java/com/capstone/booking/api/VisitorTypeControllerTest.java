@@ -112,7 +112,7 @@ public class VisitorTypeControllerTest {
     }
 
     @Test
-    public void testFindByTicketTypeId() {
+    public void  testFindByTicketTypeId() {
         // Setup
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(visitorTypeControllerUnderTest.visitorTypeService).findByTicketTypeId(0L);
 
