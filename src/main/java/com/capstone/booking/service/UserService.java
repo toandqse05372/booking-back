@@ -2,6 +2,7 @@ package com.capstone.booking.service;
 
 import com.capstone.booking.entity.dto.UserDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
@@ -46,4 +47,6 @@ public interface UserService {
     ResponseEntity<?> changePassword(long uid, String oldPassword, String newPassword);
 
     ResponseEntity<?> getUserClient(Long id);
+
+    ResponseEntity<?> updateAvatar(Long id, MultipartFile file);
 }

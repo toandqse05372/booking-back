@@ -10,10 +10,13 @@ import lombok.SneakyThrows;
 import org.apache.poi.util.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -33,8 +36,10 @@ public class CategoryServiceImplTest {
 
     @Mock
     private CategoryRepository mockCategoryRepository;
+
     @Mock
     private CategoryConverter mockCategoryConverter;
+
     @Mock
     private AmazonS3ClientService mockAmazonS3ClientService;
 
@@ -91,15 +96,8 @@ public class CategoryServiceImplTest {
         categoryDTO.setTypeKey("typeKey");
         categoryDTO.setIconLink("iconLink");
         when(mockCategoryRepository.findByTypeName("typeName")).thenReturn(new Category("typeName", "typeKey"));
-        when(mockCategoryConverter.toCategory(new CategoryDTO())).thenReturn(new Category("typeName", "typeKey"));
+        when(mockCategoryConverter.toCategory(categoryDTO)).thenReturn(new Category("typeName", "typeKey"));
         when(mockCategoryRepository.save(new Category("typeName", "typeKey"))).thenReturn(new Category("typeName", "typeKey"));
-
-        // Configure CategoryConverter.toDTO(...).
-        final CategoryDTO categoryDTO1 = new CategoryDTO();
-        categoryDTO1.setCategoryName("categoryName");
-        categoryDTO1.setTypeKey("typeKey");
-        categoryDTO1.setIconLink("iconLink");
-        when(mockCategoryConverter.toDTO(new Category("typeName", "typeKey"))).thenReturn(categoryDTO1);
 
         File file = new File("Test.pdf");
         FileInputStream input = new FileInputStream(file);
@@ -109,7 +107,7 @@ public class CategoryServiceImplTest {
         final ResponseEntity<?> result = categoryServiceImplUnderTest.create(categoryDTO, multipartFile);
 
         // Verify the results
-        verify(mockAmazonS3ClientService).uploadFileToS3Bucket(eq(0L), any(MultipartFile.class), eq("name"), eq("ext"), eq(false));
+        verify(mockAmazonS3ClientService).uploadFileToS3Bucket(eq(null), eq(multipartFile), eq("Category_null"), eq(".pdf"), eq(true));
     }
 
     @SneakyThrows
@@ -120,13 +118,18 @@ public class CategoryServiceImplTest {
         categoryDTO.setCategoryName("categoryName");
         categoryDTO.setTypeKey("typeKey");
         categoryDTO.setIconLink("iconLink");
+        categoryDTO.setId(0l);
         when(mockCategoryRepository.findByTypeName("typeName")).thenReturn(new Category("typeName", "typeKey"));
 
         // Configure CategoryRepository.findById(...).
-        final Optional<Category> category = Optional.of(new Category("typeName", "typeKey"));
-        when(mockCategoryRepository.findById(0L)).thenReturn(category);
+        Category category = new Category();
+        category.setId(0l);
+        category.setTypeName("typeName");
+        category.setTypeKey("typeKey");
+        final Optional<Category> categoryOptional = Optional.of(category);
+        when(mockCategoryRepository.findById(0L)).thenReturn(categoryOptional);
 
-        when(mockCategoryConverter.toCategory(new CategoryDTO(), new Category("typeName", "typeKey"))).thenReturn(new Category("typeName", "typeKey"));
+        when(mockCategoryConverter.toCategory(categoryDTO, new Category("typeName", "typeKey"))).thenReturn(new Category("typeName", "typeKey"));
         when(mockCategoryRepository.save(new Category("typeName", "typeKey"))).thenReturn(new Category("typeName", "typeKey"));
 
         // Configure CategoryConverter.toDTO(...).
@@ -144,7 +147,7 @@ public class CategoryServiceImplTest {
         final ResponseEntity<?> result = categoryServiceImplUnderTest.update(categoryDTO, multipartFile);
 
         // Verify the results
-        verify(mockAmazonS3ClientService).uploadFileToS3Bucket(eq(0L), any(MultipartFile.class), eq("name"), eq("ext"), eq(false));
+        verify(mockAmazonS3ClientService).uploadFileToS3Bucket(eq(null), eq(multipartFile), eq("Category_null"), eq(".pdf"), eq(true));
     }
 
     @Test
@@ -200,6 +203,6 @@ public class CategoryServiceImplTest {
 
         // Verify the results
         assertThat(result).isEqualTo("nullCategory_0.pdf");
-        verify(mockAmazonS3ClientService).uploadFileToS3Bucket(eq(0L), any(MultipartFile.class), eq("name"), eq("ext"), eq(false));
+        verify(mockAmazonS3ClientService).uploadFileToS3Bucket(eq(0L), eq(multipartFile), eq("Category_0"), eq(".pdf"), eq(true));
     }
 }

@@ -27,6 +27,7 @@ public class User extends BaseEntity {
     @Column(length = 20)
     private String status;
     private String userType;
+    private String avatarLink;
     //nhiều user có nhiều trường, nhiều trường thuộc về nhiều user
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinTable(name = "t_user_role",

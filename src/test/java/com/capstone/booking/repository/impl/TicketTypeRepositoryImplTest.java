@@ -1,10 +1,13 @@
 package com.capstone.booking.repository.impl;
 
 import com.capstone.booking.entity.TicketType;
+import com.capstone.booking.entity.VisitorType;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
@@ -18,6 +21,13 @@ public class TicketTypeRepositoryImplTest {
     public void setUp() {
         ticketTypeRepositoryImplUnderTest = new TicketTypeRepositoryImpl();
         ticketTypeRepositoryImplUnderTest.entityManager = mock(EntityManager.class);
+    }
+
+    void mockQuery(String name, List<VisitorType> results) {
+        Query mockedQuery = mock(Query.class);
+        when(mockedQuery.getResultList()).thenReturn(results);
+        when(mockedQuery.setParameter(Matchers.anyString(), Matchers.anyObject())).thenReturn(mockedQuery);
+        when(this.ticketTypeRepositoryImplUnderTest.entityManager.createNamedQuery(name)).thenReturn(mockedQuery);
     }
 
     @Test

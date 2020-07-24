@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 //user's api
 @RestController
@@ -97,6 +98,11 @@ public class UserController {
     @GetMapping("/userClient/{id}")
     public ResponseEntity<?> getUserClient(@PathVariable Long id) {
         return userService.getUserClient(id);
+    }
+
+    @PostMapping("/user/avatar/{id}")
+    public ResponseEntity<?> updateAvatar(@PathVariable Long id, @RequestPart(value = "file") MultipartFile file){
+        return userService.updateAvatar(id, file);
     }
 
 

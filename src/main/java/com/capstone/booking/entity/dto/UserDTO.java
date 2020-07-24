@@ -16,4 +16,5 @@ public class UserDTO extends BaseDTO{
     private String status;
     private Set<String> roleKey;
     private String userType;
+    private String avatarLink;
 }

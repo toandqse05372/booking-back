@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
@@ -72,8 +73,8 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     //add ticket Type for place
     @Override
     public ResponseEntity<?> create(TicketTypeDTO ticketTypeDTO) {
-        if(null != ticketTypeRepository.
-                findByTypeNameAndPlaceId(ticketTypeDTO.getTypeName(), ticketTypeDTO.getPlaceId())){
+        if (null != ticketTypeRepository.
+                findByTypeNameAndPlaceId(ticketTypeDTO.getTypeName(), ticketTypeDTO.getPlaceId())) {
             return new ResponseEntity("TICKET_TYPE_EXISTED", HttpStatus.BAD_REQUEST);
         }
         TicketType ticketType = ticketTypeConverter.toTicketType(ticketTypeDTO);
@@ -92,7 +93,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     public ResponseEntity<?> update(TicketTypeDTO ticketTypeDTO) {
         TicketType existedTicketType = ticketTypeRepository.
                 findByTypeNameAndPlaceId(ticketTypeDTO.getTypeName(), ticketTypeDTO.getPlaceId());
-        if(null != existedTicketType && existedTicketType.getId() != ticketTypeDTO.getId()){
+        if (null != existedTicketType && existedTicketType.getId() != ticketTypeDTO.getId()) {
             return new ResponseEntity("TICKET_TYPE_EXISTED", HttpStatus.BAD_REQUEST);
         }
         TicketType ticketType = new TicketType();
@@ -111,8 +112,8 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     @Override
     public ResponseEntity<?> changeStatus(Long id) {
         TicketType ticketType = ticketTypeRepository.findById(id).get();
-        for(VisitorType visitorType: visitorTypeRepository.findByTicketType(ticketType)){
-            if(visitorType.isBasicType()){
+        for (VisitorType visitorType : visitorTypeRepository.findByTicketType(ticketType)) {
+            if (visitorType.isBasicType()) {
                 return new ResponseEntity("VISITOR_TYPE_IS_BASIC", HttpStatus.BAD_REQUEST);
             }
         }
@@ -131,14 +132,14 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         List<TicketTypeDTO> list = new ArrayList<>();
         List<TicketType> ticketTypes = ticketTypeRepository.findByPlaceId(placeId);
         OutputExcel output = new OutputExcel();
-        if(ticketTypes.size() > 0){
-            for(TicketType ticketType: ticketTypes){
+        if (ticketTypes.size() > 0) {
+            for (TicketType ticketType : ticketTypes) {
                 TicketTypeDTO ticketTypeDTO = ticketTypeConverter.toDTO(ticketType);
                 List<VisitorType> visitorTypes = visitorTypeRepository.findByTicketType(ticketType);
-                if(visitorTypes.size() > 0){
+                if (visitorTypes.size() > 0) {
                     output.setImportExcel(true);
                     List<VisitorTypeDTO> visitorTypeDTOS = new ArrayList<>();
-                    for(VisitorType type: visitorTypes){
+                    for (VisitorType type : visitorTypes) {
                         visitorTypeDTOS.add(visitorTypeConverter.toDTO(type));
                     }
                     ticketTypeDTO.setVisitorTypes(visitorTypeDTOS.stream().sorted(new Comparator<VisitorTypeDTO>() {
@@ -164,7 +165,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 
     // import code from excel
     @Override
-    public ResponseEntity<?> addCodeFromExcel(MultipartFile file, long placeId){
+    public ResponseEntity<?> addCodeFromExcel(MultipartFile file, long placeId) {
         if (ExcelHelper.hasExcelFormat(file)) {
             try {
                 //get code from excel 
@@ -172,26 +173,26 @@ public class TicketTypeServiceImpl implements TicketTypeService {
                 List<VisitorType> visitorTypes = visitorTypeRepository.findByPlaceId(placeId);
                 int uniqle = 0;
                 int wrongKey = 0;
-                for(Code code: codes){
-                    if(visitorTypes.contains(code.getVisitorType())){
+                for (Code code : codes) {
+                    if (visitorTypes.contains(code.getVisitorType())) {
                         try {
                             codeRepository.save(code);
                         } catch (DataIntegrityViolationException e) {
                             uniqle += 1;
                         }
-                    }else{
+                    } else {
                         wrongKey += 1;
                     }
                 }
-                if(wrongKey > 0 || uniqle > 0){
+                if (wrongKey > 0 || uniqle > 0) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                            .body("Wrong key: "+wrongKey+"\nDuplicate: "+uniqle);
-                }else
+                            .body("Wrong key: " + wrongKey + "\nDuplicate: " + uniqle);
+                } else
                     return ResponseEntity.ok("OK");
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("COULD_NOT_UPLOAD_FILE");
             }
-        }else
+        } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT_EXCEL_FILE");
 
     }

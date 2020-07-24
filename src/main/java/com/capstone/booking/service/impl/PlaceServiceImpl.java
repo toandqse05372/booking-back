@@ -127,7 +127,8 @@ public class PlaceServiceImpl implements PlaceService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("PLACE_EXISTED");
         }
         Place place = new Place();
-        Place oldPlace = placeRepository.findById(placeDTO.getId()).get();
+        Optional<Place> placeOptional = placeRepository.findById(placeDTO.getId());
+        Place oldPlace = placeOptional.get();
         place = placeConverter.toPlace(placeDTO, oldPlace);
         if(files != null){
             Place saved = placeRepository.save(place);
@@ -144,7 +145,8 @@ public class PlaceServiceImpl implements PlaceService {
         if (!placeRepository.findById(id).isPresent()) {
             return new ResponseEntity("PLACE_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
-        Set<ImagePlace> imagePlaces = placeRepository.findById(id).get().getImagePlace();
+        Optional<Place> optionalPlace = placeRepository.findById(id);
+        Set<ImagePlace> imagePlaces = optionalPlace.get().getImagePlace();
         if(imagePlaces != null){
             for(ImagePlace imagePlace: imagePlaces){
                 imagePlaceRepository.delete(imagePlace);
@@ -191,6 +193,7 @@ public class PlaceServiceImpl implements PlaceService {
     //upload file to amazon s3
     public void uploadFile(MultipartFile[] files, Long placeId){
         int location = 1;
+        Optional<Place> placeOptional = placeRepository.findById(placeId);
         for (MultipartFile file: files) {
             String ext = "."+ FilenameUtils.getExtension(file.getOriginalFilename());
             String name = "Place_"+placeId +"_"+ location;
@@ -204,7 +207,7 @@ public class PlaceServiceImpl implements PlaceService {
                 imagePlace = new ImagePlace();
                 imagePlace.setImageLink(bucketLink+fileName);
                 imagePlace.setImageName(name);
-                imagePlace.setPlace(placeRepository.findById(placeId).get());
+                imagePlace.setPlace(placeOptional.get());
             }
             imagePlaceRepository.save(imagePlace);
         }

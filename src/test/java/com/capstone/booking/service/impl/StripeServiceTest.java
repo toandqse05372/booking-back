@@ -1,8 +1,11 @@
 package com.capstone.booking.service.impl;
 
+import com.stripe.exception.InvalidRequestException;
 import com.stripe.model.Charge;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -17,14 +20,9 @@ public class StripeServiceTest {
     }
 
     @Test
-    public void testChargeNewCard() throws Exception {
-        // Setup
-        final Charge expectedResult = new Charge();
-
-        // Run the test
-        final Charge result = stripeServiceUnderTest.chargeNewCard("token", 0);
-
+    public void testChargeNewCard() {
         // Verify the results
-        assertThat(result).isEqualTo(expectedResult);
+        Assertions.assertThrows(InvalidRequestException.class,
+                ()->stripeServiceUnderTest.chargeNewCard("token", 0));
     }
 }

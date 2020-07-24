@@ -83,8 +83,14 @@ public class CityServiceImpl implements CityService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CITY_EXISTED");
         }
         City city = cityConverter.toCity(cityDTO);
-        cityRepository.save(city);
-        return setImageAndReturn(file, city);
+        if(file != null){
+            City saved = cityRepository.save(city);
+            saved.setImageLink(uploadFile(file, saved.getId()));
+            cityRepository.save(saved);
+        }else{
+            cityRepository.save(city);
+        }
+        return ResponseEntity.ok(cityConverter.toDTO(city));
     }
 
     //edit
@@ -95,14 +101,9 @@ public class CityServiceImpl implements CityService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CITY_EXISTED");
         }
         City city = new City();
-        City oldCity = cityRepository.findById(cityDTO.getId()).get();
+        Optional<City> optional = cityRepository.findById(cityDTO.getId());
+        City oldCity = optional.get();
         city = cityConverter.toCity(cityDTO, oldCity);
-        cityRepository.save(city);
-        return setImageAndReturn(file, city);
-    }
-
-    //set image and save city to db
-    private ResponseEntity<?> setImageAndReturn(MultipartFile file, City city) {
         if(file != null){
             City saved = cityRepository.save(city);
             saved.setImageLink(uploadFile(file, saved.getId()));

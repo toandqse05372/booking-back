@@ -214,7 +214,7 @@ public class OrderServiceImpl implements OrderService {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("USER_NOT_EXISTED");
         }
         List<OrderDTO> dtoList = new ArrayList<>();
-        for(Order order: orderRepository.findAllByUser(user)){
+        for(Order order: orderRepository.findAllByUserOrderByCreatedAtDesc(user)){
             dtoList.add(orderConverter.toDTO(order));
         }
         return ResponseEntity.ok(dtoList);
@@ -239,5 +239,20 @@ public class OrderServiceImpl implements OrderService {
         helper.addAttachment(file.getPath(), file1);
         emailSender.send(message);
     }
+
+    @Override
+    public ResponseEntity<?> getOrderByUidTop3(long id) {
+        User user = userRepository.findById(id).get();
+        if(user == null){
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("USER_NOT_EXISTED");
+        }
+        List<OrderDTO> dtoList = new ArrayList<>();
+        for(Order order: orderRepository.getTop3(id)){
+            dtoList.add(orderConverter.toDTO(order));
+        }
+        return ResponseEntity.ok(dtoList);
+    }
+
+
 
 }

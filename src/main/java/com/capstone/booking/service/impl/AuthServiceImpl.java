@@ -84,7 +84,13 @@ public class AuthServiceImpl implements AuthService {
         UserDTO userDTO = restFB.getUserInfo(accessToken);
         User user = userRepository.findByMail(userDTO.getMail());
         if (user == null) {
-            return ResponseEntity.ok(returnToken(setPermission(saveFbUser(userDTO))).getToken());
+            user = userConverter.toUser(userDTO);
+            user.setUserType(UserType.FACEBOOK.toString());
+            Set<Role> roleSet = new HashSet<>();
+            Role role = roleRepository.findByRoleKey(RoleKey.USER.toString());
+            roleSet.add(role);
+            user.setRoles(roleSet);
+            return ResponseEntity.ok(returnToken(setPermission(userRepository.save(user))).getToken());
         } else
             return ResponseEntity.ok(returnToken(setPermission(user)).getToken());
     }
@@ -130,6 +136,7 @@ public class AuthServiceImpl implements AuthService {
         userPrincipal.setPassword(user.getPassword());
         userPrincipal.setAuthorities(authorities);
         userPrincipal.setPhoneNumber(user.getPhoneNumber());
+        userPrincipal.setDob(user.getDob());
         return userPrincipal;
     }
 
@@ -142,17 +149,5 @@ public class AuthServiceImpl implements AuthService {
         tokenService.createToken(token);
         return token;
     }
-
-    //save fb user if it'd not in db
-    private User saveFbUser(UserDTO userDTO) {
-        User user = userConverter.toUser(userDTO);
-        user.setUserType(UserType.FACEBOOK.toString());
-        Set<Role> roleSet = new HashSet<>();
-        roleSet.add(roleRepository.findByRoleKey(RoleKey.USER.toString()));
-        user.setRoles(roleSet);
-        userRepository.save(user);
-        return user;
-    }
-
 
 }

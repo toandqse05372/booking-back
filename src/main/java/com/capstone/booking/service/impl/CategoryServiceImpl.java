@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -66,7 +67,14 @@ public class CategoryServiceImpl implements CategoryService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
         }
         Category category = categoryConverter.toCategory(categoryDTO);
-        return setImageAndReturn(file, category);
+        if (file != null) {
+            Category saved = categoryRepository.save(category);
+            saved.setIconLink(uploadFile(file, saved.getId()));
+            categoryRepository.save(saved);
+        } else {
+            categoryRepository.save(category);
+        }
+        return ResponseEntity.ok(categoryConverter.toDTO(category));
     }
 
     //edit
@@ -77,13 +85,9 @@ public class CategoryServiceImpl implements CategoryService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CATEGORY_EXISTED");
         }
         Category category = new Category();
-        Category categoryOld = categoryRepository.findById(categoryDTO.getId()).get();
+        Optional<Category> categoryOptional = categoryRepository.findById(categoryDTO.getId());
+        Category categoryOld = categoryOptional.get();
         category = categoryConverter.toCategory(categoryDTO, categoryOld);
-        return setImageAndReturn(file, category);
-    }
-
-    //set image and save category to db
-    private ResponseEntity<?> setImageAndReturn(MultipartFile file, Category category) {
         if (file != null) {
             Category saved = categoryRepository.save(category);
             saved.setIconLink(uploadFile(file, saved.getId()));

@@ -60,11 +60,9 @@ public class GameServiceImpl implements GameService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("GAME_EXISTED");
         }
         Game game = new Game();
-        Game oldGame = gameRepository.findById(gameDTO.getId()).get();
+        Optional<Game> gameOptional = gameRepository.findById(gameDTO.getId());
+        Game oldGame = gameOptional.get();
         game = gameConverter.toGame(gameDTO, oldGame);
-
-        Set<TicketType> typeSet = new HashSet<>();
-        game.setTicketTypes(typeSet);
         game.setPlace(place);
         game = gameRepository.save(game);
         return ResponseEntity.ok(gameConverter.toDTO(game));

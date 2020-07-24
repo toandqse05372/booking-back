@@ -2,6 +2,7 @@ package com.capstone.booking.service.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.UserConverter;
+import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.config.security.UserPrincipal;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.UserDTO;
@@ -15,9 +16,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -40,6 +43,8 @@ public class UserServiceImplTest {
     private AuthServiceImpl mockAuthService;
     @Mock
     private PasswordResetTokenRepository mockPasswordTokenRepository;
+    @Mock
+    private AmazonS3ClientService mockAmazonS3ClientService;
 
     @InjectMocks
     private UserServiceImpl userServiceImplUnderTest;
@@ -62,6 +67,7 @@ public class UserServiceImplTest {
         userDTO.setStatus("status");
         userDTO.setRoleKey(new HashSet<>(Arrays.asList("value")));
         userDTO.setUserType("userType");
+        userDTO.setAvatarLink("avatarLink");
 
         // Configure UserRepository.findByMail(...).
         final User user = new User();
@@ -73,6 +79,7 @@ public class UserServiceImplTest {
         user.setPhoneNumber("phoneNumber");
         user.setStatus("status");
         user.setUserType("userType");
+        user.setAvatarLink("avatarLink");
         final Role role = new Role();
         role.setRoleKey("roleKey");
         role.setRoleName("roleName");
@@ -81,18 +88,6 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user.setRoles(new HashSet<>(Arrays.asList(role)));
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user.setOrder(new HashSet<>(Arrays.asList(order)));
         when(mockUserRepository.findByMail("mail")).thenReturn(user);
 
         // Configure UserConverter.toUser(...).
@@ -105,6 +100,7 @@ public class UserServiceImplTest {
         user1.setPhoneNumber("phoneNumber");
         user1.setStatus("status");
         user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
         final Role role1 = new Role();
         role1.setRoleKey("roleKey");
         role1.setRoleName("roleName");
@@ -113,18 +109,6 @@ public class UserServiceImplTest {
         permission1.setPermissionName("permissionName");
         role1.setPermissions(new HashSet<>(Arrays.asList(permission1)));
         user1.setRoles(new HashSet<>(Arrays.asList(role1)));
-        final Order order1 = new Order();
-        order1.setTicketTypeId(0L);
-        order1.setFirstName("firstName");
-        order1.setLastName("lastName");
-        order1.setMail("mail");
-        order1.setPhoneNumber("phoneNumber");
-        order1.setStatus("status");
-        order1.setOrderCode("orderCode");
-        order1.setTotalPayment(0);
-        order1.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user1.setOrder(new HashSet<>(Arrays.asList(order1)));
         when(mockUserConverter.toUser(new UserDTO())).thenReturn(user1);
 
         // Configure RoleRepository.findByRoleKey(...).
@@ -147,6 +131,7 @@ public class UserServiceImplTest {
         user2.setPhoneNumber("phoneNumber");
         user2.setStatus("status");
         user2.setUserType("userType");
+        user2.setAvatarLink("avatarLink");
         final Role role3 = new Role();
         role3.setRoleKey("roleKey");
         role3.setRoleName("roleName");
@@ -155,18 +140,6 @@ public class UserServiceImplTest {
         permission3.setPermissionName("permissionName");
         role3.setPermissions(new HashSet<>(Arrays.asList(permission3)));
         user2.setRoles(new HashSet<>(Arrays.asList(role3)));
-        final Order order2 = new Order();
-        order2.setTicketTypeId(0L);
-        order2.setFirstName("firstName");
-        order2.setLastName("lastName");
-        order2.setMail("mail");
-        order2.setPhoneNumber("phoneNumber");
-        order2.setStatus("status");
-        order2.setOrderCode("orderCode");
-        order2.setTotalPayment(0);
-        order2.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user2.setOrder(new HashSet<>(Arrays.asList(order2)));
         when(mockUserRepository.save(any(User.class))).thenReturn(user2);
 
         // Configure VerificationTokenRepository.save(...).
@@ -181,6 +154,7 @@ public class UserServiceImplTest {
         user3.setPhoneNumber("phoneNumber");
         user3.setStatus("status");
         user3.setUserType("userType");
+        user3.setAvatarLink("avatarLink");
         final Role role4 = new Role();
         role4.setRoleKey("roleKey");
         role4.setRoleName("roleName");
@@ -189,18 +163,6 @@ public class UserServiceImplTest {
         permission4.setPermissionName("permissionName");
         role4.setPermissions(new HashSet<>(Arrays.asList(permission4)));
         user3.setRoles(new HashSet<>(Arrays.asList(role4)));
-        final Order order3 = new Order();
-        order3.setTicketTypeId(0L);
-        order3.setFirstName("firstName");
-        order3.setLastName("lastName");
-        order3.setMail("mail");
-        order3.setPhoneNumber("phoneNumber");
-        order3.setStatus("status");
-        order3.setOrderCode("orderCode");
-        order3.setTotalPayment(0);
-        order3.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order3.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user3.setOrder(new HashSet<>(Arrays.asList(order3)));
         verificationToken.setUser(user3);
         verificationToken.setUsed(false);
         when(mockTokenRepository.save(new VerificationToken())).thenReturn(verificationToken);
@@ -226,6 +188,7 @@ public class UserServiceImplTest {
         user.setPhoneNumber("phoneNumber");
         user.setStatus("status");
         user.setUserType("userType");
+        user.setAvatarLink("avatarLink");
         final Role role = new Role();
         role.setRoleKey("roleKey");
         role.setRoleName("roleName");
@@ -234,18 +197,6 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user.setRoles(new HashSet<>(Arrays.asList(role)));
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user.setOrder(new HashSet<>(Arrays.asList(order)));
         when(mockUserRepository.findByMail("mail")).thenReturn(user);
 
         // Configure VerificationTokenRepository.save(...).
@@ -260,6 +211,7 @@ public class UserServiceImplTest {
         user1.setPhoneNumber("phoneNumber");
         user1.setStatus("status");
         user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
         final Role role1 = new Role();
         role1.setRoleKey("roleKey");
         role1.setRoleName("roleName");
@@ -268,18 +220,6 @@ public class UserServiceImplTest {
         permission1.setPermissionName("permissionName");
         role1.setPermissions(new HashSet<>(Arrays.asList(permission1)));
         user1.setRoles(new HashSet<>(Arrays.asList(role1)));
-        final Order order1 = new Order();
-        order1.setTicketTypeId(0L);
-        order1.setFirstName("firstName");
-        order1.setLastName("lastName");
-        order1.setMail("mail");
-        order1.setPhoneNumber("phoneNumber");
-        order1.setStatus("status");
-        order1.setOrderCode("orderCode");
-        order1.setTotalPayment(0);
-        order1.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user1.setOrder(new HashSet<>(Arrays.asList(order1)));
         verificationToken.setUser(user1);
         verificationToken.setUsed(false);
         when(mockTokenRepository.save(new VerificationToken())).thenReturn(verificationToken);
@@ -305,6 +245,7 @@ public class UserServiceImplTest {
         user1.setPhoneNumber("phoneNumber");
         user1.setStatus("status");
         user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
         final Role role = new Role();
         role.setRoleKey("roleKey");
         role.setRoleName("roleName");
@@ -313,18 +254,6 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user1.setRoles(new HashSet<>(Arrays.asList(role)));
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user1.setOrder(new HashSet<>(Arrays.asList(order)));
         final Optional<User> user = Optional.of(user1);
         when(mockUserRepository.findById(0L)).thenReturn(user);
 
@@ -338,6 +267,7 @@ public class UserServiceImplTest {
         user2.setPhoneNumber("phoneNumber");
         user2.setStatus("status");
         user2.setUserType("userType");
+        user2.setAvatarLink("avatarLink");
         final Role role1 = new Role();
         role1.setRoleKey("roleKey");
         role1.setRoleName("roleName");
@@ -346,18 +276,6 @@ public class UserServiceImplTest {
         permission1.setPermissionName("permissionName");
         role1.setPermissions(new HashSet<>(Arrays.asList(permission1)));
         user2.setRoles(new HashSet<>(Arrays.asList(role1)));
-        final Order order1 = new Order();
-        order1.setTicketTypeId(0L);
-        order1.setFirstName("firstName");
-        order1.setLastName("lastName");
-        order1.setMail("mail");
-        order1.setPhoneNumber("phoneNumber");
-        order1.setStatus("status");
-        order1.setOrderCode("orderCode");
-        order1.setTotalPayment(0);
-        order1.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user2.setOrder(new HashSet<>(Arrays.asList(order1)));
         when(mockUserRepository.save(any(User.class))).thenReturn(user2);
 
         // Configure VerificationTokenRepository.save(...).
@@ -372,6 +290,7 @@ public class UserServiceImplTest {
         user3.setPhoneNumber("phoneNumber");
         user3.setStatus("status");
         user3.setUserType("userType");
+        user3.setAvatarLink("avatarLink");
         final Role role2 = new Role();
         role2.setRoleKey("roleKey");
         role2.setRoleName("roleName");
@@ -380,18 +299,6 @@ public class UserServiceImplTest {
         permission2.setPermissionName("permissionName");
         role2.setPermissions(new HashSet<>(Arrays.asList(permission2)));
         user3.setRoles(new HashSet<>(Arrays.asList(role2)));
-        final Order order2 = new Order();
-        order2.setTicketTypeId(0L);
-        order2.setFirstName("firstName");
-        order2.setLastName("lastName");
-        order2.setMail("mail");
-        order2.setPhoneNumber("phoneNumber");
-        order2.setStatus("status");
-        order2.setOrderCode("orderCode");
-        order2.setTotalPayment(0);
-        order2.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user3.setOrder(new HashSet<>(Arrays.asList(order2)));
         verificationToken.setUser(user3);
         verificationToken.setUsed(false);
         when(mockTokenRepository.save(new VerificationToken())).thenReturn(verificationToken);
@@ -415,6 +322,7 @@ public class UserServiceImplTest {
         user.setPhoneNumber("phoneNumber");
         user.setStatus("status");
         user.setUserType("userType");
+        user.setAvatarLink("avatarLink");
         final Role role = new Role();
         role.setRoleKey("roleKey");
         role.setRoleName("roleName");
@@ -423,18 +331,6 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user.setRoles(new HashSet<>(Arrays.asList(role)));
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user.setOrder(new HashSet<>(Arrays.asList(order)));
 
         // Configure VerificationTokenRepository.save(...).
         final VerificationToken verificationToken = new VerificationToken();
@@ -448,6 +344,7 @@ public class UserServiceImplTest {
         user1.setPhoneNumber("phoneNumber");
         user1.setStatus("status");
         user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
         final Role role1 = new Role();
         role1.setRoleKey("roleKey");
         role1.setRoleName("roleName");
@@ -456,18 +353,6 @@ public class UserServiceImplTest {
         permission1.setPermissionName("permissionName");
         role1.setPermissions(new HashSet<>(Arrays.asList(permission1)));
         user1.setRoles(new HashSet<>(Arrays.asList(role1)));
-        final Order order1 = new Order();
-        order1.setTicketTypeId(0L);
-        order1.setFirstName("firstName");
-        order1.setLastName("lastName");
-        order1.setMail("mail");
-        order1.setPhoneNumber("phoneNumber");
-        order1.setStatus("status");
-        order1.setOrderCode("orderCode");
-        order1.setTotalPayment(0);
-        order1.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user1.setOrder(new HashSet<>(Arrays.asList(order1)));
         verificationToken.setUser(user1);
         verificationToken.setUsed(false);
         when(mockTokenRepository.save(new VerificationToken())).thenReturn(verificationToken);
@@ -495,6 +380,7 @@ public class UserServiceImplTest {
         user.setPhoneNumber("phoneNumber");
         user.setStatus("status");
         user.setUserType("userType");
+        user.setAvatarLink("avatarLink");
         final Role role = new Role();
         role.setRoleKey("roleKey");
         role.setRoleName("roleName");
@@ -503,18 +389,6 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user.setRoles(new HashSet<>(Arrays.asList(role)));
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user.setOrder(new HashSet<>(Arrays.asList(order)));
         verificationToken.setUser(user);
         verificationToken.setUsed(false);
         when(mockTokenRepository.findByConfirmationToken("verificationToken")).thenReturn(verificationToken);
@@ -529,6 +403,7 @@ public class UserServiceImplTest {
         user1.setPhoneNumber("phoneNumber");
         user1.setStatus("status");
         user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
         final Role role1 = new Role();
         role1.setRoleKey("roleKey");
         role1.setRoleName("roleName");
@@ -537,18 +412,6 @@ public class UserServiceImplTest {
         permission1.setPermissionName("permissionName");
         role1.setPermissions(new HashSet<>(Arrays.asList(permission1)));
         user1.setRoles(new HashSet<>(Arrays.asList(role1)));
-        final Order order1 = new Order();
-        order1.setTicketTypeId(0L);
-        order1.setFirstName("firstName");
-        order1.setLastName("lastName");
-        order1.setMail("mail");
-        order1.setPhoneNumber("phoneNumber");
-        order1.setStatus("status");
-        order1.setOrderCode("orderCode");
-        order1.setTotalPayment(0);
-        order1.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user1.setOrder(new HashSet<>(Arrays.asList(order1)));
         when(mockUserRepository.findByMail("mail")).thenReturn(user1);
 
         // Configure UserRepository.save(...).
@@ -561,6 +424,7 @@ public class UserServiceImplTest {
         user2.setPhoneNumber("phoneNumber");
         user2.setStatus("status");
         user2.setUserType("userType");
+        user2.setAvatarLink("avatarLink");
         final Role role2 = new Role();
         role2.setRoleKey("roleKey");
         role2.setRoleName("roleName");
@@ -569,18 +433,6 @@ public class UserServiceImplTest {
         permission2.setPermissionName("permissionName");
         role2.setPermissions(new HashSet<>(Arrays.asList(permission2)));
         user2.setRoles(new HashSet<>(Arrays.asList(role2)));
-        final Order order2 = new Order();
-        order2.setTicketTypeId(0L);
-        order2.setFirstName("firstName");
-        order2.setLastName("lastName");
-        order2.setMail("mail");
-        order2.setPhoneNumber("phoneNumber");
-        order2.setStatus("status");
-        order2.setOrderCode("orderCode");
-        order2.setTotalPayment(0);
-        order2.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user2.setOrder(new HashSet<>(Arrays.asList(order2)));
         when(mockUserRepository.save(any(User.class))).thenReturn(user2);
 
         // Configure AuthServiceImpl.returnToken(...).
@@ -610,6 +462,7 @@ public class UserServiceImplTest {
         userDTO.setStatus("status");
         userDTO.setRoleKey(new HashSet<>(Arrays.asList("value")));
         userDTO.setUserType("userType");
+        userDTO.setAvatarLink("avatarLink");
 
         // Configure UserRepository.findById(...).
         final User user1 = new User();
@@ -621,6 +474,7 @@ public class UserServiceImplTest {
         user1.setPhoneNumber("phoneNumber");
         user1.setStatus("status");
         user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
         final Role role = new Role();
         role.setRoleKey("roleKey");
         role.setRoleName("roleName");
@@ -629,18 +483,6 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user1.setRoles(new HashSet<>(Arrays.asList(role)));
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user1.setOrder(new HashSet<>(Arrays.asList(order)));
         final Optional<User> user = Optional.of(user1);
         when(mockUserRepository.findById(0L)).thenReturn(user);
 
@@ -654,6 +496,7 @@ public class UserServiceImplTest {
         user2.setPhoneNumber("phoneNumber");
         user2.setStatus("status");
         user2.setUserType("userType");
+        user2.setAvatarLink("avatarLink");
         final Role role1 = new Role();
         role1.setRoleKey("roleKey");
         role1.setRoleName("roleName");
@@ -662,18 +505,6 @@ public class UserServiceImplTest {
         permission1.setPermissionName("permissionName");
         role1.setPermissions(new HashSet<>(Arrays.asList(permission1)));
         user2.setRoles(new HashSet<>(Arrays.asList(role1)));
-        final Order order1 = new Order();
-        order1.setTicketTypeId(0L);
-        order1.setFirstName("firstName");
-        order1.setLastName("lastName");
-        order1.setMail("mail");
-        order1.setPhoneNumber("phoneNumber");
-        order1.setStatus("status");
-        order1.setOrderCode("orderCode");
-        order1.setTotalPayment(0);
-        order1.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user2.setOrder(new HashSet<>(Arrays.asList(order1)));
         when(mockUserConverter.toUser(eq(new UserDTO()), any(User.class))).thenReturn(user2);
 
         // Configure UserRepository.findByMail(...).
@@ -686,6 +517,7 @@ public class UserServiceImplTest {
         user3.setPhoneNumber("phoneNumber");
         user3.setStatus("status");
         user3.setUserType("userType");
+        user3.setAvatarLink("avatarLink");
         final Role role2 = new Role();
         role2.setRoleKey("roleKey");
         role2.setRoleName("roleName");
@@ -694,18 +526,6 @@ public class UserServiceImplTest {
         permission2.setPermissionName("permissionName");
         role2.setPermissions(new HashSet<>(Arrays.asList(permission2)));
         user3.setRoles(new HashSet<>(Arrays.asList(role2)));
-        final Order order2 = new Order();
-        order2.setTicketTypeId(0L);
-        order2.setFirstName("firstName");
-        order2.setLastName("lastName");
-        order2.setMail("mail");
-        order2.setPhoneNumber("phoneNumber");
-        order2.setStatus("status");
-        order2.setOrderCode("orderCode");
-        order2.setTotalPayment(0);
-        order2.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user3.setOrder(new HashSet<>(Arrays.asList(order2)));
         when(mockUserRepository.findByMail("mail")).thenReturn(user3);
 
         // Configure RoleRepository.findByRoleKey(...).
@@ -728,6 +548,7 @@ public class UserServiceImplTest {
         user4.setPhoneNumber("phoneNumber");
         user4.setStatus("status");
         user4.setUserType("userType");
+        user4.setAvatarLink("avatarLink");
         final Role role4 = new Role();
         role4.setRoleKey("roleKey");
         role4.setRoleName("roleName");
@@ -736,18 +557,6 @@ public class UserServiceImplTest {
         permission4.setPermissionName("permissionName");
         role4.setPermissions(new HashSet<>(Arrays.asList(permission4)));
         user4.setRoles(new HashSet<>(Arrays.asList(role4)));
-        final Order order3 = new Order();
-        order3.setTicketTypeId(0L);
-        order3.setFirstName("firstName");
-        order3.setLastName("lastName");
-        order3.setMail("mail");
-        order3.setPhoneNumber("phoneNumber");
-        order3.setStatus("status");
-        order3.setOrderCode("orderCode");
-        order3.setTotalPayment(0);
-        order3.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order3.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user4.setOrder(new HashSet<>(Arrays.asList(order3)));
         when(mockUserRepository.save(any(User.class))).thenReturn(user4);
 
         // Run the test
@@ -769,6 +578,7 @@ public class UserServiceImplTest {
         userDTO.setStatus("status");
         userDTO.setRoleKey(new HashSet<>(Arrays.asList("value")));
         userDTO.setUserType("userType");
+        userDTO.setAvatarLink("avatarLink");
 
         // Configure UserRepository.findByMail(...).
         final User user = new User();
@@ -780,6 +590,7 @@ public class UserServiceImplTest {
         user.setPhoneNumber("phoneNumber");
         user.setStatus("status");
         user.setUserType("userType");
+        user.setAvatarLink("avatarLink");
         final Role role = new Role();
         role.setRoleKey("roleKey");
         role.setRoleName("roleName");
@@ -788,18 +599,6 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user.setRoles(new HashSet<>(Arrays.asList(role)));
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user.setOrder(new HashSet<>(Arrays.asList(order)));
         when(mockUserRepository.findByMail("mail")).thenReturn(user);
 
         // Configure UserConverter.toUser(...).
@@ -812,6 +611,7 @@ public class UserServiceImplTest {
         user1.setPhoneNumber("phoneNumber");
         user1.setStatus("status");
         user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
         final Role role1 = new Role();
         role1.setRoleKey("roleKey");
         role1.setRoleName("roleName");
@@ -820,18 +620,6 @@ public class UserServiceImplTest {
         permission1.setPermissionName("permissionName");
         role1.setPermissions(new HashSet<>(Arrays.asList(permission1)));
         user1.setRoles(new HashSet<>(Arrays.asList(role1)));
-        final Order order1 = new Order();
-        order1.setTicketTypeId(0L);
-        order1.setFirstName("firstName");
-        order1.setLastName("lastName");
-        order1.setMail("mail");
-        order1.setPhoneNumber("phoneNumber");
-        order1.setStatus("status");
-        order1.setOrderCode("orderCode");
-        order1.setTotalPayment(0);
-        order1.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user1.setOrder(new HashSet<>(Arrays.asList(order1)));
         when(mockUserConverter.toUser(new UserDTO())).thenReturn(user1);
 
         // Configure RoleRepository.findByRoleKey(...).
@@ -854,6 +642,7 @@ public class UserServiceImplTest {
         user2.setPhoneNumber("phoneNumber");
         user2.setStatus("status");
         user2.setUserType("userType");
+        user2.setAvatarLink("avatarLink");
         final Role role3 = new Role();
         role3.setRoleKey("roleKey");
         role3.setRoleName("roleName");
@@ -862,18 +651,6 @@ public class UserServiceImplTest {
         permission3.setPermissionName("permissionName");
         role3.setPermissions(new HashSet<>(Arrays.asList(permission3)));
         user2.setRoles(new HashSet<>(Arrays.asList(role3)));
-        final Order order2 = new Order();
-        order2.setTicketTypeId(0L);
-        order2.setFirstName("firstName");
-        order2.setLastName("lastName");
-        order2.setMail("mail");
-        order2.setPhoneNumber("phoneNumber");
-        order2.setStatus("status");
-        order2.setOrderCode("orderCode");
-        order2.setTotalPayment(0);
-        order2.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user2.setOrder(new HashSet<>(Arrays.asList(order2)));
         when(mockUserRepository.save(any(User.class))).thenReturn(user2);
 
         // Run the test
@@ -914,6 +691,7 @@ public class UserServiceImplTest {
         user1.setPhoneNumber("phoneNumber");
         user1.setStatus("status");
         user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
         final Role role = new Role();
         role.setRoleKey("roleKey");
         role.setRoleName("roleName");
@@ -922,18 +700,6 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user1.setRoles(new HashSet<>(Arrays.asList(role)));
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user1.setOrder(new HashSet<>(Arrays.asList(order)));
         final Optional<User> user = Optional.of(user1);
         when(mockUserRepository.findById(0L)).thenReturn(user);
 
@@ -958,6 +724,7 @@ public class UserServiceImplTest {
         user1.setPhoneNumber("phoneNumber");
         user1.setStatus("status");
         user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
         final Role role = new Role();
         role.setRoleKey("roleKey");
         role.setRoleName("roleName");
@@ -966,18 +733,6 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user1.setRoles(new HashSet<>(Arrays.asList(role)));
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user1.setOrder(new HashSet<>(Arrays.asList(order)));
         final Optional<User> user = Optional.of(user1);
         when(mockUserRepository.findById(0L)).thenReturn(user);
 
@@ -992,6 +747,7 @@ public class UserServiceImplTest {
         userDTO.setStatus("status");
         userDTO.setRoleKey(new HashSet<>(Arrays.asList("value")));
         userDTO.setUserType("userType");
+        userDTO.setAvatarLink("avatarLink");
         when(mockUserConverter.toDTO(any(User.class))).thenReturn(userDTO);
 
         // Run the test
@@ -1038,6 +794,7 @@ public class UserServiceImplTest {
         user.setPhoneNumber("phoneNumber");
         user.setStatus("status");
         user.setUserType("userType");
+        user.setAvatarLink("avatarLink");
         final Role role = new Role();
         role.setRoleKey("roleKey");
         role.setRoleName("roleName");
@@ -1046,18 +803,6 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user.setRoles(new HashSet<>(Arrays.asList(role)));
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user.setOrder(new HashSet<>(Arrays.asList(order)));
         passwordResetToken.setUser(user);
         passwordResetToken.setExpiryDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
         when(mockPasswordTokenRepository.findByToken("token")).thenReturn(passwordResetToken);
@@ -1082,6 +827,7 @@ public class UserServiceImplTest {
         user1.setPhoneNumber("phoneNumber");
         user1.setStatus("status");
         user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
         final Role role = new Role();
         role.setRoleKey("roleKey");
         role.setRoleName("roleName");
@@ -1090,18 +836,6 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user1.setRoles(new HashSet<>(Arrays.asList(role)));
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user1.setOrder(new HashSet<>(Arrays.asList(order)));
         final Optional<User> user = Optional.of(user1);
         when(mockUserRepository.findById(0L)).thenReturn(user);
 
@@ -1125,6 +859,7 @@ public class UserServiceImplTest {
         user1.setPhoneNumber("phoneNumber");
         user1.setStatus("status");
         user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
         final Role role = new Role();
         role.setRoleKey("roleKey");
         role.setRoleName("roleName");
@@ -1133,18 +868,6 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user1.setRoles(new HashSet<>(Arrays.asList(role)));
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user1.setOrder(new HashSet<>(Arrays.asList(order)));
         final Optional<User> user = Optional.of(user1);
         when(mockUserRepository.findById(0L)).thenReturn(user);
 
@@ -1152,6 +875,134 @@ public class UserServiceImplTest {
         final ResponseEntity<?> result = userServiceImplUnderTest.changePassword(0L, "oldPassword", "newPassword");
 
         // Verify the results
+    }
+
+    @Test
+    public void testGetUserClient() {
+        // Setup
+
+        // Configure UserRepository.findById(...).
+        final User user1 = new User();
+        user1.setPassword("password");
+        user1.setFirstName("firstName");
+        user1.setLastName("lastName");
+        user1.setMail("mail");
+        user1.setDob(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
+        user1.setPhoneNumber("phoneNumber");
+        user1.setStatus("status");
+        user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
+        final Role role = new Role();
+        role.setRoleKey("roleKey");
+        role.setRoleName("roleName");
+        final Permission permission = new Permission();
+        permission.setPermissionKey("permissionKey");
+        permission.setPermissionName("permissionName");
+        role.setPermissions(new HashSet<>(Arrays.asList(permission)));
+        user1.setRoles(new HashSet<>(Arrays.asList(role)));
+        final Optional<User> user = Optional.of(user1);
+        when(mockUserRepository.findById(0L)).thenReturn(user);
+
+        // Configure UserConverter.toDTOClient(...).
+        final UserDTO userDTO = new UserDTO();
+        userDTO.setPassword("password");
+        userDTO.setFirstName("firstName");
+        userDTO.setLastName("lastName");
+        userDTO.setMail("mail");
+        userDTO.setDob(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
+        userDTO.setPhoneNumber("phoneNumber");
+        userDTO.setStatus("status");
+        userDTO.setRoleKey(new HashSet<>(Arrays.asList("value")));
+        userDTO.setUserType("userType");
+        userDTO.setAvatarLink("avatarLink");
+        when(mockUserConverter.toDTOClient(any(User.class))).thenReturn(userDTO);
+
+        // Run the test
+        final ResponseEntity<?> result = userServiceImplUnderTest.getUserClient(0L);
+
+        // Verify the results
+    }
+
+    @Test
+    public void testUpdateAvatar() {
+        // Setup
+        final MultipartFile file = null;
+
+        // Configure UserRepository.findById(...).
+        final User user1 = new User();
+        user1.setPassword("password");
+        user1.setFirstName("firstName");
+        user1.setLastName("lastName");
+        user1.setMail("mail");
+        user1.setDob(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
+        user1.setPhoneNumber("phoneNumber");
+        user1.setStatus("status");
+        user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
+        final Role role = new Role();
+        role.setRoleKey("roleKey");
+        role.setRoleName("roleName");
+        final Permission permission = new Permission();
+        permission.setPermissionKey("permissionKey");
+        permission.setPermissionName("permissionName");
+        role.setPermissions(new HashSet<>(Arrays.asList(permission)));
+        user1.setRoles(new HashSet<>(Arrays.asList(role)));
+        final Optional<User> user = Optional.of(user1);
+        when(mockUserRepository.findById(0L)).thenReturn(user);
+
+        // Configure UserRepository.save(...).
+        final User user2 = new User();
+        user2.setPassword("password");
+        user2.setFirstName("firstName");
+        user2.setLastName("lastName");
+        user2.setMail("mail");
+        user2.setDob(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
+        user2.setPhoneNumber("phoneNumber");
+        user2.setStatus("status");
+        user2.setUserType("userType");
+        user2.setAvatarLink("avatarLink");
+        final Role role1 = new Role();
+        role1.setRoleKey("roleKey");
+        role1.setRoleName("roleName");
+        final Permission permission1 = new Permission();
+        permission1.setPermissionKey("permissionKey");
+        permission1.setPermissionName("permissionName");
+        role1.setPermissions(new HashSet<>(Arrays.asList(permission1)));
+        user2.setRoles(new HashSet<>(Arrays.asList(role1)));
+        when(mockUserRepository.save(any(User.class))).thenReturn(user2);
+
+        // Configure UserConverter.toDTO(...).
+        final UserDTO userDTO = new UserDTO();
+        userDTO.setPassword("password");
+        userDTO.setFirstName("firstName");
+        userDTO.setLastName("lastName");
+        userDTO.setMail("mail");
+        userDTO.setDob(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
+        userDTO.setPhoneNumber("phoneNumber");
+        userDTO.setStatus("status");
+        userDTO.setRoleKey(new HashSet<>(Arrays.asList("value")));
+        userDTO.setUserType("userType");
+        userDTO.setAvatarLink("avatarLink");
+        when(mockUserConverter.toDTO(any(User.class))).thenReturn(userDTO);
+
+        // Run the test
+        final ResponseEntity<?> result = userServiceImplUnderTest.updateAvatar(0L, file);
+
+        // Verify the results
+        verify(mockAmazonS3ClientService).uploadFileToS3Bucket(eq(0L), any(MultipartFile.class), eq("name"), eq("ext"), eq(false));
+    }
+
+    @Test
+    public void testUploadFile() {
+        // Setup
+        final MultipartFile file = null;
+
+        // Run the test
+        final String result = userServiceImplUnderTest.uploadFile(file, 0L);
+
+        // Verify the results
+        assertThat(result).isEqualTo("result");
+        verify(mockAmazonS3ClientService).uploadFileToS3Bucket(eq(0L), any(MultipartFile.class), eq("name"), eq("ext"), eq(false));
     }
 
     @Test
@@ -1168,6 +1019,7 @@ public class UserServiceImplTest {
         user.setPhoneNumber("phoneNumber");
         user.setStatus("status");
         user.setUserType("userType");
+        user.setAvatarLink("avatarLink");
         final Role role = new Role();
         role.setRoleKey("roleKey");
         role.setRoleName("roleName");
@@ -1176,18 +1028,6 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user.setRoles(new HashSet<>(Arrays.asList(role)));
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user.setOrder(new HashSet<>(Arrays.asList(order)));
         when(mockUserRepository.findByMail("mail")).thenReturn(user);
 
         // Configure PasswordResetTokenRepository.save(...).
@@ -1203,6 +1043,7 @@ public class UserServiceImplTest {
         user1.setPhoneNumber("phoneNumber");
         user1.setStatus("status");
         user1.setUserType("userType");
+        user1.setAvatarLink("avatarLink");
         final Role role1 = new Role();
         role1.setRoleKey("roleKey");
         role1.setRoleName("roleName");
@@ -1211,18 +1052,6 @@ public class UserServiceImplTest {
         permission1.setPermissionName("permissionName");
         role1.setPermissions(new HashSet<>(Arrays.asList(permission1)));
         user1.setRoles(new HashSet<>(Arrays.asList(role1)));
-        final Order order1 = new Order();
-        order1.setTicketTypeId(0L);
-        order1.setFirstName("firstName");
-        order1.setLastName("lastName");
-        order1.setMail("mail");
-        order1.setPhoneNumber("phoneNumber");
-        order1.setStatus("status");
-        order1.setOrderCode("orderCode");
-        order1.setTotalPayment(0);
-        order1.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user1.setOrder(new HashSet<>(Arrays.asList(order1)));
         passwordResetToken.setUser(user1);
         passwordResetToken.setExpiryDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
         when(mockPasswordTokenRepository.save(new PasswordResetToken())).thenReturn(passwordResetToken);

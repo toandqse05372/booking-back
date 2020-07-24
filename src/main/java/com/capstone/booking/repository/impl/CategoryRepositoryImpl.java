@@ -6,6 +6,7 @@ import com.capstone.booking.entity.Category;
 import com.capstone.booking.entity.dto.CategoryDTO;
 import com.capstone.booking.repository.customRepository.CategoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class CategoryRepositoryImpl implements CategoryCustom {
 
     private Integer totalItem;
@@ -23,6 +25,10 @@ public class CategoryRepositoryImpl implements CategoryCustom {
 
     @PersistenceContext
     EntityManager entityManager;
+
+    public CategoryRepositoryImpl(EntityManager entityManager){
+        this.entityManager = entityManager;
+    }
 
     @Autowired
     private CategoryConverter categoryConverter;

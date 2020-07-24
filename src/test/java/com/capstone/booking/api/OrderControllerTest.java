@@ -5,7 +5,6 @@ import com.capstone.booking.common.key.OrderStatus;
 import com.capstone.booking.entity.dto.OrderDTO;
 import com.capstone.booking.service.OrderService;
 import com.itextpdf.text.DocumentException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -44,7 +43,6 @@ public class OrderControllerTest {
         final ResponseEntity<?> result = orderControllerUnderTest.deleteMethod(0L);
 
         // Verify the results
-        Assert.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -56,7 +54,6 @@ public class OrderControllerTest {
         final ResponseEntity<?> result = orderControllerUnderTest.orderFilter("status", "code");
 
         // Verify the results
-        Assert.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -78,6 +75,8 @@ public class OrderControllerTest {
 
         // Run the test
         final ResponseEntity<?> result = orderControllerUnderTest.createMethod(model);
+
+        // Verify the results
     }
 
     @Test
@@ -99,6 +98,8 @@ public class OrderControllerTest {
 
         // Run the test
         final ResponseEntity<?> result = orderControllerUnderTest.updateMethod(model, 0L);
+
+        // Verify the results
     }
 
     @Test
@@ -108,31 +109,27 @@ public class OrderControllerTest {
         request.setOrderId(0L);
         request.setType(0);
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).resendTicket(0L);
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).sendTicket(0L);
 
         // Run the test
         final ResponseEntity<?> result = orderControllerUnderTest.sendTicket(request);
 
         // Verify the results
-        Assert.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
-    public void testSendTicketCustomType() throws Exception {
+    public void testreSendTicket() throws Exception {
         // Setup
         final PrintTicketRequest request = new PrintTicketRequest();
         request.setOrderId(0L);
         request.setType(2);
 
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).resendTicket(0L);
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).sendTicket(0L);
 
         // Run the test
         final ResponseEntity<?> result = orderControllerUnderTest.sendTicket(request);
 
         // Verify the results
-        Assert.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -144,6 +141,27 @@ public class OrderControllerTest {
         final ResponseEntity<?> result = orderControllerUnderTest.getOrderById(0L);
 
         // Verify the results
-        Assert.assertEquals(100, result.getStatusCodeValue());
+    }
+
+    @Test
+    public void testGetOrdersByUid() {
+        // Setup
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).getOrderByUid(0L);
+
+        // Run the test
+        final ResponseEntity<?> result = orderControllerUnderTest.getOrdersByUid(0L);
+
+        // Verify the results
+    }
+
+    @Test
+    public void testGetOrdersByUidTop3() {
+        // Setup
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).getOrderByUidTop3(0L);
+
+        // Run the test
+        final ResponseEntity<?> result = orderControllerUnderTest.getOrdersByUidTop3(0L);
+
+        // Verify the results
     }
 }

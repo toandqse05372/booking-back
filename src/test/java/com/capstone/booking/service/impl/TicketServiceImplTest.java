@@ -751,21 +751,4 @@ public class TicketServiceImplTest {
         // Verify the results
         verify(mockEmailSender).send(any(MimeMessage.class));
     }
-
-    @Test
-    public void testSendEmail_JavaMailSenderThrowsMailException() throws Exception {
-        // Setup
-        final File file = new File("filename.txt");
-
-        // Configure JavaMailSender.createMimeMessage(...).
-        final MimeMessage mimeMessage = new MimeMessage(Session.getInstance(new Properties()));
-        when(mockEmailSender.createMimeMessage()).thenReturn(mimeMessage);
-
-        doThrow(MailException.class).when(mockEmailSender).send(any(MimeMessage.class));
-
-        // Run the test
-        ticketServiceImplUnderTest.sendEmail(file);
-
-        // Verify the results
-    }
 }

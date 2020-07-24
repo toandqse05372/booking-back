@@ -3,6 +3,7 @@ import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.UserConverter;
 import com.capstone.booking.common.key.RoleKey;
 import com.capstone.booking.common.key.UserType;
+import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.UserDTO;
 import com.capstone.booking.repository.PasswordResetTokenRepository;
@@ -10,6 +11,7 @@ import com.capstone.booking.repository.RoleRepository;
 import com.capstone.booking.repository.UserRepository;
 import com.capstone.booking.repository.VerificationTokenRepository;
 import com.capstone.booking.service.UserService;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -51,6 +54,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordResetTokenRepository passwordTokenRepository;
+
+    @Value("${aws.bucketLink}")
+    private String bucketLink;
+
+    @Autowired
+    private AmazonS3ClientService amazonS3ClientService;
 
     //normal register
     @Override
@@ -125,11 +134,14 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.findByMail(user.getMail()).getId().equals(oldUser.getId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EMAIL_EXISTED");
         }
-        Set<Role> roleSet = new HashSet<>();
-        for(String role: userDTO.getRoleKey()){
-            roleSet.add(roleRepository.findByRoleKey(role));
+        if(userDTO.getRoleKey() != null){
+            Set<Role> roleSet = new HashSet<>();
+            for(String role: userDTO.getRoleKey()){
+                roleSet.add(roleRepository.findByRoleKey(role));
+            }
+            user.setRoles(roleSet);
         }
-        user.setRoles(roleSet);
+
         userRepository.save(user);
         return ResponseEntity.ok(user);
     }
@@ -226,6 +238,25 @@ public class UserServiceImpl implements UserService {
         Optional<User> users = userRepository.findById(id);
         User user = users.get();
         return ResponseEntity.ok(userConverter.toDTOClient(user));
+    }
+
+    @Override
+    public ResponseEntity<?> updateAvatar(Long id, MultipartFile file) {
+        User user = userRepository.findById(id).get();
+        if(user == null){
+            return new ResponseEntity("USER_NOT_FOUND", HttpStatus.BAD_REQUEST);
+        }
+        user.setAvatarLink(uploadFile(file, id));
+        User saved = userRepository.save(user);
+        return ResponseEntity.ok(userConverter.toDTO(saved));
+    }
+
+    //upload file to s3
+    public String uploadFile(MultipartFile file, Long userId){
+        String ext = "."+ FilenameUtils.getExtension(file.getOriginalFilename());
+        String name = "User_"+userId;
+        this.amazonS3ClientService.uploadFileToS3Bucket(userId, file, "City_" + userId, ext, true);
+        return bucketLink + name + ext;
     }
 
     //create password reset token

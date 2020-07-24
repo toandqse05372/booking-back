@@ -2,19 +2,21 @@ package com.capstone.booking.api;
 
 import com.capstone.booking.entity.dto.UserDTO;
 import com.capstone.booking.service.UserService;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -44,6 +46,7 @@ public class UserControllerTest {
         user.setStatus("status");
         user.setRoleKey(new HashSet<>(Arrays.asList("value")));
         user.setUserType("userType");
+        user.setAvatarLink("avatarLink");
 
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).register(new UserDTO());
 
@@ -88,6 +91,7 @@ public class UserControllerTest {
         user.setStatus("status");
         user.setRoleKey(new HashSet<>(Arrays.asList("value")));
         user.setUserType("userType");
+        user.setAvatarLink("avatarLink");
 
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).createUserCMS(new UserDTO());
 
@@ -110,6 +114,7 @@ public class UserControllerTest {
         model.setStatus("status");
         model.setRoleKey(new HashSet<>(Arrays.asList("value")));
         model.setUserType("userType");
+        model.setAvatarLink("avatarLink");
 
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).update(new UserDTO());
 
@@ -194,6 +199,17 @@ public class UserControllerTest {
         final ResponseEntity<?> result = userControllerUnderTest.getUserClient(0L);
 
         // Verify the results
-        Assert.assertEquals(100, result.getStatusCodeValue());
+    }
+
+    @Test
+    public void testUpdateAvatar() {
+        // Setup
+        final MultipartFile file = null;
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).updateAvatar(eq(0L), any(MultipartFile.class));
+
+        // Run the test
+        final ResponseEntity<?> result = userControllerUnderTest.updateAvatar(0L, file);
+
+        // Verify the results
     }
 }

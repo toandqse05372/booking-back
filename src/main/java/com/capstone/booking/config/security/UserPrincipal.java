@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -18,6 +19,7 @@ public class UserPrincipal implements UserDetails {
     private String lastName;
     private String mail;
     private String phoneNumber;
+    private Date dob;
     //   private List<String> permissions;
 
     @Override

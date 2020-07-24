@@ -1,14 +1,13 @@
 package com.capstone.booking.repository.impl;
 
 import com.capstone.booking.api.output.Output;
-import com.capstone.booking.common.converter.CategoryConverter;
 import com.capstone.booking.entity.Category;
 import com.capstone.booking.entity.dto.CategoryDTO;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import javax.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -21,14 +20,14 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CategoryRepositoryImplTest {
 
     @Mock
-    private CategoryConverter mockCategoryConverter;
+    private EntityManager mockEntityManager;
 
-    @InjectMocks
     private CategoryRepositoryImpl categoryRepositoryImplUnderTest;
 
     @Before
     public void setUp() {
         initMocks(this);
+        categoryRepositoryImplUnderTest = new CategoryRepositoryImpl(mockEntityManager);
     }
 
     @Test
@@ -40,12 +39,7 @@ public class CategoryRepositoryImplTest {
         expectedResult.setListResult(Arrays.asList());
         expectedResult.setTotalItems(0);
 
-        // Configure CategoryConverter.toDTO(...).
-        final CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryName("categoryName");
-        categoryDTO.setTypeKey("typeKey");
-        categoryDTO.setIconLink("iconLink");
-        when(mockCategoryConverter.toDTO(new Category("typeName", "typeKey"))).thenReturn(categoryDTO);
+        when(mockEntityManager.createNativeQuery("s", Category.class)).thenReturn(null);
 
         // Run the test
         final Output result = categoryRepositoryImplUnderTest.findByMulParam("typeName", 0L, 0L);
@@ -64,13 +58,6 @@ public class CategoryRepositoryImplTest {
         categoryDTO.setIconLink("iconLink");
         final List<CategoryDTO> expectedResult = Arrays.asList(categoryDTO);
 
-        // Configure CategoryConverter.toDTO(...).
-        final CategoryDTO categoryDTO1 = new CategoryDTO();
-        categoryDTO1.setCategoryName("categoryName");
-        categoryDTO1.setTypeKey("typeKey");
-        categoryDTO1.setIconLink("iconLink");
-        when(mockCategoryConverter.toDTO(new Category("typeName", "typeKey"))).thenReturn(categoryDTO1);
-
         // Run the test
         final List<CategoryDTO> result = categoryRepositoryImplUnderTest.convertList(categories);
 
@@ -83,6 +70,7 @@ public class CategoryRepositoryImplTest {
         // Setup
         final Map<String, Object> params = new HashMap<>();
         final List<Category> expectedResult = Arrays.asList(new Category("typeName", "typeKey"));
+        when(mockEntityManager.createNativeQuery("s", Category.class)).thenReturn(null);
 
         // Run the test
         final List<Category> result = categoryRepositoryImplUnderTest.queryCategory(params, "sqlStr");
