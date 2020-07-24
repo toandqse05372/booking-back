@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         user.setStatus("NOT");
         userRepository.save(user);
         sendEmailVerify(user);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userConverter.toDTOClient(user));
     }
 
     //send email again
@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.save(user);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userConverter.toDTOClient(user));
     }
 
     //create User by CMS
