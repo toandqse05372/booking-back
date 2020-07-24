@@ -43,9 +43,18 @@ public class UserController {
 
     //update User
     @PutMapping(value = "/user/{id}")
+    @PreAuthorize("hasAnyAuthority('USER_EDIT')")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO model, @PathVariable("id") long id) {
         model.setId(id);
         return userService.update(model);
+    }
+
+    //update User
+    @PutMapping(value = "/userClient/{id}")
+    @PreAuthorize("hasAnyAuthority('USER_EDIT')")
+    public ResponseEntity<?> updateUserFromClient(@RequestBody UserDTO model, @PathVariable("id") long id) {
+        model.setId(id);
+        return userService.updateClient(model);
     }
 
     //search by firstName, mail, lastName, phoneNumber, role & paging

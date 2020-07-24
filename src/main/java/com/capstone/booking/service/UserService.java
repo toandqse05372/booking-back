@@ -21,6 +21,8 @@ public interface UserService {
     //edit
     ResponseEntity<?> update(UserDTO userDTO);
 
+    ResponseEntity<?> updateClient(UserDTO userDTO);
+
     //createUserCMS
     ResponseEntity<?> createUserCMS(UserDTO user);
 

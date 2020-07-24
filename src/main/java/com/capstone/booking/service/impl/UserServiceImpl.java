@@ -146,6 +146,15 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(userConverter.toDTOClient(user));
     }
 
+    @Override
+    public ResponseEntity<?> updateClient(UserDTO userDTO) {
+        User user = new User();
+        User oldUser = userRepository.findById(userDTO.getId()).get();
+        user = userConverter.toUserFromClient(userDTO, oldUser);
+        userRepository.save(user);
+        return ResponseEntity.ok(userConverter.toDTOClient(user));
+    }
+
     //create User by CMS
     @Override
     public ResponseEntity<?> createUserCMS(UserDTO userDTO) {
@@ -248,7 +257,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setAvatarLink(uploadFile(file, id));
         User saved = userRepository.save(user);
-        return ResponseEntity.ok(userConverter.toDTO(saved));
+        return ResponseEntity.ok(userConverter.toDTOClient(saved));
     }
 
     //upload file to s3

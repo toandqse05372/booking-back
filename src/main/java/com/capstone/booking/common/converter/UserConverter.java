@@ -62,26 +62,31 @@ public class UserConverter {
 
     //convert from dto to entity (for update)
     public User toUser(UserDTO dto, User user) {
-        if(dto.getPassword() != null && !dto.getPassword().equals(user.getPassword())) {
+        if(!dto.getPassword().equals(user.getPassword())) {
             user.setPassword(new BCryptPasswordEncoder().encode(dto.getPassword()));
         }
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setMail(dto.getMail());
+        user.setDob(dto.getDob());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        user.setStatus(dto.getStatus());
+        return user;
+    }
+
+    //convert from dto to entity (for update)
+    public User toUserFromClient(UserDTO dto, User user) {
         if(dto.getFirstName() != null){
             user.setFirstName(dto.getFirstName());
         }
         if(dto.getLastName() != null){
             user.setLastName(dto.getLastName());
         }
-        if(dto.getMail() != null){
-            user.setMail(dto.getMail());
-        }
         if(dto.getDob() != null){
             user.setDob(dto.getDob());
         }
         if(dto.getPhoneNumber() != null){
             user.setPhoneNumber(dto.getPhoneNumber());
-        }
-        if(dto.getStatus() != null){
-            user.setStatus(dto.getStatus());
         }
         return user;
     }
