@@ -42,6 +42,7 @@ public class UserConverter {
         dto.setMail(user.getMail());
         dto.setDob(user.getDob());
         dto.setPhoneNumber(user.getPhoneNumber());
+        dto.setAvatarLink(user.getAvatarLink());
         return dto;
     }
 
