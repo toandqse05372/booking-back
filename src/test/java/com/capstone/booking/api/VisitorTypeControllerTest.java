@@ -121,16 +121,4 @@ public class VisitorTypeControllerTest {
 
         // Verify the results
     }
-
-    @Test
-    public void testUploadFile() {
-        // Setup
-        final MultipartFile file = null;
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(visitorTypeControllerUnderTest.visitorTypeService).addCodeForTicketType(any(MultipartFile.class), eq("codeType"));
-
-        // Run the test
-        final ResponseEntity<?> result = visitorTypeControllerUnderTest.uploadFile(file, "codeType");
-
-        // Verify the results
-    }
 }

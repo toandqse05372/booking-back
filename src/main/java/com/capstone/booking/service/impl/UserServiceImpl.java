@@ -264,7 +264,7 @@ public class UserServiceImpl implements UserService {
     public String uploadFile(MultipartFile file, Long userId){
         String ext = "."+ FilenameUtils.getExtension(file.getOriginalFilename());
         String name = "User_"+userId;
-        this.amazonS3ClientService.uploadFileToS3Bucket(userId, file, "City_" + userId, ext, true);
+        this.amazonS3ClientService.uploadFileToS3Bucket(userId, file, "User_" + userId, ext, true);
         return bucketLink + name + ext;
     }
 

@@ -24,13 +24,6 @@ public class TicketController {
         return ticketService.create(model);
     }
 
-    //edit api
-    @PutMapping("/ticket/{id}")
-    public ResponseEntity<?> update(@RequestBody TicketDTO model, @PathVariable("id") long id){
-        model.setId(id);
-        return ticketService.update(model);
-    }
-
     //delete api
     @DeleteMapping("/ticket/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {

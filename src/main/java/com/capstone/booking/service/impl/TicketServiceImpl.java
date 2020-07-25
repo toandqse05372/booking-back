@@ -56,17 +56,6 @@ public class TicketServiceImpl implements TicketService {
         return ResponseEntity.ok(ticketConverter.toDTO(ticket));
     }
 
-    //edit
-    @Override
-    public ResponseEntity<?> update(TicketDTO ticketDTO) {
-        Ticket ticket = new Ticket();
-        Ticket oldTicket = ticketRepository.findById(ticketDTO.getId()).get();
-        ticket = ticketConverter.toTicket(ticketDTO, oldTicket);
-
-        ticketRepository.save(ticket);
-        return ResponseEntity.ok(ticketConverter.toDTO(ticket));
-    }
-
     //delete
     @Override
     @Transactional

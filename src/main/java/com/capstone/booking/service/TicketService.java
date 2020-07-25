@@ -13,9 +13,6 @@ public interface TicketService {
     //edd
     ResponseEntity<?> create(TicketDTO ticketDTO);
 
-    //edit
-    ResponseEntity<?> update(TicketDTO ticketDTO);
-
     //delete
     ResponseEntity<?> delete(long id);
 

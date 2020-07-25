@@ -13,8 +13,8 @@ public interface OrderService {
     //add
     ResponseEntity<?> create(OrderDTO orderDTO, OrderStatus status);
 
-    //edit
-    ResponseEntity<?> update(OrderDTO orderDTO);
+    //add
+    ResponseEntity<?> update(OrderDTO orderDTO, OrderStatus status);
 
     //delete
     ResponseEntity<?> delete(long id);

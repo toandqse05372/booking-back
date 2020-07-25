@@ -62,31 +62,6 @@ public class TicketControllerTest {
     }
 
     @Test
-    public void testUpdate() {
-        // Setup
-        final TicketDTO model = new TicketDTO();
-        model.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        model.setCode("code");
-        final VisitorTypeDTO visitorType = new VisitorTypeDTO();
-        visitorType.setTypeName("typeName");
-        visitorType.setTypeKey("typeKey");
-        visitorType.setTicketTypeId(0L);
-        visitorType.setPrice(0);
-        visitorType.setBasicType(false);
-        visitorType.setRemaining(0);
-        visitorType.setStatus("status");
-        model.setVisitorType(visitorType);
-        model.setVisitorTypeId(0L);
-
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketService).update(new TicketDTO());
-
-        // Run the test
-        final ResponseEntity<?> result = ticketControllerUnderTest.update(model, 0L);
-
-        // Verify the results
-    }
-
-    @Test
     public void testDelete() {
         // Setup
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketService).delete(0L);

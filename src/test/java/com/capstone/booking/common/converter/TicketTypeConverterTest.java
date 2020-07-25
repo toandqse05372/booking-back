@@ -6,10 +6,7 @@ import com.capstone.booking.entity.dto.VisitorTypeDTO;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -174,6 +171,7 @@ public class TicketTypeConverterTest {
         game.setGameName("gameName");
         game.setGameDescription("gameDescription");
         game.setStatus("status");
+        game.setId(0l);
         game.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
         final Place place = new Place();
         place.setName("name");
@@ -193,15 +191,6 @@ public class TicketTypeConverterTest {
         expectedResult.setTypeName("typeName");
         expectedResult.setGameId(new HashSet<>(Arrays.asList(0L)));
         expectedResult.setPlaceId(0L);
-        final VisitorTypeDTO visitorTypeDTO = new VisitorTypeDTO();
-        visitorTypeDTO.setTypeName("typeName");
-        visitorTypeDTO.setTypeKey("typeKey");
-        visitorTypeDTO.setTicketTypeId(0L);
-        visitorTypeDTO.setPrice(0);
-        visitorTypeDTO.setBasicType(false);
-        visitorTypeDTO.setRemaining(0);
-        visitorTypeDTO.setStatus("status");
-        expectedResult.setVisitorTypes(Arrays.asList(visitorTypeDTO));
         expectedResult.setStatus("status");
 
         // Run the test

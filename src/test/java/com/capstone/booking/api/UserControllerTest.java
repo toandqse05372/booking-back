@@ -174,7 +174,7 @@ public class UserControllerTest {
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).changePassword(0L, "oldPassword", "newPassword");
 
         // Run the test
-        final ResponseEntity<?> result = userControllerUnderTest.resetPasswordRequest(0L, "oldPassword", "newPassword");
+        final ResponseEntity<?> result = userControllerUnderTest.changePassword(0L, "oldPassword", "newPassword");
 
         // Verify the results
     }

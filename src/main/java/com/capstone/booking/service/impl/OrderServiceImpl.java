@@ -67,10 +67,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<?> create(OrderDTO orderDTO, OrderStatus status) {
         Order order = orderConverter.toOrder(orderDTO);
-
-        User user = userRepository.findById(orderDTO.getUserId()).get();
+        Optional<User> optionalUser = userRepository.findById(orderDTO.getUserId());
+        User user = optionalUser.get();
         order.setUser(user);
-
         Order newestOrder = orderRepository.findTopByOrderByIdDesc();
         if (newestOrder != null) {
             order.setOrderCode("ORDER" + (newestOrder.getId() + 1));
@@ -89,16 +88,12 @@ public class OrderServiceImpl implements OrderService {
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
 
-    //not use
     @Override
-    public ResponseEntity<?> update(OrderDTO orderDTO) {
+    public ResponseEntity<?> update(OrderDTO orderDTO, OrderStatus status) {
         Order order = new Order();
         Order oldOrder = orderRepository.findById(orderDTO.getId()).get();
         order = orderConverter.toOrder(orderDTO, oldOrder);
-
-        User user = userRepository.findById(orderDTO.getUserId()).get();
-        order.setUser(user);
-
+        order.setStatus(status.toString());
         orderRepository.save(order);
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
@@ -132,7 +127,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException, MessagingException {
-        Order order = orderRepository.findById(id).get();
+        Optional<Order> orderOptional = orderRepository.findById(id);
+        Order order = orderOptional.get();
         if (!order.getRedemptionDate().after(new Date())) {
             order.setStatus(OrderStatus.EXPIRED.toString());
             return new ResponseEntity("ORDER_EXPIRED", HttpStatus.BAD_REQUEST);
@@ -159,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
                 ticket.setVisitorTypeId(type.getId());
                 ticketOrder.add(ticket);
             }
-            ticketRepository.saveAll(ticketOrder);
+            ticketOrder = ticketRepository.saveAll(ticketOrder);
             codeRepository.deleteAll(codeToUse);
             PrintRequest printRequest = new PrintRequest();
             printRequest.setTickets(ticketOrder);

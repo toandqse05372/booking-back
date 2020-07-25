@@ -71,11 +71,11 @@ public class VisitorTypeController {
     }
 
     //not used
-    @PostMapping("/uploadVisitorFile")
-    @PreAuthorize("hasAnyAuthority('TICKET_TYPE_EDIT')")
-    public ResponseEntity<?> uploadFile(@RequestPart(value = "file") MultipartFile file,
-                                        @RequestPart(value = "codeType") String codeType) {
-        return visitorTypeService.addCodeForTicketType(file, codeType);
-    }
+//    @PostMapping("/uploadVisitorFile")
+//    @PreAuthorize("hasAnyAuthority('TICKET_TYPE_EDIT')")
+//    public ResponseEntity<?> uploadFile(@RequestPart(value = "file") MultipartFile file,
+//                                        @RequestPart(value = "codeType") String codeType) {
+//        return visitorTypeService.addCodeForTicketType(file, codeType);
+//    }
 
 }

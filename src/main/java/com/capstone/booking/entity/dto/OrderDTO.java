@@ -1,9 +1,7 @@
 package com.capstone.booking.entity.dto;
 
-import com.capstone.booking.entity.OrderItem;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 import java.util.Date;
 import java.util.Set;
 

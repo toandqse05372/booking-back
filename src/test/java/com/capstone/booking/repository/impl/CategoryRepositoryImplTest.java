@@ -5,15 +5,22 @@ import com.capstone.booking.entity.Category;
 import com.capstone.booking.entity.dto.CategoryDTO;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -21,6 +28,9 @@ public class CategoryRepositoryImplTest {
 
     @Mock
     private EntityManager mockEntityManager;
+
+    @Mock
+    private Query query;
 
     private CategoryRepositoryImpl categoryRepositoryImplUnderTest;
 
@@ -70,10 +80,10 @@ public class CategoryRepositoryImplTest {
         // Setup
         final Map<String, Object> params = new HashMap<>();
         final List<Category> expectedResult = Arrays.asList(new Category("typeName", "typeKey"));
-        when(mockEntityManager.createNativeQuery("s", Category.class)).thenReturn(null);
+        when(mockEntityManager.createNativeQuery(anyString(), eq(Category.class))).thenReturn(query);
 
         // Run the test
-        final List<Category> result = categoryRepositoryImplUnderTest.queryCategory(params, "sqlStr");
+        final List<Category> result = categoryRepositoryImplUnderTest.queryCategory(params, eq(anyString()));
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);

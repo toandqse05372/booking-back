@@ -80,29 +80,6 @@ public class OrderControllerTest {
     }
 
     @Test
-    public void testUpdateMethod() {
-        // Setup
-        final OrderDTO model = new OrderDTO();
-        model.setTicketTypeId(0L);
-        model.setTicketTypeName("ticketTypeName");
-        model.setUserId(0L);
-        model.setFirstName("firstName");
-        model.setLastName("lastName");
-        model.setMail("mail");
-        model.setPhoneNumber("phoneNumber");
-        model.setStatus("status");
-        model.setOrderCode("orderCode");
-        model.setTotalPayment(0);
-
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).update(new OrderDTO());
-
-        // Run the test
-        final ResponseEntity<?> result = orderControllerUnderTest.updateMethod(model, 0L);
-
-        // Verify the results
-    }
-
-    @Test
     public void testSendTicket() throws Exception {
         // Setup
         final PrintTicketRequest request = new PrintTicketRequest();

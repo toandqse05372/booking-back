@@ -38,13 +38,6 @@ public class OrderController {
         return orderService.create(model, OrderStatus.UNPAID);
     }
 
-    //edit api
-    @PutMapping("/order/{id}")
-    public ResponseEntity<?> updateMethod(@RequestBody OrderDTO model, @PathVariable("id") long id) {
-        model.setId(id);
-        return orderService.update(model);
-    }
-
     //send ticket to customer api
     @PostMapping("/order/sendTicket")
     public ResponseEntity<?> sendTicket(@RequestBody PrintTicketRequest request) throws DocumentException, IOException, URISyntaxException, MessagingException {

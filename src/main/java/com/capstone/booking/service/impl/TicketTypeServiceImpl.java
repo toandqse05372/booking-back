@@ -81,7 +81,8 @@ public class TicketTypeServiceImpl implements TicketTypeService {
         ticketType.setStatus(MonoStatus.ACTIVE.toString());
         Set<Game> gameSet = new HashSet<>();
         for (Long id : ticketTypeDTO.getGameId()) {
-            gameSet.add(gameRepository.findById(id).get());
+            Optional<Game> optionalGame = gameRepository.findById(id);
+            gameSet.add(optionalGame.get());
         }
         ticketType.setGame(gameSet);
         ticketTypeRepository.save(ticketType);

@@ -90,8 +90,10 @@ public class UserController {
     }
 
     //reset password api
-    @PostMapping("user/resetPassword")
-    public ResponseEntity<?> resetPasswordRequest(@RequestBody Long uid, String oldPassword, String newPassword){
+    @PostMapping("user/changePassword")
+    public ResponseEntity<?> changePassword(@RequestPart(value = "uid") Long uid,
+                                            @RequestPart(value = "old")String oldPassword,
+                                            @RequestPart(value = "new")String newPassword){
         return userService.changePassword(uid, oldPassword, newPassword);
     }
 

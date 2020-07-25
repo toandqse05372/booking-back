@@ -24,11 +24,16 @@ public class PaymentController {
     //check payment information and save order
     @RequestMapping(value = "/payment", method = RequestMethod.POST)
     public ResponseEntity<?> payForOrder(@RequestPart(value = "order") String orderRequest,
-                                        @RequestPart(value = "token") String stripetoken) throws Exception {
+                                        @RequestPart(value = "token") String stripetoken,
+                                         @RequestPart(value = "action") String action) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         OrderDTO order = mapper.readValue(orderRequest, OrderDTO.class);
         stripeService.chargeNewCard(stripetoken, order.getTotalPayment());
-        orderService.create(order, OrderStatus.PAID);
+        if(action.equals("new")){
+            orderService.create(order, OrderStatus.PAID);
+        }else if (action.equals("existed")){
+            orderService.update(order, OrderStatus.PAID);
+        }
         return ResponseEntity.ok().body("ok");
     }
 

@@ -7,11 +7,16 @@ import com.capstone.booking.repository.CodeRepository;
 import com.capstone.booking.repository.PlaceRepository;
 import com.capstone.booking.repository.TicketTypeRepository;
 import com.capstone.booking.repository.VisitorTypeRepository;
+import lombok.SneakyThrows;
+import org.apache.poi.util.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -42,6 +47,7 @@ public class VisitorTypeServiceImplTest {
         model.setBasicType(false);
         model.setRemaining(0);
         model.setStatus("status");
+        model.setTicketTypeId(0l);
 
         // Configure VisitorTypeConverter.toVisitorType(...).
         final VisitorType visitorType = new VisitorType();
@@ -50,16 +56,19 @@ public class VisitorTypeServiceImplTest {
         visitorType.setPrice(0);
         visitorType.setBasicType(false);
         visitorType.setStatus("status");
+
         final TicketType ticketType = new TicketType();
         ticketType.setTypeName("typeName");
         ticketType.setPlaceId(0L);
         ticketType.setStatus("status");
-        ticketType.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game = new Game();
-        game.setGameName("gameName");
-        game.setGameDescription("gameDescription");
-        game.setStatus("status");
-        game.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
+        ticketType.setId(1l);
+        Set<VisitorType> visitorTypeSet = new HashSet<>();
+        visitorTypeSet.add(visitorType);
+        ticketType.setVisitorType(visitorTypeSet);
+
+        final List<TicketType> ticketTypes = new ArrayList<>();
+        ticketTypes.add(ticketType);
+
         final Place place = new Place();
         place.setName("name");
         place.setPlaceKey("placeKey");
@@ -71,315 +80,34 @@ public class VisitorTypeServiceImplTest {
         place.setStatus("status");
         place.setLocation("location");
         place.setCancelPolicy("cancelPolicy");
-        game.setPlace(place);
-        ticketType.setGame(new HashSet<>(Arrays.asList(game)));
+
         visitorType.setTicketType(ticketType);
-        final OrderItem orderItem = new OrderItem();
-        orderItem.setQuantity(0);
-        orderItem.setVisitorType(new VisitorType());
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem.setOrder(order);
-        final Ticket ticket = new Ticket();
-        ticket.setCode("code");
-        ticket.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket.setVisitorTypeId(0L);
-        ticket.setOrderItem(new OrderItem());
-        orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
-        visitorType.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
-        when(visitorTypeServiceImplUnderTest.visitorTypeConverter.toVisitorType(new VisitorTypeDTO())).thenReturn(visitorType);
+
+        when(visitorTypeServiceImplUnderTest.visitorTypeConverter.toVisitorType(model)).thenReturn(visitorType);
 
         // Configure VisitorTypeRepository.findByTypeName(...).
-        final VisitorType visitorType1 = new VisitorType();
-        visitorType1.setTypeName("typeName");
-        visitorType1.setTypeKey("typeKey");
-        visitorType1.setPrice(0);
-        visitorType1.setBasicType(false);
-        visitorType1.setStatus("status");
-        final TicketType ticketType1 = new TicketType();
-        ticketType1.setTypeName("typeName");
-        ticketType1.setPlaceId(0L);
-        ticketType1.setStatus("status");
-        ticketType1.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game1 = new Game();
-        game1.setGameName("gameName");
-        game1.setGameDescription("gameDescription");
-        game1.setStatus("status");
-        game1.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place1 = new Place();
-        place1.setName("name");
-        place1.setPlaceKey("placeKey");
-        place1.setAddress("address");
-        place1.setDetailDescription("detailDescription");
-        place1.setShortDescription("shortDescription");
-        place1.setMail("mail");
-        place1.setPhoneNumber("phoneNumber");
-        place1.setStatus("status");
-        place1.setLocation("location");
-        place1.setCancelPolicy("cancelPolicy");
-        game1.setPlace(place1);
-        ticketType1.setGame(new HashSet<>(Arrays.asList(game1)));
-        visitorType1.setTicketType(ticketType1);
-        final OrderItem orderItem1 = new OrderItem();
-        orderItem1.setQuantity(0);
-        orderItem1.setVisitorType(new VisitorType());
-        final Order order1 = new Order();
-        order1.setTicketTypeId(0L);
-        order1.setFirstName("firstName");
-        order1.setLastName("lastName");
-        order1.setMail("mail");
-        order1.setPhoneNumber("phoneNumber");
-        order1.setStatus("status");
-        order1.setOrderCode("orderCode");
-        order1.setTotalPayment(0);
-        order1.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem1.setOrder(order1);
-        final Ticket ticket1 = new Ticket();
-        ticket1.setCode("code");
-        ticket1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket1.setVisitorTypeId(0L);
-        ticket1.setOrderItem(new OrderItem());
-        orderItem1.setTicket(new HashSet<>(Arrays.asList(ticket1)));
-        visitorType1.setOrderItem(new HashSet<>(Arrays.asList(orderItem1)));
-        final Code code1 = new Code();
-        code1.setCode("code");
-        code1.setVisitorType(new VisitorType());
-        visitorType1.setCode(new HashSet<>(Arrays.asList(code1)));
-        final List<VisitorType> visitorTypes = Arrays.asList(visitorType1);
-        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findByTypeName("name")).thenReturn(visitorTypes);
+        final List<VisitorType> visitorTypes = new ArrayList<>();
+        visitorTypes.add(visitorType);
+        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findByTypeName("typeName")).thenReturn(visitorTypes);
 
         // Configure TicketTypeRepository.findByPlaceId(...).
-        final TicketType ticketType2 = new TicketType();
-        ticketType2.setTypeName("typeName");
-        ticketType2.setPlaceId(0L);
-        ticketType2.setStatus("status");
-        final VisitorType visitorType2 = new VisitorType();
-        visitorType2.setTypeName("typeName");
-        visitorType2.setTypeKey("typeKey");
-        visitorType2.setPrice(0);
-        visitorType2.setBasicType(false);
-        visitorType2.setStatus("status");
-        visitorType2.setTicketType(new TicketType());
-        final OrderItem orderItem2 = new OrderItem();
-        orderItem2.setQuantity(0);
-        orderItem2.setVisitorType(new VisitorType());
-        final Order order2 = new Order();
-        order2.setTicketTypeId(0L);
-        order2.setFirstName("firstName");
-        order2.setLastName("lastName");
-        order2.setMail("mail");
-        order2.setPhoneNumber("phoneNumber");
-        order2.setStatus("status");
-        order2.setOrderCode("orderCode");
-        order2.setTotalPayment(0);
-        order2.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem2.setOrder(order2);
-        final Ticket ticket2 = new Ticket();
-        ticket2.setCode("code");
-        ticket2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket2.setVisitorTypeId(0L);
-        ticket2.setOrderItem(new OrderItem());
-        orderItem2.setTicket(new HashSet<>(Arrays.asList(ticket2)));
-        visitorType2.setOrderItem(new HashSet<>(Arrays.asList(orderItem2)));
-        final Code code2 = new Code();
-        code2.setCode("code");
-        code2.setVisitorType(new VisitorType());
-        visitorType2.setCode(new HashSet<>(Arrays.asList(code2)));
-        ticketType2.setVisitorType(new HashSet<>(Arrays.asList(visitorType2)));
-        final Game game2 = new Game();
-        game2.setGameName("gameName");
-        game2.setGameDescription("gameDescription");
-        game2.setStatus("status");
-        game2.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place2 = new Place();
-        place2.setName("name");
-        place2.setPlaceKey("placeKey");
-        place2.setAddress("address");
-        place2.setDetailDescription("detailDescription");
-        place2.setShortDescription("shortDescription");
-        place2.setMail("mail");
-        place2.setPhoneNumber("phoneNumber");
-        place2.setStatus("status");
-        place2.setLocation("location");
-        place2.setCancelPolicy("cancelPolicy");
-        game2.setPlace(place2);
-        ticketType2.setGame(new HashSet<>(Arrays.asList(game2)));
-        final List<TicketType> ticketTypes = Arrays.asList(ticketType2);
         when(visitorTypeServiceImplUnderTest.ticketTypeRepository.findByPlaceId(0L)).thenReturn(ticketTypes);
 
         // Configure TicketTypeRepository.findById(...).
-        final TicketType ticketType4 = new TicketType();
-        ticketType4.setTypeName("typeName");
-        ticketType4.setPlaceId(0L);
-        ticketType4.setStatus("status");
-        final VisitorType visitorType3 = new VisitorType();
-        visitorType3.setTypeName("typeName");
-        visitorType3.setTypeKey("typeKey");
-        visitorType3.setPrice(0);
-        visitorType3.setBasicType(false);
-        visitorType3.setStatus("status");
-        visitorType3.setTicketType(new TicketType());
-        final OrderItem orderItem3 = new OrderItem();
-        orderItem3.setQuantity(0);
-        orderItem3.setVisitorType(new VisitorType());
-        final Order order3 = new Order();
-        order3.setTicketTypeId(0L);
-        order3.setFirstName("firstName");
-        order3.setLastName("lastName");
-        order3.setMail("mail");
-        order3.setPhoneNumber("phoneNumber");
-        order3.setStatus("status");
-        order3.setOrderCode("orderCode");
-        order3.setTotalPayment(0);
-        order3.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order3.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem3.setOrder(order3);
-        final Ticket ticket3 = new Ticket();
-        ticket3.setCode("code");
-        ticket3.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket3.setVisitorTypeId(0L);
-        ticket3.setOrderItem(new OrderItem());
-        orderItem3.setTicket(new HashSet<>(Arrays.asList(ticket3)));
-        visitorType3.setOrderItem(new HashSet<>(Arrays.asList(orderItem3)));
-        final Code code3 = new Code();
-        code3.setCode("code");
-        code3.setVisitorType(new VisitorType());
-        visitorType3.setCode(new HashSet<>(Arrays.asList(code3)));
-        ticketType4.setVisitorType(new HashSet<>(Arrays.asList(visitorType3)));
-        final Game game3 = new Game();
-        game3.setGameName("gameName");
-        game3.setGameDescription("gameDescription");
-        game3.setStatus("status");
-        game3.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place3 = new Place();
-        place3.setName("name");
-        place3.setPlaceKey("placeKey");
-        place3.setAddress("address");
-        place3.setDetailDescription("detailDescription");
-        place3.setShortDescription("shortDescription");
-        place3.setMail("mail");
-        place3.setPhoneNumber("phoneNumber");
-        place3.setStatus("status");
-        place3.setLocation("location");
-        place3.setCancelPolicy("cancelPolicy");
-        game3.setPlace(place3);
-        ticketType4.setGame(new HashSet<>(Arrays.asList(game3)));
-        final Optional<TicketType> ticketType3 = Optional.of(ticketType4);
-        when(visitorTypeServiceImplUnderTest.ticketTypeRepository.findById(0L)).thenReturn(ticketType3);
+        Optional<TicketType> optionalTicketType = Optional.of(ticketType);
+        when(visitorTypeServiceImplUnderTest.ticketTypeRepository.findById(0L)).thenReturn(optionalTicketType);
 
         // Configure VisitorTypeRepository.save(...).
-        final VisitorType visitorType4 = new VisitorType();
-        visitorType4.setTypeName("typeName");
-        visitorType4.setTypeKey("typeKey");
-        visitorType4.setPrice(0);
-        visitorType4.setBasicType(false);
-        visitorType4.setStatus("status");
-        final TicketType ticketType5 = new TicketType();
-        ticketType5.setTypeName("typeName");
-        ticketType5.setPlaceId(0L);
-        ticketType5.setStatus("status");
-        ticketType5.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game4 = new Game();
-        game4.setGameName("gameName");
-        game4.setGameDescription("gameDescription");
-        game4.setStatus("status");
-        game4.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place4 = new Place();
-        place4.setName("name");
-        place4.setPlaceKey("placeKey");
-        place4.setAddress("address");
-        place4.setDetailDescription("detailDescription");
-        place4.setShortDescription("shortDescription");
-        place4.setMail("mail");
-        place4.setPhoneNumber("phoneNumber");
-        place4.setStatus("status");
-        place4.setLocation("location");
-        place4.setCancelPolicy("cancelPolicy");
-        game4.setPlace(place4);
-        ticketType5.setGame(new HashSet<>(Arrays.asList(game4)));
-        visitorType4.setTicketType(ticketType5);
-        final OrderItem orderItem4 = new OrderItem();
-        orderItem4.setQuantity(0);
-        orderItem4.setVisitorType(new VisitorType());
-        final Order order4 = new Order();
-        order4.setTicketTypeId(0L);
-        order4.setFirstName("firstName");
-        order4.setLastName("lastName");
-        order4.setMail("mail");
-        order4.setPhoneNumber("phoneNumber");
-        order4.setStatus("status");
-        order4.setOrderCode("orderCode");
-        order4.setTotalPayment(0);
-        order4.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order4.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem4.setOrder(order4);
-        final Ticket ticket4 = new Ticket();
-        ticket4.setCode("code");
-        ticket4.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket4.setVisitorTypeId(0L);
-        ticket4.setOrderItem(new OrderItem());
-        orderItem4.setTicket(new HashSet<>(Arrays.asList(ticket4)));
-        visitorType4.setOrderItem(new HashSet<>(Arrays.asList(orderItem4)));
-        final Code code4 = new Code();
-        code4.setCode("code");
-        code4.setVisitorType(new VisitorType());
-        visitorType4.setCode(new HashSet<>(Arrays.asList(code4)));
-        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.save(new VisitorType())).thenReturn(visitorType4);
+        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.save(visitorType)).thenReturn(visitorType);
 
         // Configure PlaceRepository.findById(...).
-        final Place place6 = new Place();
-        place6.setName("name");
-        place6.setPlaceKey("placeKey");
-        place6.setAddress("address");
-        place6.setDetailDescription("detailDescription");
-        place6.setShortDescription("shortDescription");
-        place6.setMail("mail");
-        place6.setPhoneNumber("phoneNumber");
-        place6.setStatus("status");
-        place6.setLocation("location");
-        place6.setCancelPolicy("cancelPolicy");
-        final Optional<Place> place5 = Optional.of(place6);
-        when(visitorTypeServiceImplUnderTest.placeRepository.findById(0L)).thenReturn(place5);
-
-        // Configure PlaceRepository.save(...).
-        final Place place7 = new Place();
-        place7.setName("name");
-        place7.setPlaceKey("placeKey");
-        place7.setAddress("address");
-        place7.setDetailDescription("detailDescription");
-        place7.setShortDescription("shortDescription");
-        place7.setMail("mail");
-        place7.setPhoneNumber("phoneNumber");
-        place7.setStatus("status");
-        place7.setLocation("location");
-        place7.setCancelPolicy("cancelPolicy");
-        when(visitorTypeServiceImplUnderTest.placeRepository.save(any(Place.class))).thenReturn(place7);
+        Optional<Place> placeOptional = Optional.of(place);
+        when(visitorTypeServiceImplUnderTest.placeRepository.findById(0l)).thenReturn(placeOptional);
+        when(visitorTypeServiceImplUnderTest.placeRepository.save(place)).thenReturn(place);
 
         // Configure VisitorTypeConverter.toDTO(...).
-        final VisitorTypeDTO visitorTypeDTO = new VisitorTypeDTO();
-        visitorTypeDTO.setTypeName("typeName");
-        visitorTypeDTO.setTypeKey("typeKey");
-        visitorTypeDTO.setTicketTypeId(0L);
-        visitorTypeDTO.setPrice(0);
-        visitorTypeDTO.setBasicType(false);
-        visitorTypeDTO.setRemaining(0);
-        visitorTypeDTO.setStatus("status");
-        when(visitorTypeServiceImplUnderTest.visitorTypeConverter.toDTO(new VisitorType())).thenReturn(visitorTypeDTO);
+        VisitorTypeDTO visitorTypeDTO = new VisitorTypeDTO();
+        when(visitorTypeServiceImplUnderTest.visitorTypeConverter.toDTO(visitorType)).thenReturn(visitorTypeDTO);
 
         // Run the test
         final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.create(model, 0L);
@@ -398,6 +126,7 @@ public class VisitorTypeServiceImplTest {
         model.setBasicType(false);
         model.setRemaining(0);
         model.setStatus("status");
+        model.setId(0l);
 
         // Configure VisitorTypeRepository.findById(...).
         final VisitorType visitorType1 = new VisitorType();
@@ -406,298 +135,16 @@ public class VisitorTypeServiceImplTest {
         visitorType1.setPrice(0);
         visitorType1.setBasicType(false);
         visitorType1.setStatus("status");
+        visitorType1.setId(2l);
         final TicketType ticketType = new TicketType();
         ticketType.setTypeName("typeName");
         ticketType.setPlaceId(0L);
         ticketType.setStatus("status");
-        ticketType.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game = new Game();
-        game.setGameName("gameName");
-        game.setGameDescription("gameDescription");
-        game.setStatus("status");
-        game.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place = new Place();
-        place.setName("name");
-        place.setPlaceKey("placeKey");
-        place.setAddress("address");
-        place.setDetailDescription("detailDescription");
-        place.setShortDescription("shortDescription");
-        place.setMail("mail");
-        place.setPhoneNumber("phoneNumber");
-        place.setStatus("status");
-        place.setLocation("location");
-        place.setCancelPolicy("cancelPolicy");
-        game.setPlace(place);
-        ticketType.setGame(new HashSet<>(Arrays.asList(game)));
-        visitorType1.setTicketType(ticketType);
-        final OrderItem orderItem = new OrderItem();
-        orderItem.setQuantity(0);
-        orderItem.setVisitorType(new VisitorType());
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem.setOrder(order);
-        final Ticket ticket = new Ticket();
-        ticket.setCode("code");
-        ticket.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket.setVisitorTypeId(0L);
-        ticket.setOrderItem(new OrderItem());
-        orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
-        visitorType1.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType1.setCode(new HashSet<>(Arrays.asList(code)));
-        final Optional<VisitorType> visitorType = Optional.of(visitorType1);
-        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findById(0L)).thenReturn(visitorType);
+        ticketType.setId(1l);
+        Set<VisitorType> visitorTypes = new HashSet<>();
+        visitorTypes.add(visitorType1);
+        ticketType.setVisitorType(visitorTypes);
 
-        // Configure VisitorTypeConverter.toVisitorType(...).
-        final VisitorType visitorType2 = new VisitorType();
-        visitorType2.setTypeName("typeName");
-        visitorType2.setTypeKey("typeKey");
-        visitorType2.setPrice(0);
-        visitorType2.setBasicType(false);
-        visitorType2.setStatus("status");
-        final TicketType ticketType1 = new TicketType();
-        ticketType1.setTypeName("typeName");
-        ticketType1.setPlaceId(0L);
-        ticketType1.setStatus("status");
-        ticketType1.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game1 = new Game();
-        game1.setGameName("gameName");
-        game1.setGameDescription("gameDescription");
-        game1.setStatus("status");
-        game1.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place1 = new Place();
-        place1.setName("name");
-        place1.setPlaceKey("placeKey");
-        place1.setAddress("address");
-        place1.setDetailDescription("detailDescription");
-        place1.setShortDescription("shortDescription");
-        place1.setMail("mail");
-        place1.setPhoneNumber("phoneNumber");
-        place1.setStatus("status");
-        place1.setLocation("location");
-        place1.setCancelPolicy("cancelPolicy");
-        game1.setPlace(place1);
-        ticketType1.setGame(new HashSet<>(Arrays.asList(game1)));
-        visitorType2.setTicketType(ticketType1);
-        final OrderItem orderItem1 = new OrderItem();
-        orderItem1.setQuantity(0);
-        orderItem1.setVisitorType(new VisitorType());
-        final Order order1 = new Order();
-        order1.setTicketTypeId(0L);
-        order1.setFirstName("firstName");
-        order1.setLastName("lastName");
-        order1.setMail("mail");
-        order1.setPhoneNumber("phoneNumber");
-        order1.setStatus("status");
-        order1.setOrderCode("orderCode");
-        order1.setTotalPayment(0);
-        order1.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem1.setOrder(order1);
-        final Ticket ticket1 = new Ticket();
-        ticket1.setCode("code");
-        ticket1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket1.setVisitorTypeId(0L);
-        ticket1.setOrderItem(new OrderItem());
-        orderItem1.setTicket(new HashSet<>(Arrays.asList(ticket1)));
-        visitorType2.setOrderItem(new HashSet<>(Arrays.asList(orderItem1)));
-        final Code code1 = new Code();
-        code1.setCode("code");
-        code1.setVisitorType(new VisitorType());
-        visitorType2.setCode(new HashSet<>(Arrays.asList(code1)));
-        when(visitorTypeServiceImplUnderTest.visitorTypeConverter.toVisitorType(new VisitorTypeDTO(), new VisitorType())).thenReturn(visitorType2);
-
-        // Configure TicketTypeRepository.findById(...).
-        final TicketType ticketType3 = new TicketType();
-        ticketType3.setTypeName("typeName");
-        ticketType3.setPlaceId(0L);
-        ticketType3.setStatus("status");
-        final VisitorType visitorType3 = new VisitorType();
-        visitorType3.setTypeName("typeName");
-        visitorType3.setTypeKey("typeKey");
-        visitorType3.setPrice(0);
-        visitorType3.setBasicType(false);
-        visitorType3.setStatus("status");
-        visitorType3.setTicketType(new TicketType());
-        final OrderItem orderItem2 = new OrderItem();
-        orderItem2.setQuantity(0);
-        orderItem2.setVisitorType(new VisitorType());
-        final Order order2 = new Order();
-        order2.setTicketTypeId(0L);
-        order2.setFirstName("firstName");
-        order2.setLastName("lastName");
-        order2.setMail("mail");
-        order2.setPhoneNumber("phoneNumber");
-        order2.setStatus("status");
-        order2.setOrderCode("orderCode");
-        order2.setTotalPayment(0);
-        order2.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem2.setOrder(order2);
-        final Ticket ticket2 = new Ticket();
-        ticket2.setCode("code");
-        ticket2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket2.setVisitorTypeId(0L);
-        ticket2.setOrderItem(new OrderItem());
-        orderItem2.setTicket(new HashSet<>(Arrays.asList(ticket2)));
-        visitorType3.setOrderItem(new HashSet<>(Arrays.asList(orderItem2)));
-        final Code code2 = new Code();
-        code2.setCode("code");
-        code2.setVisitorType(new VisitorType());
-        visitorType3.setCode(new HashSet<>(Arrays.asList(code2)));
-        ticketType3.setVisitorType(new HashSet<>(Arrays.asList(visitorType3)));
-        final Game game2 = new Game();
-        game2.setGameName("gameName");
-        game2.setGameDescription("gameDescription");
-        game2.setStatus("status");
-        game2.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place2 = new Place();
-        place2.setName("name");
-        place2.setPlaceKey("placeKey");
-        place2.setAddress("address");
-        place2.setDetailDescription("detailDescription");
-        place2.setShortDescription("shortDescription");
-        place2.setMail("mail");
-        place2.setPhoneNumber("phoneNumber");
-        place2.setStatus("status");
-        place2.setLocation("location");
-        place2.setCancelPolicy("cancelPolicy");
-        game2.setPlace(place2);
-        ticketType3.setGame(new HashSet<>(Arrays.asList(game2)));
-        final Optional<TicketType> ticketType2 = Optional.of(ticketType3);
-        when(visitorTypeServiceImplUnderTest.ticketTypeRepository.findById(0L)).thenReturn(ticketType2);
-
-        // Configure VisitorTypeRepository.findByTypeName(...).
-        final VisitorType visitorType4 = new VisitorType();
-        visitorType4.setTypeName("typeName");
-        visitorType4.setTypeKey("typeKey");
-        visitorType4.setPrice(0);
-        visitorType4.setBasicType(false);
-        visitorType4.setStatus("status");
-        final TicketType ticketType4 = new TicketType();
-        ticketType4.setTypeName("typeName");
-        ticketType4.setPlaceId(0L);
-        ticketType4.setStatus("status");
-        ticketType4.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game3 = new Game();
-        game3.setGameName("gameName");
-        game3.setGameDescription("gameDescription");
-        game3.setStatus("status");
-        game3.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place3 = new Place();
-        place3.setName("name");
-        place3.setPlaceKey("placeKey");
-        place3.setAddress("address");
-        place3.setDetailDescription("detailDescription");
-        place3.setShortDescription("shortDescription");
-        place3.setMail("mail");
-        place3.setPhoneNumber("phoneNumber");
-        place3.setStatus("status");
-        place3.setLocation("location");
-        place3.setCancelPolicy("cancelPolicy");
-        game3.setPlace(place3);
-        ticketType4.setGame(new HashSet<>(Arrays.asList(game3)));
-        visitorType4.setTicketType(ticketType4);
-        final OrderItem orderItem3 = new OrderItem();
-        orderItem3.setQuantity(0);
-        orderItem3.setVisitorType(new VisitorType());
-        final Order order3 = new Order();
-        order3.setTicketTypeId(0L);
-        order3.setFirstName("firstName");
-        order3.setLastName("lastName");
-        order3.setMail("mail");
-        order3.setPhoneNumber("phoneNumber");
-        order3.setStatus("status");
-        order3.setOrderCode("orderCode");
-        order3.setTotalPayment(0);
-        order3.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order3.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem3.setOrder(order3);
-        final Ticket ticket3 = new Ticket();
-        ticket3.setCode("code");
-        ticket3.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket3.setVisitorTypeId(0L);
-        ticket3.setOrderItem(new OrderItem());
-        orderItem3.setTicket(new HashSet<>(Arrays.asList(ticket3)));
-        visitorType4.setOrderItem(new HashSet<>(Arrays.asList(orderItem3)));
-        final Code code3 = new Code();
-        code3.setCode("code");
-        code3.setVisitorType(new VisitorType());
-        visitorType4.setCode(new HashSet<>(Arrays.asList(code3)));
-        final List<VisitorType> visitorTypes = Arrays.asList(visitorType4);
-        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findByTypeName("name")).thenReturn(visitorTypes);
-
-        // Configure VisitorTypeRepository.save(...).
-        final VisitorType visitorType5 = new VisitorType();
-        visitorType5.setTypeName("typeName");
-        visitorType5.setTypeKey("typeKey");
-        visitorType5.setPrice(0);
-        visitorType5.setBasicType(false);
-        visitorType5.setStatus("status");
-        final TicketType ticketType5 = new TicketType();
-        ticketType5.setTypeName("typeName");
-        ticketType5.setPlaceId(0L);
-        ticketType5.setStatus("status");
-        ticketType5.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game4 = new Game();
-        game4.setGameName("gameName");
-        game4.setGameDescription("gameDescription");
-        game4.setStatus("status");
-        game4.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place4 = new Place();
-        place4.setName("name");
-        place4.setPlaceKey("placeKey");
-        place4.setAddress("address");
-        place4.setDetailDescription("detailDescription");
-        place4.setShortDescription("shortDescription");
-        place4.setMail("mail");
-        place4.setPhoneNumber("phoneNumber");
-        place4.setStatus("status");
-        place4.setLocation("location");
-        place4.setCancelPolicy("cancelPolicy");
-        game4.setPlace(place4);
-        ticketType5.setGame(new HashSet<>(Arrays.asList(game4)));
-        visitorType5.setTicketType(ticketType5);
-        final OrderItem orderItem4 = new OrderItem();
-        orderItem4.setQuantity(0);
-        orderItem4.setVisitorType(new VisitorType());
-        final Order order4 = new Order();
-        order4.setTicketTypeId(0L);
-        order4.setFirstName("firstName");
-        order4.setLastName("lastName");
-        order4.setMail("mail");
-        order4.setPhoneNumber("phoneNumber");
-        order4.setStatus("status");
-        order4.setOrderCode("orderCode");
-        order4.setTotalPayment(0);
-        order4.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order4.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem4.setOrder(order4);
-        final Ticket ticket4 = new Ticket();
-        ticket4.setCode("code");
-        ticket4.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket4.setVisitorTypeId(0L);
-        ticket4.setOrderItem(new OrderItem());
-        orderItem4.setTicket(new HashSet<>(Arrays.asList(ticket4)));
-        visitorType5.setOrderItem(new HashSet<>(Arrays.asList(orderItem4)));
-        final Code code4 = new Code();
-        code4.setCode("code");
-        code4.setVisitorType(new VisitorType());
-        visitorType5.setCode(new HashSet<>(Arrays.asList(code4)));
-        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.save(new VisitorType())).thenReturn(visitorType5);
-
-        // Configure VisitorTypeConverter.toDTO(...).
         final VisitorTypeDTO visitorTypeDTO = new VisitorTypeDTO();
         visitorTypeDTO.setTypeName("typeName");
         visitorTypeDTO.setTypeKey("typeKey");
@@ -706,7 +153,27 @@ public class VisitorTypeServiceImplTest {
         visitorTypeDTO.setBasicType(false);
         visitorTypeDTO.setRemaining(0);
         visitorTypeDTO.setStatus("status");
-        when(visitorTypeServiceImplUnderTest.visitorTypeConverter.toDTO(new VisitorType())).thenReturn(visitorTypeDTO);
+
+        Optional<VisitorType> optionalVisitorType = Optional.of(visitorType1);
+        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findById(0L)).thenReturn(optionalVisitorType);
+
+        // Configure VisitorTypeConverter.toVisitorType(...).
+        when(visitorTypeServiceImplUnderTest.visitorTypeConverter.toVisitorType(visitorTypeDTO, visitorType1)).thenReturn(visitorType1);
+
+        // Configure TicketTypeRepository.findById(...).
+        Optional<TicketType> optionalTicketType = Optional.of(ticketType);
+        when(visitorTypeServiceImplUnderTest.ticketTypeRepository.findById(0L)).thenReturn(optionalTicketType);
+
+        // Configure VisitorTypeRepository.findByTypeName(...).
+        final List<VisitorType> visitorTypesList = new ArrayList<>();
+        visitorTypesList.add(visitorType1);
+        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findByTypeName("typeName")).thenReturn(visitorTypesList);
+
+        // Configure VisitorTypeRepository.save(...).
+        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.save(visitorType1)).thenReturn(visitorType1);
+
+        // Configure VisitorTypeConverter.toDTO(...).
+        when(visitorTypeServiceImplUnderTest.visitorTypeConverter.toDTO(visitorType1)).thenReturn(visitorTypeDTO);
 
         // Run the test
         final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.update(model);
@@ -769,12 +236,9 @@ public class VisitorTypeServiceImplTest {
         ticket.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
         ticket.setVisitorTypeId(0L);
         ticket.setOrderItem(new OrderItem());
-        orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
-        visitorType1.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
         final Code code = new Code();
         code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType1.setCode(new HashSet<>(Arrays.asList(code)));
+        code.setVisitorType(visitorType1);
         final Optional<VisitorType> visitorType = Optional.of(visitorType1);
         when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findById(0L)).thenReturn(visitorType);
 
@@ -782,14 +246,12 @@ public class VisitorTypeServiceImplTest {
         final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.delete(0L);
 
         // Verify the results
-        verify(visitorTypeServiceImplUnderTest.codeRepository).deleteByVisitorType(new VisitorType());
+        verify(visitorTypeServiceImplUnderTest.codeRepository).deleteByVisitorType(visitorType1);
         verify(visitorTypeServiceImplUnderTest.visitorTypeRepository).deleteById(0L);
     }
 
     @Test
     public void testChangeStatus() {
-        // Setup
-
         // Configure VisitorTypeRepository.findById(...).
         final VisitorType visitorType1 = new VisitorType();
         visitorType1.setTypeName("typeName");
@@ -1147,196 +609,41 @@ public class VisitorTypeServiceImplTest {
 
         // Verify the results
     }
-
-    @Test
-    public void testAddCodeForTicketType() {
-        // Setup
-        final MultipartFile file = null;
-
-        // Configure CodeRepository.saveAll(...).
-        final Code code = new Code();
-        code.setCode("code");
-        final VisitorType visitorType = new VisitorType();
-        visitorType.setTypeName("typeName");
-        visitorType.setTypeKey("typeKey");
-        visitorType.setPrice(0);
-        visitorType.setBasicType(false);
-        visitorType.setStatus("status");
-        final TicketType ticketType = new TicketType();
-        ticketType.setTypeName("typeName");
-        ticketType.setPlaceId(0L);
-        ticketType.setStatus("status");
-        ticketType.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game = new Game();
-        game.setGameName("gameName");
-        game.setGameDescription("gameDescription");
-        game.setStatus("status");
-        game.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place = new Place();
-        place.setName("name");
-        place.setPlaceKey("placeKey");
-        place.setAddress("address");
-        place.setDetailDescription("detailDescription");
-        place.setShortDescription("shortDescription");
-        place.setMail("mail");
-        place.setPhoneNumber("phoneNumber");
-        place.setStatus("status");
-        place.setLocation("location");
-        place.setCancelPolicy("cancelPolicy");
-        game.setPlace(place);
-        ticketType.setGame(new HashSet<>(Arrays.asList(game)));
-        visitorType.setTicketType(ticketType);
-        final OrderItem orderItem = new OrderItem();
-        orderItem.setQuantity(0);
-        orderItem.setVisitorType(new VisitorType());
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem.setOrder(order);
-        final Ticket ticket = new Ticket();
-        ticket.setCode("code");
-        ticket.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket.setVisitorTypeId(0L);
-        ticket.setOrderItem(new OrderItem());
-        orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
-        visitorType.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-        visitorType.setCode(new HashSet<>(Arrays.asList(new Code())));
-        code.setVisitorType(visitorType);
-        final List<Code> codes = Arrays.asList(code);
-        when(visitorTypeServiceImplUnderTest.codeRepository.saveAll(Arrays.asList(new Code()))).thenReturn(codes);
-
-        // Configure CodeRepository.findByVisitorType(...).
-        final Code code1 = new Code();
-        code1.setCode("code");
-        final VisitorType visitorType1 = new VisitorType();
-        visitorType1.setTypeName("typeName");
-        visitorType1.setTypeKey("typeKey");
-        visitorType1.setPrice(0);
-        visitorType1.setBasicType(false);
-        visitorType1.setStatus("status");
-        final TicketType ticketType1 = new TicketType();
-        ticketType1.setTypeName("typeName");
-        ticketType1.setPlaceId(0L);
-        ticketType1.setStatus("status");
-        ticketType1.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game1 = new Game();
-        game1.setGameName("gameName");
-        game1.setGameDescription("gameDescription");
-        game1.setStatus("status");
-        game1.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place1 = new Place();
-        place1.setName("name");
-        place1.setPlaceKey("placeKey");
-        place1.setAddress("address");
-        place1.setDetailDescription("detailDescription");
-        place1.setShortDescription("shortDescription");
-        place1.setMail("mail");
-        place1.setPhoneNumber("phoneNumber");
-        place1.setStatus("status");
-        place1.setLocation("location");
-        place1.setCancelPolicy("cancelPolicy");
-        game1.setPlace(place1);
-        ticketType1.setGame(new HashSet<>(Arrays.asList(game1)));
-        visitorType1.setTicketType(ticketType1);
-        final OrderItem orderItem1 = new OrderItem();
-        orderItem1.setQuantity(0);
-        orderItem1.setVisitorType(new VisitorType());
-        final Order order1 = new Order();
-        order1.setTicketTypeId(0L);
-        order1.setFirstName("firstName");
-        order1.setLastName("lastName");
-        order1.setMail("mail");
-        order1.setPhoneNumber("phoneNumber");
-        order1.setStatus("status");
-        order1.setOrderCode("orderCode");
-        order1.setTotalPayment(0);
-        order1.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem1.setOrder(order1);
-        final Ticket ticket1 = new Ticket();
-        ticket1.setCode("code");
-        ticket1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket1.setVisitorTypeId(0L);
-        ticket1.setOrderItem(new OrderItem());
-        orderItem1.setTicket(new HashSet<>(Arrays.asList(ticket1)));
-        visitorType1.setOrderItem(new HashSet<>(Arrays.asList(orderItem1)));
-        visitorType1.setCode(new HashSet<>(Arrays.asList(new Code())));
-        code1.setVisitorType(visitorType1);
-        final List<Code> codes1 = Arrays.asList(code1);
-        when(visitorTypeServiceImplUnderTest.codeRepository.findByVisitorType(new VisitorType())).thenReturn(codes1);
-
-        // Configure VisitorTypeRepository.findByTypeKey(...).
-        final VisitorType visitorType2 = new VisitorType();
-        visitorType2.setTypeName("typeName");
-        visitorType2.setTypeKey("typeKey");
-        visitorType2.setPrice(0);
-        visitorType2.setBasicType(false);
-        visitorType2.setStatus("status");
-        final TicketType ticketType2 = new TicketType();
-        ticketType2.setTypeName("typeName");
-        ticketType2.setPlaceId(0L);
-        ticketType2.setStatus("status");
-        ticketType2.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game2 = new Game();
-        game2.setGameName("gameName");
-        game2.setGameDescription("gameDescription");
-        game2.setStatus("status");
-        game2.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place2 = new Place();
-        place2.setName("name");
-        place2.setPlaceKey("placeKey");
-        place2.setAddress("address");
-        place2.setDetailDescription("detailDescription");
-        place2.setShortDescription("shortDescription");
-        place2.setMail("mail");
-        place2.setPhoneNumber("phoneNumber");
-        place2.setStatus("status");
-        place2.setLocation("location");
-        place2.setCancelPolicy("cancelPolicy");
-        game2.setPlace(place2);
-        ticketType2.setGame(new HashSet<>(Arrays.asList(game2)));
-        visitorType2.setTicketType(ticketType2);
-        final OrderItem orderItem2 = new OrderItem();
-        orderItem2.setQuantity(0);
-        orderItem2.setVisitorType(new VisitorType());
-        final Order order2 = new Order();
-        order2.setTicketTypeId(0L);
-        order2.setFirstName("firstName");
-        order2.setLastName("lastName");
-        order2.setMail("mail");
-        order2.setPhoneNumber("phoneNumber");
-        order2.setStatus("status");
-        order2.setOrderCode("orderCode");
-        order2.setTotalPayment(0);
-        order2.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem2.setOrder(order2);
-        final Ticket ticket2 = new Ticket();
-        ticket2.setCode("code");
-        ticket2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket2.setVisitorTypeId(0L);
-        ticket2.setOrderItem(new OrderItem());
-        orderItem2.setTicket(new HashSet<>(Arrays.asList(ticket2)));
-        visitorType2.setOrderItem(new HashSet<>(Arrays.asList(orderItem2)));
-        final Code code2 = new Code();
-        code2.setCode("code");
-        code2.setVisitorType(new VisitorType());
-        visitorType2.setCode(new HashSet<>(Arrays.asList(code2)));
-        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findByTypeKey("key")).thenReturn(visitorType2);
-
-        // Run the test
-        final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.addCodeForTicketType(file, "codeType");
-
-        // Verify the results
-    }
+//
+//    @SneakyThrows
+//    @Test
+//    public void testAddCodeForTicketType() {
+//        // Setup
+//        File file = new File("wrong key.xlsx");
+//        FileInputStream input = new FileInputStream(file);
+//        MultipartFile multipartFile = new MockMultipartFile("file",
+//                file.getName(), "text/plain", IOUtils.toByteArray(input));
+//
+//        // Configure CodeRepository.saveAll(...).
+//        final Code code = new Code();
+//        code.setCode("code");
+//        final VisitorType visitorType = new VisitorType();
+//        visitorType.setTypeName("typeName");
+//        visitorType.setTypeKey("typeKey");
+//        visitorType.setPrice(0);
+//        visitorType.setBasicType(false);
+//        visitorType.setStatus("status");
+//
+//        when(visitorTypeServiceImplUnderTest.codeRepository.saveAll(Arrays.asList(new Code()))).thenReturn(codes);
+//
+//        // Configure CodeRepository.findByVisitorType(...).
+//
+//        when(visitorTypeServiceImplUnderTest.codeRepository.findByVisitorType(new VisitorType())).thenReturn(codes1);
+//
+//        // Configure VisitorTypeRepository.findByTypeKey(...).
+//
+//        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findByTypeKey("key")).thenReturn(visitorType2);
+//
+//        // Run the test
+//        final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.addCodeForTicketType(file, "codeType");
+//
+//        // Verify the results
+//    }
 
     @Test
     public void testMarkBasicPrice() {
@@ -1349,16 +656,15 @@ public class VisitorTypeServiceImplTest {
         visitorType1.setPrice(0);
         visitorType1.setBasicType(false);
         visitorType1.setStatus("status");
-        final TicketType ticketType = new TicketType();
-        ticketType.setTypeName("typeName");
-        ticketType.setPlaceId(0L);
-        ticketType.setStatus("status");
-        ticketType.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game = new Game();
-        game.setGameName("gameName");
-        game.setGameDescription("gameDescription");
-        game.setStatus("status");
-        game.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
+        visitorType1.setId(0l);
+
+        final VisitorType visitorType2 = new VisitorType();
+        visitorType2.setTypeName("typeName");
+        visitorType2.setTypeKey("typeKey");
+        visitorType2.setPrice(2);
+        visitorType2.setBasicType(false);
+        visitorType2.setStatus("status");
+
         final Place place = new Place();
         place.setName("name");
         place.setPlaceKey("placeKey");
@@ -1370,184 +676,26 @@ public class VisitorTypeServiceImplTest {
         place.setStatus("status");
         place.setLocation("location");
         place.setCancelPolicy("cancelPolicy");
-        game.setPlace(place);
-        ticketType.setGame(new HashSet<>(Arrays.asList(game)));
-        visitorType1.setTicketType(ticketType);
-        final OrderItem orderItem = new OrderItem();
-        orderItem.setQuantity(0);
-        orderItem.setVisitorType(new VisitorType());
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem.setOrder(order);
-        final Ticket ticket = new Ticket();
-        ticket.setCode("code");
-        ticket.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket.setVisitorTypeId(0L);
-        ticket.setOrderItem(new OrderItem());
-        orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
-        visitorType1.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType1.setCode(new HashSet<>(Arrays.asList(code)));
-        final Optional<VisitorType> visitorType = Optional.of(visitorType1);
-        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findById(0L)).thenReturn(visitorType);
+        place.setId(0l);
+        place.setBasicPrice(2);
+
+        Optional<VisitorType> optionalVisitorType = Optional.of(visitorType1);
+        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findById(0L)).thenReturn(optionalVisitorType);
 
         // Configure VisitorTypeRepository.findByPlaceIdAndBasic(...).
-        final VisitorType visitorType2 = new VisitorType();
-        visitorType2.setTypeName("typeName");
-        visitorType2.setTypeKey("typeKey");
-        visitorType2.setPrice(0);
-        visitorType2.setBasicType(false);
-        visitorType2.setStatus("status");
-        final TicketType ticketType1 = new TicketType();
-        ticketType1.setTypeName("typeName");
-        ticketType1.setPlaceId(0L);
-        ticketType1.setStatus("status");
-        ticketType1.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game1 = new Game();
-        game1.setGameName("gameName");
-        game1.setGameDescription("gameDescription");
-        game1.setStatus("status");
-        game1.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place1 = new Place();
-        place1.setName("name");
-        place1.setPlaceKey("placeKey");
-        place1.setAddress("address");
-        place1.setDetailDescription("detailDescription");
-        place1.setShortDescription("shortDescription");
-        place1.setMail("mail");
-        place1.setPhoneNumber("phoneNumber");
-        place1.setStatus("status");
-        place1.setLocation("location");
-        place1.setCancelPolicy("cancelPolicy");
-        game1.setPlace(place1);
-        ticketType1.setGame(new HashSet<>(Arrays.asList(game1)));
-        visitorType2.setTicketType(ticketType1);
-        final OrderItem orderItem1 = new OrderItem();
-        orderItem1.setQuantity(0);
-        orderItem1.setVisitorType(new VisitorType());
-        final Order order1 = new Order();
-        order1.setTicketTypeId(0L);
-        order1.setFirstName("firstName");
-        order1.setLastName("lastName");
-        order1.setMail("mail");
-        order1.setPhoneNumber("phoneNumber");
-        order1.setStatus("status");
-        order1.setOrderCode("orderCode");
-        order1.setTotalPayment(0);
-        order1.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem1.setOrder(order1);
-        final Ticket ticket1 = new Ticket();
-        ticket1.setCode("code");
-        ticket1.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket1.setVisitorTypeId(0L);
-        ticket1.setOrderItem(new OrderItem());
-        orderItem1.setTicket(new HashSet<>(Arrays.asList(ticket1)));
-        visitorType2.setOrderItem(new HashSet<>(Arrays.asList(orderItem1)));
-        final Code code1 = new Code();
-        code1.setCode("code");
-        code1.setVisitorType(new VisitorType());
-        visitorType2.setCode(new HashSet<>(Arrays.asList(code1)));
-        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findByPlaceIdAndBasic(0L, false)).thenReturn(visitorType2);
+        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findByPlaceIdAndBasic(0L, true)).thenReturn(visitorType1);
 
         // Configure VisitorTypeRepository.save(...).
-        final VisitorType visitorType3 = new VisitorType();
-        visitorType3.setTypeName("typeName");
-        visitorType3.setTypeKey("typeKey");
-        visitorType3.setPrice(0);
-        visitorType3.setBasicType(false);
-        visitorType3.setStatus("status");
-        final TicketType ticketType2 = new TicketType();
-        ticketType2.setTypeName("typeName");
-        ticketType2.setPlaceId(0L);
-        ticketType2.setStatus("status");
-        ticketType2.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game2 = new Game();
-        game2.setGameName("gameName");
-        game2.setGameDescription("gameDescription");
-        game2.setStatus("status");
-        game2.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place2 = new Place();
-        place2.setName("name");
-        place2.setPlaceKey("placeKey");
-        place2.setAddress("address");
-        place2.setDetailDescription("detailDescription");
-        place2.setShortDescription("shortDescription");
-        place2.setMail("mail");
-        place2.setPhoneNumber("phoneNumber");
-        place2.setStatus("status");
-        place2.setLocation("location");
-        place2.setCancelPolicy("cancelPolicy");
-        game2.setPlace(place2);
-        ticketType2.setGame(new HashSet<>(Arrays.asList(game2)));
-        visitorType3.setTicketType(ticketType2);
-        final OrderItem orderItem2 = new OrderItem();
-        orderItem2.setQuantity(0);
-        orderItem2.setVisitorType(new VisitorType());
-        final Order order2 = new Order();
-        order2.setTicketTypeId(0L);
-        order2.setFirstName("firstName");
-        order2.setLastName("lastName");
-        order2.setMail("mail");
-        order2.setPhoneNumber("phoneNumber");
-        order2.setStatus("status");
-        order2.setOrderCode("orderCode");
-        order2.setTotalPayment(0);
-        order2.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem2.setOrder(order2);
-        final Ticket ticket2 = new Ticket();
-        ticket2.setCode("code");
-        ticket2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket2.setVisitorTypeId(0L);
-        ticket2.setOrderItem(new OrderItem());
-        orderItem2.setTicket(new HashSet<>(Arrays.asList(ticket2)));
-        visitorType3.setOrderItem(new HashSet<>(Arrays.asList(orderItem2)));
-        final Code code2 = new Code();
-        code2.setCode("code");
-        code2.setVisitorType(new VisitorType());
-        visitorType3.setCode(new HashSet<>(Arrays.asList(code2)));
-        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.save(new VisitorType())).thenReturn(visitorType3);
+
+        when(visitorTypeServiceImplUnderTest.visitorTypeRepository.save(visitorType1)).thenReturn(visitorType1);
 
         // Configure PlaceRepository.findById(...).
-        final Place place4 = new Place();
-        place4.setName("name");
-        place4.setPlaceKey("placeKey");
-        place4.setAddress("address");
-        place4.setDetailDescription("detailDescription");
-        place4.setShortDescription("shortDescription");
-        place4.setMail("mail");
-        place4.setPhoneNumber("phoneNumber");
-        place4.setStatus("status");
-        place4.setLocation("location");
-        place4.setCancelPolicy("cancelPolicy");
-        final Optional<Place> place3 = Optional.of(place4);
-        when(visitorTypeServiceImplUnderTest.placeRepository.findById(0L)).thenReturn(place3);
+        place.setBasicPrice(visitorType1.getPrice());
+        Optional<Place> optionalPlace = Optional.of(place);
+        when(visitorTypeServiceImplUnderTest.placeRepository.findById(0L)).thenReturn(optionalPlace);
 
         // Configure PlaceRepository.save(...).
-        final Place place5 = new Place();
-        place5.setName("name");
-        place5.setPlaceKey("placeKey");
-        place5.setAddress("address");
-        place5.setDetailDescription("detailDescription");
-        place5.setShortDescription("shortDescription");
-        place5.setMail("mail");
-        place5.setPhoneNumber("phoneNumber");
-        place5.setStatus("status");
-        place5.setLocation("location");
-        place5.setCancelPolicy("cancelPolicy");
-        when(visitorTypeServiceImplUnderTest.placeRepository.save(any(Place.class))).thenReturn(place5);
+        when(visitorTypeServiceImplUnderTest.placeRepository.save(place)).thenReturn(place);
 
         // Run the test
         final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.markBasicPrice(0L, 0L);

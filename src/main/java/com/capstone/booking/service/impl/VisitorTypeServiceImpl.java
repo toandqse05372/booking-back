@@ -20,6 +20,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -70,7 +71,8 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
             visitorType.setBasicType(true);
         }
         visitorTypeRepository.save(visitorType);
-        Place place = placeRepository.findById(placeId).get();
+        Optional<Place> optionalPlace = placeRepository.findById(placeId);
+        Place place = optionalPlace.get();
         place.setBasicPrice(visitorType.getPrice());
         placeRepository.save(place);
         return ResponseEntity.ok(visitorTypeConverter.toDTO(visitorType));
@@ -80,10 +82,12 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     @Override
     public ResponseEntity<?> update(VisitorTypeDTO model) {
         VisitorType visitorType = new VisitorType();
-        VisitorType oldVisitor = visitorTypeRepository.findById(model.getId()).get();
+        Optional<VisitorType> optionalVisitorType = visitorTypeRepository.findById(model.getId());
+        VisitorType oldVisitor = optionalVisitorType.get();
         visitorType = visitorTypeConverter.toVisitorType(model, oldVisitor);
 
-        TicketType ticketType = ticketTypeRepository.findById(model.getTicketTypeId()).get();
+        Optional<TicketType> optionalTicketType = ticketTypeRepository.findById(model.getTicketTypeId());
+        TicketType ticketType = optionalTicketType.get();
         visitorType.setTicketType(ticketType);
 
         List<VisitorType> typeList = visitorTypeRepository.findByTypeName(visitorType.getTypeName());
@@ -151,27 +155,28 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         return ResponseEntity.ok(visitorTypeConverter.toDTO(type));
     }
 
-    //not use
-    @Override
-    public ResponseEntity<?> addCodeForTicketType(MultipartFile file, String codeType){
-        if (ExcelHelper.hasExcelFormat(file)) {
-            try {
-                List<Code> tutorials = ExcelHelper.excelToCode(file.getInputStream());
-                codeRepository.saveAll(tutorials);
-                int reaming = codeRepository.findByVisitorType(visitorTypeRepository.findByTypeKey(codeType)).size();
-                return ResponseEntity.ok(reaming);
-            } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("COULD_NOT_UPLOAD_FILE");
-            }
-        }else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT_EXCEL_FILE");
-
-    }
+//    //not use
+//    @Override
+//    public ResponseEntity<?> addCodeForVisitorType(MultipartFile file, String codeType){
+//        if (ExcelHelper.hasExcelFormat(file)) {
+//            try {
+//                List<Code> tutorials = ExcelHelper.excelToCode(file.getInputStream());
+//                codeRepository.saveAll(tutorials);
+//                int reaming = codeRepository.findByVisitorType(visitorTypeRepository.findByTypeKey(codeType)).size();
+//                return ResponseEntity.ok(reaming);
+//            } catch (IOException e) {
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("COULD_NOT_UPLOAD_FILE");
+//            }
+//        }else
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT_EXCEL_FILE");
+//
+//    }
 
     //set chosen visitor type's price as basic type
     @Override
     public ResponseEntity<?> markBasicPrice(long id, long placeId) {
-        VisitorType markType = visitorTypeRepository.findById(id).get();
+        Optional<VisitorType> optionalVisitorType = visitorTypeRepository.findById(id);
+        VisitorType markType = optionalVisitorType.get();
         if(markType == null){
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("VISITOR_TYPE_NOT_FOUND");
         }
@@ -182,7 +187,8 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         markType.setBasicType(true);
         visitorTypeRepository.save(markType);
 
-        Place place = placeRepository.findById(placeId).get();
+        Optional<Place> optionalPlace = placeRepository.findById(placeId);
+        Place place = optionalPlace.get();
         place.setBasicPrice(markType.getPrice());
         placeRepository.save(place);
 
