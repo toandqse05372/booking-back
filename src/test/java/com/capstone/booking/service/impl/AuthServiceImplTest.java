@@ -16,6 +16,7 @@ import com.capstone.booking.repository.UserRepository;
 import com.capstone.booking.service.TokenService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
@@ -82,8 +83,8 @@ public class AuthServiceImplTest {
         user.setUserType("userType");
         user.setAvatarLink("avatarLink");
         final Role role = new Role();
-        role.setRoleKey("roleKey");
-        role.setRoleName("roleName");
+        role.setRoleKey("ADMIN");
+        role.setRoleName("ADMIN");
         final Permission permission = new Permission();
         permission.setPermissionKey("permissionKey");
         permission.setPermissionName("permissionName");
@@ -97,12 +98,14 @@ public class AuthServiceImplTest {
         final Date date = new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime();
         when(mockJwtUtil.generateExpirationDate()).thenReturn(date);
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTokenService).createToken(any(Token.class));
+        Token token = new Token();
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTokenService).createToken(token);
 
         // Run the test
         final ResponseEntity<?> result = authServiceImplUnderTest.findByEmail(userDTO, "CMS");
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -169,6 +172,7 @@ public class AuthServiceImplTest {
         final ResponseEntity<?> result = authServiceImplUnderTest.loginFb(fbForm);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -231,6 +235,7 @@ public class AuthServiceImplTest {
         final UserPrincipal result = authServiceImplUnderTest.setPermission(user);
 
         // Verify the results
+        Assertions.assertNotNull(result);
     }
 
     @Test
@@ -249,5 +254,6 @@ public class AuthServiceImplTest {
         final Token result = authServiceImplUnderTest.returnToken(userPrincipal);
 
         // Verify the results
+        Assertions.assertNotNull(result);
     }
 }

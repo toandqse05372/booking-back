@@ -11,6 +11,7 @@ import com.capstone.booking.repository.PlaceRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
@@ -294,6 +295,7 @@ public class GameServiceImplTest {
         final ResponseEntity<?> result = gameServiceImplUnderTest.getGame(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -312,6 +314,7 @@ public class GameServiceImplTest {
         final ResponseEntity<?> result = gameServiceImplUnderTest.findByMulParam("gameName", "placeName", 0L, 0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -392,6 +395,7 @@ public class GameServiceImplTest {
         final ResponseEntity<?> result = gameServiceImplUnderTest.findAll();
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -531,6 +535,7 @@ public class GameServiceImplTest {
         final ResponseEntity<?> result = gameServiceImplUnderTest.changeStatus(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -549,6 +554,7 @@ public class GameServiceImplTest {
         final ResponseEntity<?> result = gameServiceImplUnderTest.findByPlaceId(0L, 0L, 0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -624,5 +630,6 @@ public class GameServiceImplTest {
         final ResponseEntity<?> result = gameServiceImplUnderTest.listOptionByPlace(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 }

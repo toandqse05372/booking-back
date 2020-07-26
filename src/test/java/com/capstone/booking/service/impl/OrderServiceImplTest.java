@@ -13,6 +13,7 @@ import com.capstone.booking.repository.*;
 import com.itextpdf.text.DocumentException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
@@ -149,6 +150,7 @@ public class OrderServiceImplTest {
         final ResponseEntity<?> result = orderServiceImplUnderTest.create(orderDTO, OrderStatus.PAID);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -194,6 +196,7 @@ public class OrderServiceImplTest {
         final ResponseEntity<?> result = orderServiceImplUnderTest.findByStatus("status", "code");
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -233,6 +236,7 @@ public class OrderServiceImplTest {
         final ResponseEntity<?> result = orderServiceImplUnderTest.findByOrderId(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -530,6 +534,7 @@ public class OrderServiceImplTest {
         final ResponseEntity<?> result = orderServiceImplUnderTest.getOrderByUid(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -619,5 +624,6 @@ public class OrderServiceImplTest {
         final ResponseEntity<?> result = orderServiceImplUnderTest.getOrderByUidTop3(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 }

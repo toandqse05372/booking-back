@@ -7,6 +7,7 @@ import com.capstone.booking.service.impl.StripeService;
 import com.stripe.model.Charge;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
@@ -35,24 +36,14 @@ public class PaymentControllerTest {
     @Test
     public void testPayForOrder() throws Exception {
         // Setup
+        String model = "{\"ticketTypeId\":1,\"ticketTypeName\":\"Vé vào cổng\",\"userId\":1,\"totalPayment\":700000,\"purchaseDay\":\"2020-07-22T03:04:37.543Z\",\"redemptionDate\":\"2020-07-22T03:04:14.102Z\",\"orderItems\":[{\"visitorTypeId\":1,\"quantity\":1}]}";
         when(mockStripeService.chargeNewCard("token", 0)).thenReturn(new Charge());
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).create(new OrderDTO(), OrderStatus.PAID);
 
         // Run the test
-        final ResponseEntity<?> result = paymentControllerUnderTest.payForOrder("{\"ticketTypeId\":1,\"ticketTypeName\":\"Vé vào cổng\",\"userId\":1,\"totalPayment\":700000,\"purchaseDay\":\"2020-07-22T03:04:37.543Z\",\"redemptionDate\":\"2020-07-22T03:04:14.102Z\",\"orderItems\":[{\"visitorTypeId\":1,\"quantity\":1}]}", "stripetoken");
+        final ResponseEntity<?> result = paymentControllerUnderTest.payForOrder( model, "stripetoken", "PAID");
 
         // Verify the results
-    }
-
-    @Test
-    public void testPayForOrder_StripeServiceThrowsException() throws Exception {
-        // Setup
-        when(mockStripeService.chargeNewCard("token", 0)).thenThrow(Exception.class);
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).create(new OrderDTO(), OrderStatus.PAID);
-
-        // Run the test
-        assertThatThrownBy(() -> {
-            paymentControllerUnderTest.payForOrder("message", "stripetoken");
-        }).isInstanceOf(Exception.class).hasMessageContaining("message");
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 }

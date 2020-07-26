@@ -3,14 +3,20 @@ package com.capstone.booking.api;
 import com.capstone.booking.entity.dto.TicketTypeDTO;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
 import com.capstone.booking.service.TicketTypeService;
+import lombok.SneakyThrows;
+import org.apache.poi.util.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -41,6 +47,7 @@ public class TicketTypeControllerTest {
         final ResponseEntity<?> result = ticketTypeControllerUnderTest.searchAll();
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -52,6 +59,7 @@ public class TicketTypeControllerTest {
         final ResponseEntity<?> result = ticketTypeControllerUnderTest.searchByPlaceId(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -63,6 +71,7 @@ public class TicketTypeControllerTest {
         final ResponseEntity<?> result = ticketTypeControllerUnderTest.delete(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -83,12 +92,13 @@ public class TicketTypeControllerTest {
         model.setVisitorTypes(Arrays.asList(visitorTypeDTO));
         model.setStatus("status");
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketTypeService).create(new TicketTypeDTO());
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketTypeService).create(model);
 
         // Run the test
         final ResponseEntity<?> result = ticketTypeControllerUnderTest.create(model);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -109,12 +119,13 @@ public class TicketTypeControllerTest {
         model.setVisitorTypes(Arrays.asList(visitorTypeDTO));
         model.setStatus("status");
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketTypeService).update(new TicketTypeDTO());
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketTypeService).update(model);
 
         // Run the test
         final ResponseEntity<?> result = ticketTypeControllerUnderTest.update(model, 0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -126,6 +137,7 @@ public class TicketTypeControllerTest {
         final ResponseEntity<?> result = ticketTypeControllerUnderTest.changeTicketTypeStatus(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -137,17 +149,23 @@ public class TicketTypeControllerTest {
         final ResponseEntity<?> result = ticketTypeControllerUnderTest.getTicketType(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
+    @SneakyThrows
     @Test
     public void testUploadFile() {
         // Setup
-        final MultipartFile file = null;
+        File file = new File("Test.pdf");
+        FileInputStream input = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile("file",
+                file.getName(), "text/plain", IOUtils.toByteArray(input));
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketTypeService).addCodeFromExcel(any(MultipartFile.class), eq(0L));
 
         // Run the test
-        final ResponseEntity<?> result = ticketTypeControllerUnderTest.uploadFile(file, "1");
+        final ResponseEntity<?> result = ticketTypeControllerUnderTest.uploadFile(multipartFile, "0");
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 }

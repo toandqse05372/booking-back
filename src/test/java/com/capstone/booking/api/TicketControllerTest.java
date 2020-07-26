@@ -7,6 +7,7 @@ import com.capstone.booking.entity.dto.VisitorTypeDTO;
 import com.capstone.booking.service.TicketService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
@@ -53,12 +54,13 @@ public class TicketControllerTest {
         model.setVisitorType(visitorType);
         model.setVisitorTypeId(0L);
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketService).create(new TicketDTO());
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketService).create(model);
 
         // Run the test
         final ResponseEntity<?> result = ticketControllerUnderTest.create(model);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -70,6 +72,7 @@ public class TicketControllerTest {
         final ResponseEntity<?> result = ticketControllerUnderTest.delete(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -81,6 +84,7 @@ public class TicketControllerTest {
         final ResponseEntity<?> result = ticketControllerUnderTest.searchForReport(0L, 0L, 0L, 0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -98,11 +102,12 @@ public class TicketControllerTest {
         report.setPlaceId(0L);
         report.setTotalRevenue(0);
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketService).createReport(new OutputReport());
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketService).createReport(report);
 
         // Run the test
         final ResponseEntity<?> result = ticketControllerUnderTest.sendReport(report);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 }

@@ -7,6 +7,7 @@ import com.capstone.booking.service.OrderService;
 import com.itextpdf.text.DocumentException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,7 @@ public class OrderControllerTest {
         final ResponseEntity<?> result = orderControllerUnderTest.deleteMethod(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -54,6 +56,7 @@ public class OrderControllerTest {
         final ResponseEntity<?> result = orderControllerUnderTest.orderFilter("status", "code");
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -71,12 +74,13 @@ public class OrderControllerTest {
         model.setOrderCode("orderCode");
         model.setTotalPayment(0);
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).create(new OrderDTO(), OrderStatus.PAID);
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).create(model, OrderStatus.UNPAID);
 
         // Run the test
         final ResponseEntity<?> result = orderControllerUnderTest.createMethod(model);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -92,6 +96,7 @@ public class OrderControllerTest {
         final ResponseEntity<?> result = orderControllerUnderTest.sendTicket(request);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -107,6 +112,7 @@ public class OrderControllerTest {
         final ResponseEntity<?> result = orderControllerUnderTest.sendTicket(request);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -118,6 +124,7 @@ public class OrderControllerTest {
         final ResponseEntity<?> result = orderControllerUnderTest.getOrderById(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -129,6 +136,7 @@ public class OrderControllerTest {
         final ResponseEntity<?> result = orderControllerUnderTest.getOrdersByUid(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -140,5 +148,6 @@ public class OrderControllerTest {
         final ResponseEntity<?> result = orderControllerUnderTest.getOrdersByUidTop3(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 }

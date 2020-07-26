@@ -3,8 +3,10 @@ package com.capstone.booking.api;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
 import com.capstone.booking.service.VisitorTypeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,23 +30,16 @@ public class VisitorTypeControllerTest {
     @Test
     public void testCreate() throws Exception {
         // Setup
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(visitorTypeControllerUnderTest.visitorTypeService).create(new VisitorTypeDTO(), 0L);
+        String model = "{\"id\":\"\",\"typeName\":\"Khu vui chơi\",\"typeKey\":\"123EE\",\"price\":\"123456\",\"ticketTypeId\":5}";
+        ObjectMapper mapper = new ObjectMapper();
+        VisitorTypeDTO visitorTypeDTO = mapper.readValue(model, VisitorTypeDTO.class);
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(visitorTypeControllerUnderTest.visitorTypeService).create(visitorTypeDTO, 1L);
 
         // Run the test
-        final ResponseEntity<?> result = visitorTypeControllerUnderTest.create("1", "{\"id\":\"\",\"typeName\":\"Khu vui chơi\",\"typeKey\":\"123EE\",\"price\":\"123456\",\"ticketTypeId\":5}");
+        final ResponseEntity<?> result = visitorTypeControllerUnderTest.create("1", model);
 
         // Verify the results
-    }
-
-    @Test
-    public void testCreate_ThrowsJsonProcessingException() {
-        // Setup
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(visitorTypeControllerUnderTest.visitorTypeService).create(new VisitorTypeDTO(), 0L);
-
-        // Run the test
-        assertThatThrownBy(() -> {
-            visitorTypeControllerUnderTest.create("1", "message");
-        }).isInstanceOf(JsonProcessingException.class).hasMessageContaining("message");
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -59,12 +54,13 @@ public class VisitorTypeControllerTest {
         model.setRemaining(0);
         model.setStatus("status");
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(visitorTypeControllerUnderTest.visitorTypeService).update(new VisitorTypeDTO());
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(visitorTypeControllerUnderTest.visitorTypeService).update(model);
 
         // Run the test
         final ResponseEntity<?> result = visitorTypeControllerUnderTest.update(model, 0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test

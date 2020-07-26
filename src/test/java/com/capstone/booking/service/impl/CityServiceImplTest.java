@@ -12,6 +12,7 @@ import lombok.SneakyThrows;
 import org.apache.poi.util.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
@@ -86,6 +87,7 @@ public class CityServiceImplTest {
         final ResponseEntity<?> result = cityServiceImplUnderTest.findAllCity();
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -125,6 +127,7 @@ public class CityServiceImplTest {
         final ResponseEntity<?> result = cityServiceImplUnderTest.getTop3();
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -164,6 +167,7 @@ public class CityServiceImplTest {
         final ResponseEntity<?> result = cityServiceImplUnderTest.getCity(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -182,6 +186,7 @@ public class CityServiceImplTest {
         final ResponseEntity<?> result = cityServiceImplUnderTest.findByName("name", 0L, 0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @SneakyThrows

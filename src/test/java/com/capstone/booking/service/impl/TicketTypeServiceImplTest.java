@@ -13,6 +13,7 @@ import lombok.SneakyThrows;
 import org.apache.poi.util.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -125,6 +126,7 @@ public class TicketTypeServiceImplTest {
         final ResponseEntity<?> result = ticketTypeServiceImplUnderTest.findAll();
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -235,6 +237,7 @@ public class TicketTypeServiceImplTest {
         final ResponseEntity<?> result = ticketTypeServiceImplUnderTest.create(ticketTypeDTO);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -286,6 +289,7 @@ public class TicketTypeServiceImplTest {
         final ResponseEntity<?> result = ticketTypeServiceImplUnderTest.update(ticketTypeDTO);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -492,6 +496,7 @@ public class TicketTypeServiceImplTest {
         final ResponseEntity<?> result = ticketTypeServiceImplUnderTest.changeStatus(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -650,6 +655,7 @@ public class TicketTypeServiceImplTest {
         final ResponseEntity<?> result = ticketTypeServiceImplUnderTest.findByPlaceId(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -737,5 +743,6 @@ public class TicketTypeServiceImplTest {
         final ResponseEntity<?> result = ticketTypeServiceImplUnderTest.getTicketType(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 }

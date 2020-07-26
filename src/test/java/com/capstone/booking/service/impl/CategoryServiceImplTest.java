@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 import org.apache.poi.util.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -70,6 +71,7 @@ public class CategoryServiceImplTest {
         final ResponseEntity<?> result = categoryServiceImplUnderTest.getAllCategories();
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -166,6 +168,7 @@ public class CategoryServiceImplTest {
         final ResponseEntity<?> result = categoryServiceImplUnderTest.findByTypeName("typeName", 0L, 0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -187,6 +190,7 @@ public class CategoryServiceImplTest {
         final ResponseEntity<?> result = categoryServiceImplUnderTest.getCategory(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @SneakyThrows

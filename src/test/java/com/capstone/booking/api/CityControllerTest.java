@@ -1,15 +1,23 @@
 package com.capstone.booking.api;
 
+import com.capstone.booking.entity.dto.CategoryDTO;
 import com.capstone.booking.entity.dto.CityDTO;
 import com.capstone.booking.service.CityService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.poi.util.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.FileInputStream;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,6 +47,7 @@ public class CityControllerTest {
         final ResponseEntity<?> result = cityControllerUnderTest.getAllCity();
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -50,6 +59,7 @@ public class CityControllerTest {
         final ResponseEntity<?> result = cityControllerUnderTest.getTop3();
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -61,6 +71,7 @@ public class CityControllerTest {
         final ResponseEntity<?> result = cityControllerUnderTest.getCity(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -72,6 +83,7 @@ public class CityControllerTest {
         final ResponseEntity<?> result = cityControllerUnderTest.searchByName("name", 0L, 0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -83,55 +95,46 @@ public class CityControllerTest {
         final ResponseEntity<?> result = cityControllerUnderTest.deleteCity(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
     public void testCreateCity() throws Exception {
         // Setup
-        final MultipartFile file = null;
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockCityService).create(eq(new CityDTO()), any(MultipartFile.class));
+        String model = "{\"id\":null,\"name\":\"dbadmin1\"" +
+                ",\"shortDescription\":null,\"detailDescription\":null}";
+        ObjectMapper mapper = new ObjectMapper();
+        CityDTO cityDTO = mapper.readValue(model, CityDTO.class);
+        File file = new File("Test.pdf");
+        FileInputStream input = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile("file",
+                file.getName(), "text/plain", IOUtils.toByteArray(input));
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockCityService).create(cityDTO, multipartFile);
 
         // Run the test
-        final ResponseEntity<?> result = cityControllerUnderTest.createCity(file, "{\"id\":null,\"name\":\"dbadmin1\"" +
-                ",\"shortDescription\":null,\"detailDescription\":null}");
+        final ResponseEntity<?> result = cityControllerUnderTest.createCity(multipartFile, model);
 
         // Verify the results
-    }
-
-    @Test
-    public void testCreateCity_ThrowsJsonProcessingException() {
-        // Setup
-        final MultipartFile file = null;
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockCityService).create(eq(new CityDTO()), any(MultipartFile.class));
-
-        // Run the test
-        assertThatThrownBy(() -> {
-            cityControllerUnderTest.createCity(file, "message");
-        }).isInstanceOf(JsonProcessingException.class).hasMessageContaining("message");
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
     public void testUpdateCity() throws Exception {
         // Setup
-        final MultipartFile file = null;
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockCityService).update(eq(new CityDTO()), any(MultipartFile.class));
+        String model = "{\"id\":0,\"name\":\"dbadmin1\"" +
+                ",\"shortDescription\":null,\"detailDescription\":null}";
+        ObjectMapper mapper = new ObjectMapper();
+        CityDTO cityDTO = mapper.readValue(model, CityDTO.class);
+        File file = new File("Test.pdf");
+        FileInputStream input = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile("file",
+                file.getName(), "text/plain", IOUtils.toByteArray(input));
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockCityService).update(cityDTO, multipartFile);
 
         // Run the test
-        final ResponseEntity<?> result = cityControllerUnderTest.updateCity(file, "{\"id\":5,\"name\":\"" +
-                "dbadmin1\",\"shortDescription\":null,\"detailDescription\":null}", 0L);
+        final ResponseEntity<?> result = cityControllerUnderTest.updateCity(multipartFile, model, 0L);
 
         // Verify the results
-    }
-
-    @Test
-    public void testUpdateCity_ThrowsJsonProcessingException() {
-        // Setup
-        final MultipartFile file = null;
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockCityService).update(eq(new CityDTO()), any(MultipartFile.class));
-
-        // Run the test
-        assertThatThrownBy(() -> {
-            cityControllerUnderTest.updateCity(file, "message", 0L);
-        }).isInstanceOf(JsonProcessingException.class).hasMessageContaining("message");
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 }

@@ -4,6 +4,7 @@ import com.capstone.booking.entity.dto.GameDTO;
 import com.capstone.booking.service.GameService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,7 @@ public class GameControllerTest {
         final ResponseEntity<?> result = gameControllerUnderTest.searchAll();
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -48,6 +50,7 @@ public class GameControllerTest {
         final ResponseEntity<?> result = gameControllerUnderTest.searchMUL("gameName", 0L, 0L, "placeName");
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -59,6 +62,7 @@ public class GameControllerTest {
         final ResponseEntity<?> result = gameControllerUnderTest.deleteGame(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -70,6 +74,7 @@ public class GameControllerTest {
         final ResponseEntity<?> result = gameControllerUnderTest.changeStatusGame(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -83,12 +88,13 @@ public class GameControllerTest {
         model.setPlaceName("placeName");
         model.setStatus("status");
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockGameService).create(new GameDTO());
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockGameService).create(model);
 
         // Run the test
         final ResponseEntity<?> result = gameControllerUnderTest.createGame(model);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -102,12 +108,13 @@ public class GameControllerTest {
         model.setPlaceName("placeName");
         model.setStatus("status");
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockGameService).update(new GameDTO());
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockGameService).update(model);
 
         // Run the test
         final ResponseEntity<?> result = gameControllerUnderTest.updateGame(model, 0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -119,6 +126,7 @@ public class GameControllerTest {
         final ResponseEntity<?> result = gameControllerUnderTest.getGame(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -130,6 +138,7 @@ public class GameControllerTest {
         final ResponseEntity<?> result = gameControllerUnderTest.findByPlaceId(0L, 0L, 0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -141,5 +150,6 @@ public class GameControllerTest {
         final ResponseEntity<?> result = gameControllerUnderTest.listOptionByPlace(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 }

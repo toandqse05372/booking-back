@@ -4,6 +4,7 @@ import com.capstone.booking.entity.Token;
 import com.capstone.booking.repository.TokenRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,7 @@ public class TokenServiceImplTest {
         final ResponseEntity<?> result = tokenServiceImplUnderTest.createToken(token);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -58,8 +60,9 @@ public class TokenServiceImplTest {
         when(mockTokenRepository.findByToken("token")).thenReturn(token);
 
         // Run the test
-        final Token result = tokenServiceImplUnderTest.findByToken("tokenStr");
+        final Token result = tokenServiceImplUnderTest.findByToken("token");
 
         // Verify the results
+        Assertions.assertNotNull(result);
     }
 }

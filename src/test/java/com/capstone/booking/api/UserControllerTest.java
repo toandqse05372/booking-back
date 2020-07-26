@@ -2,14 +2,20 @@ package com.capstone.booking.api;
 
 import com.capstone.booking.entity.dto.UserDTO;
 import com.capstone.booking.service.UserService;
+import lombok.SneakyThrows;
+import org.apache.poi.util.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -48,12 +54,13 @@ public class UserControllerTest {
         user.setUserType("userType");
         user.setAvatarLink("avatarLink");
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).register(new UserDTO());
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).register(user);
 
         // Run the test
         final ResponseEntity<?> result = userControllerUnderTest.register(user);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -65,6 +72,7 @@ public class UserControllerTest {
         final ResponseEntity<?> result = userControllerUnderTest.resendEmail("mail");
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -76,6 +84,7 @@ public class UserControllerTest {
         final ResponseEntity<?> result = userControllerUnderTest.active("verificationToken");
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -93,12 +102,13 @@ public class UserControllerTest {
         user.setUserType("userType");
         user.setAvatarLink("avatarLink");
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).createUserCMS(new UserDTO());
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).createUserCMS(user);
 
         // Run the test
         final ResponseEntity<?> result = userControllerUnderTest.createUserCMS(user);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -116,12 +126,13 @@ public class UserControllerTest {
         model.setUserType("userType");
         model.setAvatarLink("avatarLink");
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).update(new UserDTO());
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).update(model);
 
         // Run the test
         final ResponseEntity<?> result = userControllerUnderTest.updateUser(model, 0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -130,9 +141,10 @@ public class UserControllerTest {
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).findByMultiParam("fname", "mail", "lastName", "phoneNumber", 0L, 0L, 0L);
 
         // Run the test
-        final ResponseEntity<?> result = userControllerUnderTest.findByMultiParam("firstName", "mail", "lastName", "phoneNumber", 0L, 0L, 0L);
+        final ResponseEntity<?> result = userControllerUnderTest.findByMultiParam("fname", "mail", "lastName", "phoneNumber", 0L, 0L, 0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -144,6 +156,7 @@ public class UserControllerTest {
         final ResponseEntity<?> result = userControllerUnderTest.deleteUser(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -155,6 +168,7 @@ public class UserControllerTest {
         final ResponseEntity<?> result = userControllerUnderTest.getUser(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -166,6 +180,7 @@ public class UserControllerTest {
         final ResponseEntity<?> result = userControllerUnderTest.findAllRoles();
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -174,9 +189,10 @@ public class UserControllerTest {
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).changePassword(0L, "oldPassword", "newPassword");
 
         // Run the test
-        final ResponseEntity<?> result = userControllerUnderTest.changePassword(0L, "oldPassword", "newPassword");
+        final ResponseEntity<?> result = userControllerUnderTest.changePassword("0", "oldPassword", "newPassword");
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -188,6 +204,7 @@ public class UserControllerTest {
         final ResponseEntity<?> result = userControllerUnderTest.verifyEmailFb("mail", 0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
     @Test
@@ -199,17 +216,23 @@ public class UserControllerTest {
         final ResponseEntity<?> result = userControllerUnderTest.getUserClient(0L);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 
+    @SneakyThrows
     @Test
     public void testUpdateAvatar() {
         // Setup
-        final MultipartFile file = null;
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).updateAvatar(eq(0L), any(MultipartFile.class));
+        File file = new File("Test.pdf");
+        FileInputStream input = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile("file",
+                file.getName(), "text/plain", IOUtils.toByteArray(input));
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockUserService).updateAvatar(0l, multipartFile);
 
         // Run the test
-        final ResponseEntity<?> result = userControllerUnderTest.updateAvatar(0L, file);
+        final ResponseEntity<?> result = userControllerUnderTest.updateAvatar(0L, multipartFile);
 
         // Verify the results
+        Assertions.assertEquals(100, result.getStatusCodeValue());
     }
 }

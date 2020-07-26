@@ -91,10 +91,10 @@ public class UserController {
 
     //reset password api
     @PostMapping("user/changePassword")
-    public ResponseEntity<?> changePassword(@RequestPart(value = "uid") Long uid,
+    public ResponseEntity<?> changePassword(@RequestPart(value = "uid") String uid,
                                             @RequestPart(value = "old")String oldPassword,
                                             @RequestPart(value = "new")String newPassword){
-        return userService.changePassword(uid, oldPassword, newPassword);
+        return userService.changePassword(Long.parseLong(uid), oldPassword, newPassword);
     }
 
     //verify email for fb account api

@@ -11,6 +11,7 @@ import com.capstone.booking.repository.TicketTypeRepository;
 import com.capstone.booking.repository.VisitorTypeRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
@@ -203,6 +204,7 @@ public class TicketServiceImplTest {
         final ResponseEntity<?> result = ticketServiceImplUnderTest.create(ticketDTO);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -464,6 +466,7 @@ public class TicketServiceImplTest {
         final ResponseEntity<?> result = ticketServiceImplUnderTest.getReport(0L, 0L, 0L, 0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test

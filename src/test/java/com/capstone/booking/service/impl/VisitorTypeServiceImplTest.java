@@ -11,6 +11,7 @@ import lombok.SneakyThrows;
 import org.apache.poi.util.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -113,6 +114,7 @@ public class VisitorTypeServiceImplTest {
         final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.create(model, 0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -179,6 +181,7 @@ public class VisitorTypeServiceImplTest {
         final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.update(model);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -386,6 +389,7 @@ public class VisitorTypeServiceImplTest {
         final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.changeStatus(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -527,6 +531,7 @@ public class VisitorTypeServiceImplTest {
         final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.findByTicketTypeId(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -608,6 +613,7 @@ public class VisitorTypeServiceImplTest {
         final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.getById(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 //
 //    @SneakyThrows
@@ -701,5 +707,6 @@ public class VisitorTypeServiceImplTest {
         final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.markBasicPrice(0L, 0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 }

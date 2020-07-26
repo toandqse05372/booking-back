@@ -2,6 +2,7 @@ package com.capstone.booking.repository.impl;
 
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.CityConverter;
+import com.capstone.booking.entity.Category;
 import com.capstone.booking.entity.City;
 import com.capstone.booking.entity.dto.CityDTO;
 import com.capstone.booking.repository.customRepository.CityRepositoryCustom;
@@ -17,15 +18,18 @@ import java.util.Map;
 
 public class CityRepositoryImpl implements CityRepositoryCustom {
 
-    private Integer totalItem;
-    private long totalPage;
-    private boolean searched = false;
+    private Integer totalItem = 0;
+    private long totalPage = 1;
 
     @PersistenceContext
     EntityManager entityManager;
 
     @Autowired
     CityConverter cityConverter;
+
+    public CityRepositoryImpl(EntityManager entityManager){
+        this.entityManager = entityManager;
+    }
 
     @Override
     public Output findByName(String name, Long limit, Long page) {
@@ -49,18 +53,24 @@ public class CityRepositoryImpl implements CityRepositoryCustom {
         if (addedWhere) {
             queryStr += " where ";
         }
-        if (!searched) {
-            totalItem = queryCity(params, queryStr + where).size();
+        List<City> cities = queryCity(params, queryStr + where);
+        List<City> limitList = new ArrayList<>();
+        if(cities.size() > 0){
+            totalItem = cities.size();
             totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
+            int range = totalItem >= limit ? (int) (page * limit) : totalItem;
+            for(int i = (int) ((page - 1) * limit); i < range; i++){
+                limitList.add(cities.get(i));
+            }
         }
-        params.put("from", (page - 1) * limit);
-        stack++;
-        params.put("limit", limit);
-        stack++;
-        where += "limit :from, :limit";
+//        params.put("from", (page - 1) * limit);
+//        stack++;
+//        params.put("limit", limit);
+//        stack++;
+//        where += "limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryCity(params, queryStr + where)));
+        output.setListResult(convertList(limitList));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);

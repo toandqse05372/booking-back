@@ -64,7 +64,7 @@ public class CategoryController {
 
     //search By Id
     @GetMapping("/category/{id}")
-    public ResponseEntity<?> getCategry(@PathVariable Long id) {
+    public ResponseEntity<?> getCategory(@PathVariable Long id) {
         return categoryService.getCategory(id);
     }
 

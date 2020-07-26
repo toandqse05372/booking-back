@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,13 +25,18 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
     EntityManager entityManager;
 
     @Autowired
-    private GameConverter gameConverter;
+    GameConverter gameConverter;
 
+    public GameRepositoryImpl(EntityManager entityManager){
+        this.entityManager = entityManager;
+    }
 
     @Override
     public Output findByMulParam(String gameName, String placeName, Long limit, Long page) {
         boolean addedWhere = false;
-        String queryStr = "select game0_.* from t_game game0_ ";
+        String count = "select count(game0_.id)";
+        String getAll = "select game0_.*";
+        String queryStr = " from t_game game0_ ";
         String where = "";
         Integer stack = 1;
         int pageInt = Math.toIntExact(page);
@@ -57,7 +63,7 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
             queryStr += " where ";
         }
         if (!searched) {
-            totalItem = queryGame(params, queryStr + where).size();
+            totalItem = countGame(params, count + queryStr + where);
             totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
         }
         params.put("from", (page - 1) * limit);
@@ -67,7 +73,7 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
         where += " limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryGame(params, queryStr + where)));
+        output.setListResult(convertList(queryGame(params, getAll +queryStr + where)));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);
@@ -135,5 +141,16 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
                 query.setParameter(key, value + "%");
         }
         return query.getResultList();
+    }
+
+    public int countGame(Map<String, Object> params, String sqlStr) {
+        Query query = entityManager.createNativeQuery(sqlStr);
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            query.setParameter(key, value + "%");
+        }
+        BigInteger counter = (BigInteger) query.getSingleResult();
+        return counter.intValue() ;
     }
 }

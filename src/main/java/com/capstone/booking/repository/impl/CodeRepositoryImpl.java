@@ -13,12 +13,15 @@ public class CodeRepositoryImpl implements CodeCustom {
     @PersistenceContext
     private EntityManager entityManager;
 
+    public CodeRepositoryImpl(EntityManager entityManager){
+        this.entityManager = entityManager;
+    }
+
     @Override
     public List<Code> findByVisitorTypeIdLimitTo(int limit, VisitorType visitorType) {
-        return entityManager.createQuery("SELECT p FROM Code p WHERE p.visitorType like :visitorType ORDER BY p.id",
+        return entityManager.createNativeQuery("SELECT p FROM Code p WHERE p.visitorType like :visitorType ORDER BY p.id",
                 Code.class).setParameter("visitorType", visitorType)
                 .setMaxResults(limit)
                 .getResultList();
     }
-
 }

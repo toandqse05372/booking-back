@@ -15,6 +15,7 @@ import lombok.SneakyThrows;
 import org.apache.poi.util.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
@@ -74,6 +75,7 @@ public class PlaceServiceImplTest {
         final ResponseEntity<?> result = placeServiceImplUnderTest.findByMultipleParam("name", "address", 0L, 0L, 0L, 0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -113,6 +115,7 @@ public class PlaceServiceImplTest {
         final ResponseEntity<?> result = placeServiceImplUnderTest.getPlace(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -195,6 +198,7 @@ public class PlaceServiceImplTest {
         final ResponseEntity<?> result = placeServiceImplUnderTest.getPlaceClient(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @SneakyThrows
@@ -418,6 +422,7 @@ public class PlaceServiceImplTest {
         final ResponseEntity<?> result = placeServiceImplUnderTest.changeStatus(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -448,6 +453,7 @@ public class PlaceServiceImplTest {
         final ResponseEntity<?> result = placeServiceImplUnderTest.getAll();
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -468,6 +474,7 @@ public class PlaceServiceImplTest {
         final ResponseEntity<?> result = placeServiceImplUnderTest.searchPlaceForClient("name", 0L, 0L, cityId, categoryId, 0L, 0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @SneakyThrows

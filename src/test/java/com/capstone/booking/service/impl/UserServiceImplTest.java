@@ -14,6 +14,7 @@ import lombok.SneakyThrows;
 import org.apache.poi.util.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
@@ -695,6 +696,7 @@ public class UserServiceImplTest {
         final ResponseEntity<?> result = userServiceImplUnderTest.changePassword(0L, "password", "newPassword");
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -741,6 +743,7 @@ public class UserServiceImplTest {
         final ResponseEntity<?> result = userServiceImplUnderTest.getUserClient(0L);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @SneakyThrows
@@ -870,6 +873,7 @@ public class UserServiceImplTest {
         final ResponseEntity<?> result = userServiceImplUnderTest.createPasswordResetToken("mail");
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -916,5 +920,6 @@ public class UserServiceImplTest {
         final ResponseEntity<?> result = userServiceImplUnderTest.updateClient(userDTO);
 
         // Verify the results
+        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 }
