@@ -239,6 +239,7 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("WRONG_OLD_PASSWORD");
         }
         user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+        userRepository.save(user);
         return new ResponseEntity(user.getId(), HttpStatus.OK);
     }
 
