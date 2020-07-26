@@ -6,4 +6,6 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 
     //find jwt token saved in db
     Token findByToken(String token);
+
+    Token findByUserId(long uid);
 }

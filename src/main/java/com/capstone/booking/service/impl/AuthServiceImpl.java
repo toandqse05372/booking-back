@@ -56,6 +56,9 @@ public class AuthServiceImpl implements AuthService {
         if (null == user || !new BCryptPasswordEncoder().matches(userDTO.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("WRONG_USERNAME_PASSWORD");
         }
+        if(null != tokenRepository.findByUserId(user.getId())){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("ACCOUNT_LOGGED_IN");
+        }
         if (page != null) {
             // check if user logging in from cms site
             if (page.equals("CMS")) {
@@ -146,6 +149,7 @@ public class AuthServiceImpl implements AuthService {
         token.setToken(jwtUtil.generateToken(userPrincipal));
         token.setTokenExpDate(jwtUtil.generateExpirationDate());
         token.setCreatedBy(userPrincipal.getUserId());
+        token.setUserId(userPrincipal.getUserId());
         tokenService.createToken(token);
         return token;
     }
