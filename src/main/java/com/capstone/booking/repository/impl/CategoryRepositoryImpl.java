@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ public class CategoryRepositoryImpl implements CategoryCustom {
 
     private Integer totalItem = 0;
     private long totalPage = 1;
+    private boolean searched = false;
 
     @PersistenceContext
     EntityManager entityManager;
@@ -35,7 +37,9 @@ public class CategoryRepositoryImpl implements CategoryCustom {
     @Override
     public Output findByMulParam(String typeName, Long limit, Long page) {
         boolean addedWhere = false;
-        String queryStr = "select pt.* from t_category pt ";
+        String count = "select count(pt.id)";
+        String getAll = "select pt.*";
+        String queryStr = " from t_category pt ";
         String where = "";
         Integer stack = 1;
         int pageInt = Math.toIntExact(page);
@@ -56,25 +60,19 @@ public class CategoryRepositoryImpl implements CategoryCustom {
             queryStr += " where ";
         }
 
-        List<Category> categories = queryCategory(params, queryStr + where);
-
-//        params.put("from", (page - 1) * limit);
-//        stack++;
-//        params.put("limit", limit);
-//        stack++;
-//        where += " limit :from, :limit";
-        List<Category> limitList = new ArrayList<>();
-        if(categories.size() > 0){
-            totalItem = categories.size();
+        if (!searched) {
+            totalItem = countCategory(params, count + queryStr + where);
             totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
-            int range = totalItem >= limit ? (int) (page * limit) : totalItem;
-            for(int i = (int) ((page - 1) * limit); i < range; i++){
-                limitList.add(categories.get(i));
-            }
         }
 
+        params.put("from", (page - 1) * limit);
+        stack++;
+        params.put("limit", limit);
+        stack++;
+        where += " limit :from, :limit";
+
         Output output = new Output();
-        output.setListResult(convertList(limitList));
+        output.setListResult(convertList(queryCategory(params, getAll + queryStr + where)));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);
@@ -101,5 +99,16 @@ public class CategoryRepositoryImpl implements CategoryCustom {
                 query.setParameter(key, value + "%");
         }
         return query.getResultList();
+    }
+
+    public int countCategory(Map<String, Object> params, String sqlStr) {
+        Query query = entityManager.createNativeQuery(sqlStr);
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            query.setParameter(key, value + "%");
+        }
+        BigInteger counter = (BigInteger) query.getSingleResult();
+        return counter.intValue() ;
     }
 }

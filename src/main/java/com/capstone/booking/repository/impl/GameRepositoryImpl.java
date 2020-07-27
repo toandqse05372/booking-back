@@ -84,7 +84,9 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
     @Override
     public Output findByPlaceId(Long placeId, Long limit, Long page) {
         boolean addedWhere = false;
-        String queryStr = "select game0_.* from t_game game0_ ";
+        String count = "select count(game0_.id)";
+        String getAll = "select game0_.*";
+        String queryStr = " from t_game game0_ ";
         String where = "";
         Integer stack = 1;
         int pageInt = Math.toIntExact(page);
@@ -104,7 +106,7 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
             queryStr += " where ";
         }
         if (!searched) {
-            totalItem = queryGame(params, queryStr + where).size();
+            totalItem = countGame(params, count + queryStr + where);
             totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
         }
         params.put("from", (page - 1) * limit);
@@ -114,7 +116,7 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
         where += " limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryGame(params, queryStr + where)));
+        output.setListResult(convertList(queryGame(params, getAll + queryStr + where)));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);

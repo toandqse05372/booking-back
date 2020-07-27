@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 
 //customer query to order table
@@ -20,4 +21,8 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
     //getTop3
     @Query(value="SELECT * FROM t_order o where o.user_id = :uid ORDER BY o.created_at desc LIMIT 3", nativeQuery = true)
     List<Order> getTop3(@Param("uid") long uid);
+
+    @Query(value="SELECT * FROM t_order o where o.redemption_date < :date and " +
+            "o.status not in (SELECT os.status FROM t_order os where os.status = :status)", nativeQuery = true)
+    List<Order> findAllByRedemptionDateBeforeAndStatus(@Param("date")Date date, @Param("status")String status);
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,8 +18,8 @@ import java.util.Map;
 
 public class UserRepositoryImpl implements UserRepositoryCustom {
 
-    private Integer totalItem;
-    private long totalPage;
+    private Integer totalItem = 0;
+    private long totalPage = 1;
     private boolean searched = false;
 
     @PersistenceContext
@@ -27,11 +28,17 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     @Autowired
     private UserConverter userConverter;
 
+    public UserRepositoryImpl(EntityManager entityManager){
+        this.entityManager = entityManager;
+    }
+
     @Override
     public Output findByMultiParam(String fname, String mail, String lastName,
                                    String phoneNumber, Long roleId, Long limit, Long page) {
         boolean addedWhere = false;
-        String queryStr = "select user0_.* from t_user user0_ ";
+        String count = "select count(user0_.id)";
+        String getAll = "select user0_.*";
+        String queryStr = " from t_user user0_ ";
         String where = "";
         Integer stack = 1;
         int pageInt = Math.toIntExact(page);
@@ -89,7 +96,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         }
         String between = "";
         if (!searched) {
-            totalItem = queryUser(params, queryStr + where).size();
+            totalItem = countUser(params, count + queryStr + where);
             totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
         }
         params.put("from", (page - 1) * limit);
@@ -99,7 +106,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         where += "limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryUser(params, queryStr + where)));
+        output.setListResult(convertList(queryUser(params, getAll + queryStr + where)));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);
@@ -127,6 +134,17 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 query.setParameter(key, "%" + value + "%");
         }
         return query.getResultList();
+    }
+
+    public int countUser(Map<String, Object> params, String sqlStr) {
+        Query query = entityManager.createNativeQuery(sqlStr);
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            query.setParameter(key, value + "%");
+        }
+        BigInteger counter = (BigInteger) query.getSingleResult();
+        return counter.intValue() ;
     }
 
 }

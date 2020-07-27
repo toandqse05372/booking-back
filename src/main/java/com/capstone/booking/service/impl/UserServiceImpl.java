@@ -2,6 +2,7 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.UserConverter;
 import com.capstone.booking.common.key.RoleKey;
+import com.capstone.booking.common.key.UserStatus;
 import com.capstone.booking.common.key.UserType;
 import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.entity.*;
@@ -72,7 +73,7 @@ public class UserServiceImpl implements UserService {
         Set<Role> roleSet = new HashSet<>();
         roleSet.add(roleRepository.findByRoleKey(RoleKey.USER.toString()));
         user.setRoles(roleSet);
-        user.setStatus("NOT");
+        user.setStatus(UserStatus.NOT.toString());
         userRepository.save(user);
         sendEmailVerify(user);
         return ResponseEntity.ok(userConverter.toDTOClient(user));
@@ -116,7 +117,7 @@ public class UserServiceImpl implements UserService {
         VerificationToken token = tokenRepository.findByConfirmationToken(verificationToken);
         if(token != null){
             User user = userRepository.findByMail(token.getUser().getMail());
-            user.setStatus("ACTIVATED");
+            user.setStatus(UserStatus.ACTIVATED.toString());
             userRepository.save(user);
             return ResponseEntity.ok(authService.returnToken(authService.setPermission(user)));
         }
@@ -187,6 +188,7 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.findById(id).isPresent()) {
             return new ResponseEntity("USER_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
+        tokenRepository.deleteByUser(userRepository.findById(id).get());
         userRepository.deleteById(id);
         return new ResponseEntity("Delete Successful", HttpStatus.OK);
     }

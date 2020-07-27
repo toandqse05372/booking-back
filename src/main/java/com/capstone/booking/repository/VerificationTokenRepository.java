@@ -8,4 +8,5 @@ public interface VerificationTokenRepository extends JpaRepository<VerificationT
 
     //find token cf saved in db
     VerificationToken findByConfirmationToken(String verificationToken);
+    void deleteByUser(User user);
 }

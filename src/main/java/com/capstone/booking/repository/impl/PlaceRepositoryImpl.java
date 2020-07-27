@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.util.*;
 
 public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
-    private Integer totalItem;
-    private long totalPage;
+
+    private Integer totalItem = 0;
+    private long totalPage = 1;
     private boolean searched = false;
 
     @PersistenceContext
@@ -26,10 +28,16 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     @Autowired
     private PlaceConverter placeConverter;
 
+    public PlaceRepositoryImpl(EntityManager entityManager){
+        this.entityManager = entityManager;
+    }
+
     @Override
     public Output findByMultiParam(String name, String address, Long cityId, Long categoryId, Long limit, Long page) {
         boolean addedWhere = false;
-        String queryStr = "select place0_.* from t_place place0_ ";
+        String count = "select count(place0_.id)";
+        String getAll = "select place0_.*";
+        String queryStr = " from t_place place0_ ";
         String where = "";
         Integer stack = 1;
         int pageInt = Math.toIntExact(page);
@@ -80,7 +88,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         }
         //String between ="";
         if (!searched) {
-            totalItem = queryPlace(params, queryStr + where).size();
+            totalItem = countPlace(params, count + queryStr + where);
             totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
         }
         params.put("from", (page - 1) * limit);
@@ -90,7 +98,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         where += "limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryPlace(params, queryStr + where)));
+        output.setListResult(convertList(queryPlace(params, getAll + queryStr + where)));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);
@@ -101,7 +109,9 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     public Output findByMultiParamForClient(String name, Long minValue, Long maxValue, List<Long> cityId,
                                             List<Long> categoryId, Long limit, Long page) {
         boolean addedWhere = false;
-        String queryStr = "select place0_.* from t_place place0_ ";
+        String count = "select count(place0_.id)";
+        String getAll = "select place0_.*";
+        String queryStr = " from t_place place0_ ";
         String where = "";
         Integer stack = 1;
         int pageInt = Math.toIntExact(page);
@@ -170,7 +180,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
 
         //String between ="";
         if (!searched) {
-            totalItem = queryPlace(params, queryStr + where).size();
+            totalItem = countPlace(params, count + queryStr + where);
             totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
         }
         params.put("from", (page - 1) * limit);
@@ -180,7 +190,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         where += "limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryPlace(params, queryStr + where)));
+        output.setListResult(convertList(queryPlace(params, getAll + queryStr + where)));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);
@@ -208,6 +218,17 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 query.setParameter(key, "%" + value + "%");
         }
         return query.getResultList();
+    }
+
+    public int countPlace(Map<String, Object> params, String sqlStr) {
+        Query query = entityManager.createNativeQuery(sqlStr);
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            query.setParameter(key, value + "%");
+        }
+        BigInteger counter = (BigInteger) query.getSingleResult();
+        return counter.intValue() ;
     }
 
 

@@ -1,5 +1,6 @@
 package com.capstone.booking.service.impl;
 
+import com.capstone.booking.common.key.UserStatus;
 import com.capstone.booking.config.facebook.RestFB;
 import com.capstone.booking.common.converter.UserConverter;
 import com.capstone.booking.common.key.CMSRoles;
@@ -56,8 +57,8 @@ public class AuthServiceImpl implements AuthService {
         if (null == user || !new BCryptPasswordEncoder().matches(userDTO.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("WRONG_USERNAME_PASSWORD");
         }
-        if(null != tokenRepository.findByUserId(user.getId())){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("ACCOUNT_LOGGED_IN");
+        if(user.getStatus() == UserStatus.NOT.toString()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("ACCOUNT_NOT_ACTIVATED");
         }
         if (page != null) {
             // check if user logging in from cms site

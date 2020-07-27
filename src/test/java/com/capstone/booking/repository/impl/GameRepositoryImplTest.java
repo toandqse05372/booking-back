@@ -10,6 +10,7 @@ import org.mockito.Mock;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,10 +23,10 @@ public class GameRepositoryImplTest {
     @Mock
     private EntityManager mockEntityManager;
 
+    private GameRepositoryImpl gameRepositoryImplUnderTest;
+
     @Mock
     Query query;
-
-    private GameRepositoryImpl gameRepositoryImplUnderTest;
 
     @Before
     public void setUp() {
@@ -38,15 +39,23 @@ public class GameRepositoryImplTest {
     public void testFindByMulParam() {
         // Setup
         final Output expectedResult = new Output();
-        expectedResult.setPage(0);
-        expectedResult.setTotalPage(0);
+        expectedResult.setPage(1);
+        expectedResult.setTotalPage(1);
         expectedResult.setListResult(Arrays.asList());
-        expectedResult.setTotalItems(0);
+        expectedResult.setTotalItems(1);
 
-        when(mockEntityManager.createNativeQuery("s", Game.class)).thenReturn(null);
+        BigInteger counter = BigInteger.valueOf(1);
+        when(mockEntityManager.createNativeQuery("select count(game0_.id) from t_game game0_ INNER join t_place p on p.id = game0_.place_id where  p.status like 'ACTIVE' and p.name like :pname and game0_.game_name like :gname ")).thenReturn(query);
+        when(query.setParameter("gname","gameName")).thenReturn(query);
+        when(query.setParameter("pname","placeName")).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(counter);
+        when(mockEntityManager.createNativeQuery("select game0_.* from t_game game0_ INNER join t_place p on p.id = game0_.place_id where  p.status like 'ACTIVE' and p.name like :pname and game0_.game_name like :gname  limit :from, :limit", Game.class)).thenReturn(query);
+        when(query.setParameter("from",1)).thenReturn(query);
+        when(query.setParameter("limit",1)).thenReturn(query);
+        when(query.getResultList()).thenReturn(Arrays.asList());
 
         // Run the test
-        final Output result = gameRepositoryImplUnderTest.findByMulParam("gameName", "placeName", 0L, 0L);
+        final Output result = gameRepositoryImplUnderTest.findByMulParam("gameName", "placeName", 1L, 1L);
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);
@@ -56,15 +65,22 @@ public class GameRepositoryImplTest {
     public void testFindByPlaceId() {
         // Setup
         final Output expectedResult = new Output();
-        expectedResult.setPage(0);
-        expectedResult.setTotalPage(0);
+        expectedResult.setPage(1);
+        expectedResult.setTotalPage(1);
         expectedResult.setListResult(Arrays.asList());
-        expectedResult.setTotalItems(0);
+        expectedResult.setTotalItems(1);
 
-        when(mockEntityManager.createNativeQuery("select game0_.* from t_game game0_ ", Game.class)).thenReturn(query);
+        BigInteger counter = BigInteger.valueOf(1);
+        when(mockEntityManager.createNativeQuery("select count(game0_.id) from t_game game0_  where game0_.place_id = :id ")).thenReturn(query);
+        when(query.setParameter("id",1)).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(counter);
+        when(mockEntityManager.createNativeQuery("select game0_.* from t_game game0_  where game0_.place_id = :id  limit :from, :limit", Game.class)).thenReturn(query);
+        when(query.setParameter("from",1)).thenReturn(query);
+        when(query.setParameter("limit",1)).thenReturn(query);
+        when(query.getResultList()).thenReturn(Arrays.asList());
 
         // Run the test
-        final Output result = gameRepositoryImplUnderTest.findByPlaceId(0L, 0L, 0L);
+        final Output result = gameRepositoryImplUnderTest.findByPlaceId(1L, 1L, 1L);
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);
@@ -77,46 +93,7 @@ public class GameRepositoryImplTest {
         game.setGameName("gameName");
         game.setGameDescription("gameDescription");
         game.setStatus("status");
-        final TicketType ticketType = new TicketType();
-        ticketType.setTypeName("typeName");
-        ticketType.setPlaceId(0L);
-        ticketType.setStatus("status");
-        final VisitorType visitorType = new VisitorType();
-        visitorType.setTypeName("typeName");
-        visitorType.setTypeKey("typeKey");
-        visitorType.setPrice(0);
-        visitorType.setBasicType(false);
-        visitorType.setStatus("status");
-        visitorType.setTicketType(new TicketType());
-        final OrderItem orderItem = new OrderItem();
-        orderItem.setQuantity(0);
-        orderItem.setVisitorType(new VisitorType());
-        final Order order = new Order();
-        order.setTicketTypeId(0L);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
-        order.setMail("mail");
-        order.setPhoneNumber("phoneNumber");
-        order.setStatus("status");
-        order.setOrderCode("orderCode");
-        order.setTotalPayment(0);
-        order.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem.setOrder(order);
-        final Ticket ticket = new Ticket();
-        ticket.setCode("code");
-        ticket.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket.setVisitorTypeId(0L);
-        ticket.setOrderItem(new OrderItem());
-        orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
-        visitorType.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
-        ticketType.setVisitorType(new HashSet<>(Arrays.asList(visitorType)));
-        ticketType.setGame(new HashSet<>(Arrays.asList(new Game())));
-        game.setTicketTypes(new HashSet<>(Arrays.asList(ticketType)));
+
         final Place place = new Place();
         place.setName("name");
         place.setPlaceKey("placeKey");
@@ -138,6 +115,7 @@ public class GameRepositoryImplTest {
         gameDTO.setPlaceName("placeName");
         gameDTO.setStatus("status");
         final List<GameDTO> expectedResult = Arrays.asList(gameDTO);
+        when(gameRepositoryImplUnderTest.gameConverter.toDTO(game)).thenReturn(gameDTO);
 
         // Run the test
         final List<GameDTO> result = gameRepositoryImplUnderTest.convertList(gameList);
@@ -154,6 +132,7 @@ public class GameRepositoryImplTest {
         game.setGameName("gameName");
         game.setGameDescription("gameDescription");
         game.setStatus("status");
+
         final Place place = new Place();
         place.setName("name");
         place.setPlaceKey("placeKey");
@@ -167,13 +146,27 @@ public class GameRepositoryImplTest {
         place.setCancelPolicy("cancelPolicy");
         game.setPlace(place);
         final List<Game> expectedResult = Arrays.asList(game);
-
-        when(mockEntityManager.createNativeQuery("select game0_.* from t_game game0_ ", Game.class)).thenReturn(query);
+        when(mockEntityManager.createNativeQuery("select * from t_game", Game.class)).thenReturn(query);
         when(query.getResultList()).thenReturn(expectedResult);
+
         // Run the test
-        final List<Game> result = gameRepositoryImplUnderTest.queryGame(params, "select game0_.* from t_game game0_ ");
+        final List<Game> result = gameRepositoryImplUnderTest.queryGame(params, "select * from t_game");
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    public void testCountGame() {
+        // Setup
+        final Map<String, Object> params = new HashMap<>();
+        when(mockEntityManager.createNativeQuery("select count(pt.id) from t_game pt")).thenReturn(query);
+        BigInteger expectedResult = BigInteger.valueOf(0);
+        when(query.getSingleResult()).thenReturn(expectedResult);
+        // Run the test
+        final int result = gameRepositoryImplUnderTest.countGame(params, "select count(pt.id) from t_game pt");
+
+        // Verify the results
+        assertThat(result).isEqualTo(0);
     }
 }
