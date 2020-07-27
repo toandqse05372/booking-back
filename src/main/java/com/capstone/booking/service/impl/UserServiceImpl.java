@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findByMail(token.getUser().getMail());
             user.setStatus(UserStatus.ACTIVATED.toString());
             userRepository.save(user);
-            tokenRepository.deleteByUser(user);
+            tokenRepository.delete(tokenRepository.findByUser(user));
             return ResponseEntity.ok(authService.returnToken(authService.setPermission(user)));
         }
         else{
