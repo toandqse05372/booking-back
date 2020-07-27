@@ -29,14 +29,14 @@ public class User extends BaseEntity {
     private String userType;
     private String avatarLink;
     //nhiều user có nhiều trường, nhiều trường thuộc về nhiều user
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinTable(name = "t_user_role",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles = new HashSet<>();
 
     //Bảng User qhe 1-n với Order
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Order> order = new HashSet<>();
 
 }

@@ -83,6 +83,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> resendEmailVerify(String mail){
         User user = userRepository.findByMail(mail);
+        if(user == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("WRONG_EMAIL");
+        }
         sendEmailVerify(user);
         return ResponseEntity.ok(user);
     }

@@ -24,6 +24,6 @@ public class OrderItem extends BaseEntity{
     private Order order;
 
     //Bảng OrderItem qhe 1-n với Ticket
-    @OneToMany(mappedBy = "orderItem")
+    @OneToMany(mappedBy = "orderItem", fetch = FetchType.LAZY)
     private Set<Ticket> ticket;
 }
