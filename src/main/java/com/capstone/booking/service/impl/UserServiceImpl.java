@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         if(user == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("WRONG_EMAIL");
         }
-        tokenRepository.deleteByUser(user);
+        tokenRepository.delete(tokenRepository.findByUser(user));
         sendEmailVerify(user);
         return ResponseEntity.ok(user);
     }
