@@ -124,7 +124,7 @@ public class UserController {
     }
 
     //verify Change Password Token
-    @PostMapping("/user/verifyChangePasswordToken")
+    @GetMapping("/user/verifyChangePasswordToken")
     public ResponseEntity<?> verifyChangePasswordToken(@RequestParam("token")String verificationToken){
         return userService.validatePasswordResetToken(verificationToken);
     }
