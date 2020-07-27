@@ -48,6 +48,8 @@ public interface UserService {
     //change password request
     ResponseEntity<?> changePassword(long uid, String oldPassword, String newPassword);
 
+    ResponseEntity<?> findEmailToChangePassword(String mail);
+
     ResponseEntity<?> getUserClient(Long id);
 
     ResponseEntity<?> updateAvatar(Long id, MultipartFile file);

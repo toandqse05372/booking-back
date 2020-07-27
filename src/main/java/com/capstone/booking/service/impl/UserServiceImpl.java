@@ -236,7 +236,7 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity(user.getId(), HttpStatus.OK);
     }
 
-    //change password
+    //change password in user info
     @Override
     public ResponseEntity<?> changePassword(long uid, String oldPassword, String newPassword) {
         User user = userRepository.findById(uid).get();
@@ -246,6 +246,32 @@ public class UserServiceImpl implements UserService {
         user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
         userRepository.save(user);
         return new ResponseEntity(user.getId(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> findEmailToChangePassword(String mail) {
+        User user = userRepository.findByMail(mail);
+        if(user == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EMAIL_NOT_EXISTED");
+        }
+        sendChangePassVerify(user);
+        return new ResponseEntity(user.getId(), HttpStatus.OK);
+    }
+
+    //send verify change password email
+    public void sendChangePassVerify(User user){
+        PasswordResetToken passwordResetToken = new PasswordResetToken();
+        passwordResetToken.setUser(user);
+        passwordResetToken.setToken(UUID.randomUUID().toString());
+        passwordResetToken.setExpiryDate(new Date(System.currentTimeMillis() + 17280000));
+        passwordTokenRepository.save(passwordResetToken);
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getMail()); //user email
+        mailMessage.setSubject("Complete Registration!");
+        mailMessage.setFrom(fromMail);
+        mailMessage.setText("To change your password, please click here : "
+                +hostFrontEnd+"confirmMail?token="+passwordResetToken.getToken());
+        emailSenderService.sendEmail(mailMessage);
     }
 
     @Override

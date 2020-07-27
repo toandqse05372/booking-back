@@ -97,6 +97,11 @@ public class UserController {
         return userService.changePassword(Long.parseLong(uid), oldPassword, newPassword);
     }
 
+    @PostMapping("user/forgotPassword")
+    public ResponseEntity<?> forgotPassword(@RequestPart(value = "mail") String mail){
+        return userService.findEmailToChangePassword(mail);
+    }
+
     //verify email for fb account api
     @GetMapping("user/verifyEmailFb")
     public ResponseEntity<?> verifyEmailFb(String mail, Long uid){
