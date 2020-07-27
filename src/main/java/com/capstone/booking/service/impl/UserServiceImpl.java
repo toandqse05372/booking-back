@@ -267,10 +267,10 @@ public class UserServiceImpl implements UserService {
         passwordTokenRepository.save(passwordResetToken);
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(user.getMail()); //user email
-        mailMessage.setSubject("Complete Registration!");
+        mailMessage.setSubject("Change password");
         mailMessage.setFrom(fromMail);
         mailMessage.setText("To change your password, please click here : "
-                +hostFrontEnd+"confirmMail?token="+passwordResetToken.getToken());
+                +hostFrontEnd+"newPassword?token="+passwordResetToken.getToken());
         emailSenderService.sendEmail(mailMessage);
     }
 
