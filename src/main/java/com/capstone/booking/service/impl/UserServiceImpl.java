@@ -86,6 +86,7 @@ public class UserServiceImpl implements UserService {
         if(user == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("WRONG_EMAIL");
         }
+        tokenRepository.deleteByUser(user);
         sendEmailVerify(user);
         return ResponseEntity.ok(user);
     }
@@ -122,6 +123,7 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findByMail(token.getUser().getMail());
             user.setStatus(UserStatus.ACTIVATED.toString());
             userRepository.save(user);
+            tokenRepository.deleteByUser(user);
             return ResponseEntity.ok(authService.returnToken(authService.setPermission(user)));
         }
         else{
@@ -235,6 +237,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> changePasswordAfterReset(long uid, String newPassword) {
         User user = userRepository.findById(uid).get();
         user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+        userRepository.save(user);
         return new ResponseEntity(user.getId(), HttpStatus.OK);
     }
 
