@@ -129,5 +129,11 @@ public class UserController {
         return userService.validatePasswordResetToken(verificationToken);
     }
 
+    //change Password, called After Reset
+    @PostMapping("user/changePasswordAfterReset")
+    public ResponseEntity<?> changePasswordAfterReset(@RequestPart(value = "uid") String uid, @RequestPart(value = "newPassword") String newPassword){
+        return userService.changePasswordAfterReset(Long.parseLong(uid), newPassword);
+    }
+
 
 }
