@@ -24,7 +24,7 @@ public class UserController {
 
     //re sent email
     @PostMapping("/user/resent-email")
-    public ResponseEntity<?> resendEmail(@RequestBody String mail) {
+    public ResponseEntity<?> resendEmail(@RequestPart(value = "mail") String mail) {
         return userService.resendEmailVerify(mail);
     }
 
