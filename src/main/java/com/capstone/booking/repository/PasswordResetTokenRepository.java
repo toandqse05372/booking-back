@@ -6,6 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Integer> {
     //find password reset token
     PasswordResetToken findByToken(String token);
-
-    void deleteByToken(String token);
 }

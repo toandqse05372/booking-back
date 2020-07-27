@@ -226,7 +226,7 @@ public class UserServiceImpl implements UserService {
         String randomPass = UUID.randomUUID().toString();
         user.setPassword(randomPass);
         userRepository.save(user);
-        passwordTokenRepository.deleteByToken(token);
+        passwordTokenRepository.delete(passwordTokenRepository.findByToken(token));
         return new ResponseEntity(user.getId(), HttpStatus.OK);
     }
 
