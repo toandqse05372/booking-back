@@ -97,11 +97,7 @@ public class UserController {
         return userService.changePassword(Long.parseLong(uid), oldPassword, newPassword);
     }
 
-    @PostMapping("user/forgotPassword")
-    public ResponseEntity<?> forgotPassword(@RequestPart(value = "mail") String mail){
-        return userService.findEmailToChangePassword(mail);
-    }
-
+    //not use
     //verify email for fb account api
     @GetMapping("user/verifyEmailFb")
     public ResponseEntity<?> verifyEmailFb(String mail, Long uid){
@@ -117,6 +113,20 @@ public class UserController {
     @PostMapping("/user/avatar/{id}")
     public ResponseEntity<?> updateAvatar(@PathVariable Long id, @RequestPart(value = "file") MultipartFile file){
         return userService.updateAvatar(id, file);
+    }
+
+    //api change password
+
+    // verify
+    @PostMapping("user/forgotPassword")
+    public ResponseEntity<?> forgotPassword(@RequestPart(value = "mail") String mail){
+        return userService.findEmailToChangePassword(mail);
+    }
+
+    //verify Change Password Token
+    @PostMapping("/user/verifyChangePasswordToken")
+    public ResponseEntity<?> verifyChangePasswordToken(@RequestParam("token")String verificationToken){
+        return userService.validatePasswordResetToken(verificationToken);
     }
 
 
