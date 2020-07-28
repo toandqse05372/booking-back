@@ -15,6 +15,10 @@ public class TicketTypeRepositoryImpl implements TicketTypeCustom {
     @PersistenceContext
     EntityManager entityManager;
 
+    public TicketTypeRepositoryImpl(EntityManager entityManager){
+        this.entityManager = entityManager;
+    }
+
     @Override
     public List<TicketType> findByPlaceId(Long placeId) {
         String queryStr = "select type.* from t_ticket_type type " +

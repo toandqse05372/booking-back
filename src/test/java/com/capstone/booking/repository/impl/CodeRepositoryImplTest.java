@@ -7,6 +7,7 @@ import org.mockito.Mock;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,7 +22,7 @@ public class CodeRepositoryImplTest {
     private CodeRepositoryImpl codeRepositoryImplUnderTest;
 
     @Mock
-    Query query;
+    TypedQuery query;
 
     @Before
     public void setUp() {
@@ -69,7 +70,7 @@ public class CodeRepositoryImplTest {
 
 
         final List<Code> expectedResult = Arrays.asList(code);
-        when(mockEntityManager.createNativeQuery("SELECT p FROM Code p WHERE p.visitorType like :visitorType ORDER BY p.id", Code.class)).thenReturn(query);
+        when(mockEntityManager.createQuery("SELECT p FROM Code p WHERE p.visitorType like :visitorType ORDER BY p.id", Code.class)).thenReturn(query);
         when(query.setParameter("visitorType", visitorType)).thenReturn(query);
         when(query.setMaxResults(1)).thenReturn(query);
         when(query.getResultList()).thenReturn(expectedResult);

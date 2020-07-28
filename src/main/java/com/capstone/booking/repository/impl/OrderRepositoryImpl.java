@@ -17,13 +17,15 @@ import java.util.Map;
 
 public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
-
     @PersistenceContext
     EntityManager entityManager;
 
     @Autowired
-    private OrderConverter orderConverter;
+    OrderConverter orderConverter;
 
+    public OrderRepositoryImpl(EntityManager entityManager){
+        this.entityManager = entityManager;
+    }
 
     @Override
     public Output findByStatus(String status, String code) {
