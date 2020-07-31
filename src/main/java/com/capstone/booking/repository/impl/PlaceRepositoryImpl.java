@@ -26,7 +26,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     EntityManager entityManager;
 
     @Autowired
-    private PlaceConverter placeConverter;
+    PlaceConverter placeConverter;
 
     public PlaceRepositoryImpl(EntityManager entityManager){
         this.entityManager = entityManager;
@@ -174,6 +174,11 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
             stack++;
         }
 
+        where += "and place0_.id \n" +
+                "in ( select tt.place_id from t_ticket_type tt \n" +
+                "inner join t_visitor_type vt on tt.id = vt.ticket_type_id )\n" +
+                "group by place0_.id";
+
         if (addedWhere) {
             queryStr += " where ";
         }
@@ -225,7 +230,10 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            query.setParameter(key, value + "%");
+            if (key.contains("cid") || key.contains("ptid") || key.equals("minValue") || key.equals("maxValue")) {
+                query.setParameter(key, value);
+            } else
+                query.setParameter(key, "%" + value + "%");
         }
         BigInteger counter = (BigInteger) query.getSingleResult();
         return counter.intValue() ;

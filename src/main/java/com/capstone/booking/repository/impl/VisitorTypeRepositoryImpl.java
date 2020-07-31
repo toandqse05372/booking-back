@@ -1,6 +1,5 @@
 package com.capstone.booking.repository.impl;
 
-import com.capstone.booking.entity.Code;
 import com.capstone.booking.entity.VisitorType;
 import com.capstone.booking.repository.customRepository.VisitorTypeRepositoryCustom;
 
@@ -12,6 +11,10 @@ public class VisitorTypeRepositoryImpl implements VisitorTypeRepositoryCustom {
 
     @PersistenceContext
     EntityManager entityManager;
+
+    public VisitorTypeRepositoryImpl(EntityManager entityManager){
+        this.entityManager = entityManager;
+    }
 
     @Override
     public VisitorType findByPlaceIdAndBasic(long placeId, boolean isBasic) {

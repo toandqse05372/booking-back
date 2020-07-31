@@ -1,6 +1,7 @@
 package com.capstone.booking.repository.impl;
 
 import com.capstone.booking.api.output.Output;
+import com.capstone.booking.common.converter.PlaceConverter;
 import com.capstone.booking.entity.Place;
 import com.capstone.booking.entity.dto.PlaceDTO;
 import org.junit.Before;
@@ -9,10 +10,12 @@ import org.mockito.Mock;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -30,22 +33,38 @@ public class PlaceRepositoryImplTest {
     public void setUp() {
         initMocks(this);
         placeRepositoryImplUnderTest = new PlaceRepositoryImpl(mockEntityManager);
+        placeRepositoryImplUnderTest.placeConverter = mock(PlaceConverter.class);
     }
 
     @Test
     public void testFindByMultiParam() {
         // Setup
         final Output expectedResult = new Output();
-        expectedResult.setPage(0);
-        expectedResult.setTotalPage(0);
-        expectedResult.setListResult(Arrays.asList());
-        expectedResult.setTotalItems(0);
+        Place place = new Place();
+        place.setId(1l);
+        place.setName("name");
+        List<Place> placeList = Arrays.asList(place);
+        PlaceDTO placeDTO = new PlaceDTO();
+        placeDTO.setId(1l);
+        placeDTO.setName("name");
+        expectedResult.setPage(1);
+        expectedResult.setTotalPage(1);
+        expectedResult.setListResult(Arrays.asList(placeDTO));
+        expectedResult.setTotalItems(1);
+        BigInteger counter = BigInteger.valueOf(1);
 
-        when(mockEntityManager.createNativeQuery("select count(place0_.id) from t_place place0_  where place0_.name like :name  and place0_.address like :address ")).thenReturn(null);
-        when(mockEntityManager.createNativeQuery("s", Place.class)).thenReturn(null);
+        when(mockEntityManager.createNativeQuery("select count(place0_.id) from t_place place0_ INNER join t_place_category ppt on place0_.id = ppt.place_id where  ppt.category_id = :ptid  and place0_.name like :name  and place0_.address like :address  and place0_.city_id = :cid ")).thenReturn(query);
+        when(query.setParameter("name","")).thenReturn(query);
+        when(query.setParameter("address","")).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(counter);
+        when(mockEntityManager.createNativeQuery("select place0_.* from t_place place0_ INNER join t_place_category ppt on place0_.id = ppt.place_id where  ppt.category_id = :ptid  and place0_.name like :name  and place0_.address like :address  and place0_.city_id = :cid limit :from, :limit", Place.class)).thenReturn(query);
+        when(query.setParameter("from",1)).thenReturn(query);
+        when(query.setParameter("limit",1)).thenReturn(query);
+        when(query.getResultList()).thenReturn(placeList);
+        when(placeRepositoryImplUnderTest.placeConverter.toDTO(place)).thenReturn(placeDTO);
 
         // Run the test
-        final Output result = placeRepositoryImplUnderTest.findByMultiParam("name", "address", 0L, 0L, 0L, 0L);
+        final Output result = placeRepositoryImplUnderTest.findByMultiParam("name", "address", 1L, 1L, 1L, 1L);
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);
@@ -54,19 +73,34 @@ public class PlaceRepositoryImplTest {
     @Test
     public void testFindByMultiParamForClient() {
         // Setup
-        final List<Long> cityId = Arrays.asList(0L);
-        final List<Long> categoryId = Arrays.asList(0L);
+        final List<Long> cityId = Arrays.asList(1L);
+        final List<Long> categoryId = Arrays.asList(1L);
         final Output expectedResult = new Output();
-        expectedResult.setPage(0);
-        expectedResult.setTotalPage(0);
-        expectedResult.setListResult(Arrays.asList());
-        expectedResult.setTotalItems(0);
+        Place place = new Place();
+        place.setId(1l);
+        place.setName("name");
+        List<Place> placeList = Arrays.asList(place);
+        PlaceDTO placeDTO = new PlaceDTO();
+        placeDTO.setId(1l);
+        placeDTO.setName("name");
+        expectedResult.setPage(1);
+        expectedResult.setTotalPage(1);
+        expectedResult.setListResult(Arrays.asList(placeDTO));
+        expectedResult.setTotalItems(1);
 
-        when(mockEntityManager.createNativeQuery("select count(place0_.id) from t_place place0_  where place0_.name like :name  and place0_.address like :address ")).thenReturn(null);
-        when(mockEntityManager.createNativeQuery("s", Place.class)).thenReturn(null);
+        BigInteger counter = BigInteger.valueOf(1);
 
+        when(mockEntityManager.createNativeQuery("select count(place0_.id) from t_place place0_ INNER join t_place_category ppt on place0_.id = ppt.place_id where  place0_.status like 'ACTIVE'  and  ppt.category_id = :ptid0  and place0_.name like :name  and place0_.city_id = :cid0 ")).thenReturn(query);
+        when(query.setParameter("name","")).thenReturn(query);
+        when(query.setParameter("address","")).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(counter);
+        when(mockEntityManager.createNativeQuery("select place0_.* from t_place place0_ INNER join t_place_category ppt on place0_.id = ppt.place_id where  place0_.status like 'ACTIVE'  and  ppt.category_id = :ptid0  and place0_.name like :name  and place0_.city_id = :cid0 limit :from, :limit", Place.class)).thenReturn(query);
+        when(query.setParameter("from",1)).thenReturn(query);
+        when(query.setParameter("limit",1)).thenReturn(query);
+        when(query.getResultList()).thenReturn(placeList);
+        when(placeRepositoryImplUnderTest.placeConverter.toDTO(place)).thenReturn(placeDTO);
         // Run the test
-        final Output result = placeRepositoryImplUnderTest.findByMultiParamForClient("name", 0L, 0L, cityId, categoryId, 0L, 0L);
+        final Output result = placeRepositoryImplUnderTest.findByMultiParamForClient("name", 0L, 0L, cityId, categoryId, 1L, 1L);
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);
@@ -100,6 +134,7 @@ public class PlaceRepositoryImplTest {
         placeDTO.setCityName("cityName");
         final List<PlaceDTO> expectedResult = Arrays.asList(placeDTO);
 
+        when(placeRepositoryImplUnderTest.placeConverter.toDTO(place)).thenReturn(placeDTO);
         // Run the test
         final List<PlaceDTO> result = placeRepositoryImplUnderTest.convertList(placeList);
 
@@ -110,13 +145,17 @@ public class PlaceRepositoryImplTest {
     @Test
     public void testQueryPlace() {
         // Setup
+        Place place = new Place();
+        place.setId(1l);
+        place.setName("name");
         final Map<String, Object> params = new HashMap<>();
-        when(mockEntityManager.createNativeQuery("s", Place.class)).thenReturn(null);
-
+        when(mockEntityManager.createNativeQuery("select place0_.* from t_place place0_", Place.class)).thenReturn(query);
+        when(query.getResultList()).thenReturn(Arrays.asList(place));
         // Run the test
-        final List<Place> result = placeRepositoryImplUnderTest.queryPlace(params, "sqlStr");
+        final List<Place> result = placeRepositoryImplUnderTest.queryPlace(params, "select place0_.* from t_place place0_");
 
         // Verify the results
+        assertThat(result).isEqualTo(Arrays.asList(place));
     }
 
     @Test

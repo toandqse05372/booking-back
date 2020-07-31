@@ -26,7 +26,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     EntityManager entityManager;
 
     @Autowired
-    private UserConverter userConverter;
+    UserConverter userConverter;
 
     public UserRepositoryImpl(EntityManager entityManager){
         this.entityManager = entityManager;
@@ -106,7 +106,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         where += "limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryUser(params, getAll + queryStr + where)));
+        output.setListResult(convertList(queryUser( params, getAll + queryStr + where)));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);
