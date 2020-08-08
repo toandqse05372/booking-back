@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.util.*;
 
-//nghiệp vụ user
+//user service
 @Service
 public class UserServiceImpl implements UserService {
 

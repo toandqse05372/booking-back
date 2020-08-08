@@ -253,38 +253,38 @@ public class UserServiceImplTest {
         // Verify the results
         verify(mockEmailSenderService).sendEmail(new SimpleMailMessage());
     }
-
-    @Test
-    public void testSendEmailVerify() {
-        // Setup
-        final User user = new User();
-        user.setPassword("password");
-        user.setFirstName("firstName");
-        user.setLastName("lastName");
-        user.setMail("someone@gmail.com");
-        user.setDob(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        user.setPhoneNumber("phoneNumber");
-        user.setStatus("status");
-        user.setUserType("userType");
-
-        // Configure VerificationTokenRepository.save(...).
-        final VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setConfirmationToken("confirmationToken");
-        verificationToken.setUser(user);
-        verificationToken.setUsed(false);
-        when(mockTokenRepository.save(verificationToken)).thenReturn(verificationToken);
-
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getMail()); //user email
-        mailMessage.setSubject("Complete Registration!");
-        mailMessage.setFrom(null);
-        mailMessage.setText("confirmToken");
-        // Run the test
-        userServiceImplUnderTest.sendEmailVerify(user);
-
-        // Verify the results
-        verify(mockEmailSenderService).sendEmail(mailMessage);
-    }
+//
+//    @Test
+//    public void testSendEmailVerify() {
+//        // Setup
+//        final User user = new User();
+//        user.setPassword("password");
+//        user.setFirstName("firstName");
+//        user.setLastName("lastName");
+//        user.setMail("someone@gmail.com");
+//        user.setDob(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
+//        user.setPhoneNumber("phoneNumber");
+//        user.setStatus("status");
+//        user.setUserType("userType");
+//
+//        // Configure VerificationTokenRepository.save(...).
+//        final VerificationToken verificationToken = new VerificationToken();
+//        verificationToken.setConfirmationToken("confirmationToken");
+//        verificationToken.setUser(user);
+//        verificationToken.setUsed(false);
+//        when(mockTokenRepository.save(verificationToken)).thenReturn(verificationToken);
+//
+//        SimpleMailMessage mailMessage = new SimpleMailMessage();
+//        mailMessage.setTo(user.getMail()); //user email
+//        mailMessage.setSubject("Complete Registration!");
+//        mailMessage.setFrom(null);
+//        mailMessage.setText("confirmToken");
+//        // Run the test
+//        userServiceImplUnderTest.sendEmailVerify(user);
+//
+//        // Verify the results
+//        verify(mockEmailSenderService).sendEmail(mailMessage);
+//    }
 
     @Test
     public void testVerifyEmail() {
@@ -489,10 +489,10 @@ public class UserServiceImplTest {
         output.setTotalPage(0);
         output.setListResult(Arrays.asList());
         output.setTotalItems(0);
-        when(mockUserRepository.findByMultiParam("firstName", "mail", "lastName", "phoneNumber", 0L, 0L, 0L)).thenReturn(output);
+        when(mockUserRepository.findByMultiParam("firstName", "mail", "lastName", "0123456789", 0L, 0L, 0L)).thenReturn(output);
 
         // Run the test
-        final ResponseEntity<?> result = userServiceImplUnderTest.findByMultiParam("firstName", "mail", "lastName", "phoneNumber", 0L, 0L, 0L);
+        final ResponseEntity<?> result = userServiceImplUnderTest.findByMultiParam("firstName", "mail", "lastName", "0123456789", 0L, 0L, 0L);
 
         // Verify the results
     }

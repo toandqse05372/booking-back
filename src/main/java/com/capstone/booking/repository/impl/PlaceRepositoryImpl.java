@@ -177,7 +177,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         where += "and place0_.id \n" +
                 "in ( select tt.place_id from t_ticket_type tt \n" +
                 "inner join t_visitor_type vt on tt.id = vt.ticket_type_id )\n" +
-                "group by place0_.id";
+                "group by place0_.id ";
 
         if (addedWhere) {
             queryStr += " where ";
