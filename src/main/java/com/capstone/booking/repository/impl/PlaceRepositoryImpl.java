@@ -226,7 +226,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     }
 
     public int countPlace(Map<String, Object> params, String sqlStr) {
-        Query query = entityManager.createNativeQuery(sqlStr);
+        Query query = entityManager.createNativeQuery("select count(*) from ("+sqlStr+") placecount");
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
