@@ -102,7 +102,7 @@ public class CategoryRepositoryImpl implements CategoryCustom {
     }
 
     public int countCategory(Map<String, Object> params, String sqlStr) {
-        Query query = entityManager.createNativeQuery(sqlStr);
+        Query query = entityManager.createNativeQuery("select count(*) from ("+sqlStr+") countCategory");
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();

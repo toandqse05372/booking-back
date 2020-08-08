@@ -185,7 +185,10 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public ResponseEntity<?> searchPlaceForClient(String name, Long minValue, Long maxValue, List<Long> cityId,
                                                   List<Long> categoryId, Long limit, Long page) {
-        Output results = placeRepository.findByMultiParamForClient(name.trim(), minValue, maxValue, cityId,
+        if(name != null){
+            name = name.trim();
+        }
+        Output results = placeRepository.findByMultiParamForClient(name, minValue, maxValue, cityId,
                 categoryId, limit, page);
         return ResponseEntity.ok(results);
     }

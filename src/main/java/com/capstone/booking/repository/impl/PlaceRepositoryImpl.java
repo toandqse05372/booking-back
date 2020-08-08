@@ -124,14 +124,14 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
             if (stack > 1) {
                 where += " and ";
             }
+            where += "ppt.category_id in ( ";
             for (int i = 0; i < categoryId.size(); i++) {
-                if (i > 0) {
-                    where += "or";
+                where += categoryId.get(i);
+                if(i < categoryId.size() - 1){
+                    where += ",";
                 }
-                where += " ppt.category_id = :ptid" + i + " ";
-                params.put("ptid" + i, categoryId.get(i));
             }
-
+            where += ") ";
             addedWhere = true;
             stack++;
         }
@@ -162,13 +162,14 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
             if (stack > 1) {
                 where += " and ";
             }
+            where += "place0_.city_id in ( ";
             for (int i = 0; i < cityId.size(); i++) {
-                if (i > 0) {
-                    where += "or ";
+                where += cityId.get(i);
+                if(i < cityId.size() - 1){
+                    where += ",";
                 }
-                where += "place0_.city_id = :cid" + i + " ";
-                params.put("cid" + i, cityId.get(i));
             }
+            where += ") ";
 
             addedWhere = true;
             stack++;

@@ -39,7 +39,7 @@ public class VisitorTypeConverter {
         dto.setTypeKey(visitorType.getTypeKey());
         dto.setPrice(visitorType.getPrice());
         dto.setBasicType(visitorType.isBasicType());
-        dto.setRemaining(codeRepository.findByVisitorType(visitorType).size());
+        dto.setRemaining(codeRepository.countByVisitorType(visitorType));
         dto.setTicketTypeId(visitorType.getTicketType().getId());
         dto.setBasicType(visitorType.isBasicType());
 

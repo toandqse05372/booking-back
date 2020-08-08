@@ -16,4 +16,7 @@ public interface CodeRepository extends JpaRepository<Code, Long>, CodeCustom {
 
     //delete by visitor type
     void deleteByVisitorType(VisitorType type);
+
+    //count remaining code
+    int countByVisitorType(VisitorType type);
 }

@@ -76,7 +76,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     }
 
     public List<Order> queryOrder(Map<String, Object> params, String sqlStr) {
-        Query query = entityManager.createNativeQuery(sqlStr, Order.class);
+        Query query = entityManager.createNativeQuery("select count(*) from ("+sqlStr+") queryOrder", Order.class);
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();

@@ -146,7 +146,7 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
     }
 
     public int countGame(Map<String, Object> params, String sqlStr) {
-        Query query = entityManager.createNativeQuery(sqlStr);
+        Query query = entityManager.createNativeQuery("select count(*) from ("+sqlStr+") countGame");
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
