@@ -35,7 +35,7 @@ public class Place extends BaseEntity {
     private String weekDays;//1.2.3.4..
 
     //Bảng Place qhe n-n với category
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinTable(name = "t_place_category",
             joinColumns = {@JoinColumn(name = "place_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")})
@@ -47,10 +47,10 @@ public class Place extends BaseEntity {
     private City city;
 
     //Bảng Place qhe 1-n với Image
-    @OneToMany(mappedBy = "place", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
     private Set<ImagePlace> imagePlace;
 
     //Bảng Place qhe 1-n với GAme
-    @OneToMany(mappedBy = "place", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
     private Set<Game> game;
 }
