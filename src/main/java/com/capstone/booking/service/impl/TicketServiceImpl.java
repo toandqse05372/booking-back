@@ -4,10 +4,7 @@ import com.capstone.booking.api.output.OutputReport;
 import com.capstone.booking.api.output.ReportItem;
 import com.capstone.booking.common.converter.TicketConverter;
 import com.capstone.booking.common.helper.ExcelHelper;
-import com.capstone.booking.entity.Order;
-import com.capstone.booking.entity.Ticket;
-import com.capstone.booking.entity.TicketType;
-import com.capstone.booking.entity.VisitorType;
+import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.TicketDTO;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.TicketService;
@@ -24,10 +21,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -43,6 +38,9 @@ public class TicketServiceImpl implements TicketService {
 
     @Autowired
     private VisitorTypeRepository visitorTypeRepository;
+
+    @Autowired
+    private PlaceRepository placeRepository;
 
     @Autowired
     public JavaMailSender emailSender;
@@ -70,16 +68,16 @@ public class TicketServiceImpl implements TicketService {
     // calculate number of sale tickets of a place
     @Override
     public ResponseEntity<?> getReport(Long placeId, Long reportType, Long startDateL, Long endDateL) {
-        Date endDate = new Date();
+        Date endDate = midnight();
         Date startDate = new Date();
         if (reportType == 0) {
-            endDate = new Date();
+            endDate = midnight();
             startDate = setDateBefore(1);
         } else if (reportType == 1) {
-            endDate = new Date();
+            endDate = midnight();
             startDate = setDateBefore(7);
         } else if (reportType == 2) {
-            endDate = new Date();
+            endDate = midnight();
             startDate = setDateBefore(30);
         } else if (reportType == 3) {
             endDate = new Date(endDateL);
@@ -116,23 +114,35 @@ public class TicketServiceImpl implements TicketService {
     // get report and send to place
     @Override
     public ResponseEntity<?> createReport(OutputReport report) throws IOException, MessagingException {
-        Date endDate = new Date();
-        Date startDate = new Date();
+        Date endDate = midnight();
+        Date startDate = midnight();
         if (report.getReportType() == 0) {
-            endDate = new Date();
+            endDate = midnight();
             startDate = setDateBefore(1);
         } else if (report.getReportType() == 1) {
-            endDate = new Date();
+            endDate = midnight();
             startDate = setDateBefore(7);
         } else if (report.getReportType() == 2) {
-            endDate = new Date();
+            endDate = midnight();
             startDate = setDateBefore(30);
         } else if (report.getReportType() == 3) {
             endDate = new Date(report.getEndDate());
             startDate = new Date(report.getStartDate());
         }
         ExcelHelper.writeExcel(report.getReportItemList(), "NiceJavaBooks.xls");
-        sendEmail(new File("NiceJavaBooks.xls"));
+        Place place = placeRepository.findById(report.getPlaceId()).get();
+        String content = "";
+        if(report.getReportType() == 0){
+            content = "Daily sales report";
+        }else if(report.getReportType() == 1){
+            content = "Weekly sales report";
+        }else if(report.getReportType() == 2){
+            content = "Monthly sales report";
+        }else if(report.getReportType() == 3){
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            content = "Sales report from "+formatter.format(startDate)+" to "+formatter.format(endDate);
+        }
+        sendEmail(new File("NiceJavaBooks.xls"), place.getMail(), content);
         return ResponseEntity.ok("OK");
     }
 
@@ -143,24 +153,34 @@ public class TicketServiceImpl implements TicketService {
         return cal.getTime();
     }
 
+    private Date midnight(){
+        Calendar c = new GregorianCalendar();
+        c.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        Date d1 = c.getTime();
+        return d1;
+    }
+
     //send email
-    public void sendEmail(File file) throws MessagingException, IOException {
+    public void sendEmail(File file, String placeEmail, String content) throws MessagingException, IOException {
         MimeMessage message = emailSender.createMimeMessage();
 
         boolean multipart = true;
 
         MimeMessageHelper helper = new MimeMessageHelper(message, multipart);
 
-        helper.setTo("quangtoandao123@gmail.com");
-        helper.setSubject("Test email with attachments");
+        helper.setTo(placeEmail);
+        helper.setSubject("[GOBOKI] Sales Report");
 
-        helper.setText("Hello, Im testing email with attachments!");
+        helper.setText(content);
 
         String path1 = file.getPath();
 
         // Attachment 1
         FileSystemResource file1 = new FileSystemResource(new File(path1));
-        helper.addAttachment("Report.xls", file1);
+        String fileName = content+".xls";
+        helper.addAttachment(fileName, file1);
         emailSender.send(message);
     }
 }

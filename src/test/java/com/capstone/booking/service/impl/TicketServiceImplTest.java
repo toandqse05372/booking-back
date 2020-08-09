@@ -505,7 +505,7 @@ public class TicketServiceImplTest {
         when(mockEmailSender.createMimeMessage()).thenReturn(mimeMessage);
 
         // Run the test
-        ticketServiceImplUnderTest.sendEmail(file);
+        ticketServiceImplUnderTest.sendEmail(file, "mail", "content");
 
         // Verify the results
         verify(mockEmailSender).send(any(MimeMessage.class));

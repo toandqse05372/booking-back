@@ -28,7 +28,6 @@ public class ExcelHelper {
     }
 
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADER_REPORT = {"#", "Ticket Type Name", "Quantity", "Total"};
     static String SHEET = "Sheet1";
 
     //check excel format
@@ -45,19 +44,41 @@ public class ExcelHelper {
     public static void writeExcel(List<ReportItem> reportItems, String excelFilePath) throws IOException {
         Workbook workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet();
-
         int rowCount = 0;
+        Row row = sheet.createRow(rowCount);
+        Cell cell = row.createCell(0);
+        cell.setCellValue("#");
 
-        for (ReportItem aBook : reportItems) {
-            Row row = sheet.createRow(++rowCount);
-            Cell cell = row.createCell(1);
-            cell.setCellValue(aBook.getTicketTypeName());
+        cell = row.createCell(1);
+        cell.setCellValue("Tên loại vé");
+
+        cell = row.createCell(2);
+        cell.setCellValue("Số lượng đã bán");
+
+        cell = row.createCell(3);
+        cell.setCellValue("Tổng (VNĐ)");
+
+        int stt = 1;
+        for (ReportItem item : reportItems) {
+            row = sheet.createRow(++rowCount);
+
+            cell = row.createCell(0);
+            cell.setCellValue(stt);
+            sheet.autoSizeColumn(0);
+            stt++;
+
+            cell = row.createCell(1);
+            cell.setCellValue(item.getTicketTypeName());
+            sheet.autoSizeColumn(1);
 
             cell = row.createCell(2);
-            cell.setCellValue(aBook.getQuantity());
+            cell.setCellValue(item.getQuantity());
+            sheet.autoSizeColumn(2);
 
             cell = row.createCell(3);
-            cell.setCellValue(aBook.getTotal());
+            cell.setCellValue(item.getTotal());
+            sheet.autoSizeColumn(3);
+
         }
 
         try (FileOutputStream outputStream = new FileOutputStream(excelFilePath)) {

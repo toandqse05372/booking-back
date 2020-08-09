@@ -69,14 +69,14 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     public List<OrderDTO> convertList(List<Order> orderList) {
         List<OrderDTO> results = new ArrayList<>();
         for (Order item : orderList) {
-            OrderDTO orderDTO = orderConverter.toDTO(item);
+            OrderDTO orderDTO = orderConverter.toDTOLite(item);
             results.add(orderDTO);
         }
         return results;
     }
 
     public List<Order> queryOrder(Map<String, Object> params, String sqlStr) {
-        Query query = entityManager.createNativeQuery("select count(*) from ("+sqlStr+") queryOrder", Order.class);
+        Query query = entityManager.createNativeQuery(sqlStr, Order.class);
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();

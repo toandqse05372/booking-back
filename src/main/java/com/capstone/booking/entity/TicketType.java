@@ -19,11 +19,11 @@ public class TicketType extends BaseEntity {
     private String status;
 
     //Bảng ticketType qhe 1-n với VisitorType
-    @OneToMany(mappedBy = "ticketType")
+    @OneToMany(mappedBy = "ticketType", fetch = FetchType.LAZY)
     private Set<VisitorType> visitorType;
 
     //Bảng Game qhe n-n với ticketType
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude @ToString.Exclude
     @JoinTable(name = "t_game_ticketType",
             joinColumns = {@JoinColumn(name = "ticketType_id")},

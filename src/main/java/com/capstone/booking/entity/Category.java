@@ -26,6 +26,6 @@ public class Category extends BaseEntity{
     private String iconLink;
 
     //Bảng Place qhe n-n với Category
-    @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     private Set<Place> places = new HashSet<>();
 }

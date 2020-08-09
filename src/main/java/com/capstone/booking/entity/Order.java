@@ -32,7 +32,7 @@ public class Order extends BaseEntity{
 
 
     //Bảng User qhe 1-n với Order
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

@@ -3,10 +3,7 @@ package com.capstone.booking.entity;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +21,6 @@ public class City extends BaseEntity{
     private String imageLink;
 
     //Bảng City qhe 1-n với Place
-    @OneToMany(mappedBy = "city")
+    @OneToMany(mappedBy = "city", fetch = FetchType.LAZY)
     private Set<Place> places = new HashSet<>();
 }

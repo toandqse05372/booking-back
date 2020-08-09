@@ -74,4 +74,14 @@ public class OrderConverter {
         dto.setOrderItems(orderItemDTOS);
         return dto;
     }
+
+    public OrderDTO toDTOLite(Order order){
+        OrderDTO dto = new OrderDTO();
+        dto.setId(order.getId());
+        dto.setOrderCode(order.getOrderCode());
+        dto.setTotalPayment(order.getTotalPayment());
+        dto.setPurchaseDay(order.getPurchaseDay());
+        dto.setRedemptionDate(order.getRedemptionDate());
+        return dto;
+    }
 }
