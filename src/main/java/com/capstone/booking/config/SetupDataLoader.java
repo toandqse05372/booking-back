@@ -49,7 +49,7 @@ public class SetupDataLoader implements
 
     //add first category
     public void initCategory(){
-        if(categoryRepository.findOneByTypeKey("PARK") == null){
+        if(categoryRepository.findByTypeName("Khu vui chơi") == null){
             Category category = new Category("Khu vui chơi", "PARK", "Cho trẻ tha hồ chạy nhảy, leo trẻo khắp mọi nơi");
             categoryRepository.save(category);
         }
