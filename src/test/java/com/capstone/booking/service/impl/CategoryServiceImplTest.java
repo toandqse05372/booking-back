@@ -57,7 +57,7 @@ public class CategoryServiceImplTest {
         // Setup
 
         // Configure CategoryRepository.findAll(...).
-        final List<Category> categories = Arrays.asList(new Category("typeName", "typeKey"));
+        final List<Category> categories = Arrays.asList(new Category("typeName", "typeKey", "description"));
         when(mockCategoryRepository.findAll()).thenReturn(categories);
 
         // Configure CategoryConverter.toDTO(...).
@@ -65,7 +65,7 @@ public class CategoryServiceImplTest {
         categoryDTO.setCategoryName("categoryName");
         categoryDTO.setTypeKey("typeKey");
         categoryDTO.setIconLink("iconLink");
-        when(mockCategoryConverter.toDTO(new Category("typeName", "typeKey"))).thenReturn(categoryDTO);
+        when(mockCategoryConverter.toDTO(new Category("typeName", "typeKey", "description"))).thenReturn(categoryDTO);
 
         // Run the test
         final ResponseEntity<?> result = categoryServiceImplUnderTest.getAllCategories();
@@ -79,7 +79,7 @@ public class CategoryServiceImplTest {
         // Setup
 
         // Configure CategoryRepository.findById(...).
-        final Optional<Category> category = Optional.of(new Category("typeName", "typeKey"));
+        final Optional<Category> category = Optional.of(new Category("typeName", "typeKey", "description"));
         when(mockCategoryRepository.findById(0L)).thenReturn(category);
 
         // Run the test
@@ -97,9 +97,9 @@ public class CategoryServiceImplTest {
         categoryDTO.setCategoryName("categoryName");
         categoryDTO.setTypeKey("typeKey");
         categoryDTO.setIconLink("iconLink");
-        when(mockCategoryRepository.findByTypeName("typeName")).thenReturn(new Category("typeName", "typeKey"));
-        when(mockCategoryConverter.toCategory(categoryDTO)).thenReturn(new Category("typeName", "typeKey"));
-        when(mockCategoryRepository.save(new Category("typeName", "typeKey"))).thenReturn(new Category("typeName", "typeKey"));
+        when(mockCategoryRepository.findByTypeName("typeName")).thenReturn(new Category("typeName", "typeKey", "description"));
+        when(mockCategoryConverter.toCategory(categoryDTO)).thenReturn(new Category("typeName", "typeKey", "description"));
+        when(mockCategoryRepository.save(new Category("typeName", "typeKey", "description"))).thenReturn(new Category("typeName", "typeKey", "description"));
 
         File file = new File("Test.pdf");
         FileInputStream input = new FileInputStream(file);
@@ -121,7 +121,7 @@ public class CategoryServiceImplTest {
         categoryDTO.setTypeKey("typeKey");
         categoryDTO.setIconLink("iconLink");
         categoryDTO.setId(0l);
-        when(mockCategoryRepository.findByTypeName("typeName")).thenReturn(new Category("typeName", "typeKey"));
+        when(mockCategoryRepository.findByTypeName("typeName")).thenReturn(new Category("typeName", "typeKey", "description"));
 
         // Configure CategoryRepository.findById(...).
         Category category = new Category();
@@ -131,15 +131,15 @@ public class CategoryServiceImplTest {
         final Optional<Category> categoryOptional = Optional.of(category);
         when(mockCategoryRepository.findById(0L)).thenReturn(categoryOptional);
 
-        when(mockCategoryConverter.toCategory(categoryDTO, new Category("typeName", "typeKey"))).thenReturn(new Category("typeName", "typeKey"));
-        when(mockCategoryRepository.save(new Category("typeName", "typeKey"))).thenReturn(new Category("typeName", "typeKey"));
+        when(mockCategoryConverter.toCategory(categoryDTO, new Category("typeName", "typeKey", "description"))).thenReturn(new Category("typeName", "typeKey", "description"));
+        when(mockCategoryRepository.save(new Category("typeName", "typeKey", "description"))).thenReturn(new Category("typeName", "typeKey", "description"));
 
         // Configure CategoryConverter.toDTO(...).
         final CategoryDTO categoryDTO1 = new CategoryDTO();
         categoryDTO1.setCategoryName("categoryName");
         categoryDTO1.setTypeKey("typeKey");
         categoryDTO1.setIconLink("iconLink");
-        when(mockCategoryConverter.toDTO(new Category("typeName", "typeKey"))).thenReturn(categoryDTO1);
+        when(mockCategoryConverter.toDTO(new Category("typeName", "typeKey", "description"))).thenReturn(categoryDTO1);
 
         File file = new File("Test.pdf");
         FileInputStream input = new FileInputStream(file);
@@ -176,7 +176,7 @@ public class CategoryServiceImplTest {
         // Setup
 
         // Configure CategoryRepository.findById(...).
-        final Optional<Category> category = Optional.of(new Category("typeName", "typeKey"));
+        final Optional<Category> category = Optional.of(new Category("typeName", "typeKey", "description"));
         when(mockCategoryRepository.findById(0L)).thenReturn(category);
 
         // Configure CategoryConverter.toDTO(...).
@@ -184,7 +184,7 @@ public class CategoryServiceImplTest {
         categoryDTO.setCategoryName("categoryName");
         categoryDTO.setTypeKey("typeKey");
         categoryDTO.setIconLink("iconLink");
-        when(mockCategoryConverter.toDTO(new Category("typeName", "typeKey"))).thenReturn(categoryDTO);
+        when(mockCategoryConverter.toDTO(new Category("typeName", "typeKey", "description" ))).thenReturn(categoryDTO);
 
         // Run the test
         final ResponseEntity<?> result = categoryServiceImplUnderTest.getCategory(0L);

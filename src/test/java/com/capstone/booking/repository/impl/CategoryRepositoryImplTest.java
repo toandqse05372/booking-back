@@ -65,7 +65,7 @@ public class CategoryRepositoryImplTest {
     @Test
     public void testConvertList() {
         // Setup
-        Category category = new Category("typeName", "typeKey");
+        Category category = new Category("typeName", "typeKey", "description");
         final List<Category> categories = Arrays.asList(category);
         final CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setCategoryName("categoryName");
@@ -84,7 +84,7 @@ public class CategoryRepositoryImplTest {
     public void testQueryCategory() {
         // Setup
         final Map<String, Object> params = new HashMap<>();
-        final List<Category> expectedResult = Arrays.asList(new Category("typeName", "typeKey"));
+        final List<Category> expectedResult = Arrays.asList(new Category("typeName", "typeKey", "description"));
         when(mockEntityManager.createNativeQuery("select * from t_category", Category.class)).thenReturn(query);
         when(query.getResultList()).thenReturn(expectedResult);
         // Run the test

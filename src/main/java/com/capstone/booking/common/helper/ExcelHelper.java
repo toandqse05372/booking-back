@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.capstone.booking.api.output.ReportItem;
 import com.capstone.booking.entity.Code;
-import com.capstone.booking.entity.VisitorType;
 import com.capstone.booking.repository.VisitorTypeRepository;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -41,7 +40,7 @@ public class ExcelHelper {
     }
 
     //write data to excel file
-    public static void writeExcel(List<ReportItem> reportItems, String excelFilePath) throws IOException {
+    public static void writeExcel(List<ReportItem> reportItems, String excelFilePath, int totalRevenue) throws IOException {
         Workbook workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet();
         int rowCount = 0;
@@ -80,6 +79,12 @@ public class ExcelHelper {
             sheet.autoSizeColumn(3);
 
         }
+        row = sheet.createRow(rowCount + 2);
+
+        cell = row.createCell(1);
+        cell.setCellValue("Total Revenue (VNĐ): ");
+        cell = row.createCell(3);
+        cell.setCellValue(totalRevenue);
 
         try (FileOutputStream outputStream = new FileOutputStream(excelFilePath)) {
             workbook.write(outputStream);

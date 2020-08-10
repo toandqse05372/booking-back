@@ -19,7 +19,7 @@ public class CategoryConverterTest {
     @Test
     public void testToDTO() {
         // Setup
-        final Category category = new Category("typeName", "typeKey");
+        final Category category = new Category("typeName", "typeKey", "description");
         final CategoryDTO expectedResult = new CategoryDTO();
         expectedResult.setCategoryName("typeName");
         expectedResult.setTypeKey("typeKey");
@@ -39,7 +39,7 @@ public class CategoryConverterTest {
         dto.setTypeKey("typeKey");
         dto.setIconLink("iconLink");
 
-        final Category expectedResult = new Category("categoryName", "typeKey");
+        final Category expectedResult = new Category("categoryName", "typeKey", "description");
 
         // Run the test
         final Category result = categoryConverterUnderTest.toCategory(dto);
@@ -56,8 +56,8 @@ public class CategoryConverterTest {
         dto.setTypeKey("typeKey");
         dto.setIconLink("iconLink");
 
-        final Category category = new Category("typeName", "typeKey");
-        final Category expectedResult = new Category("categoryName", "typeKey");
+        final Category category = new Category("typeName", "typeKey", "description");
+        final Category expectedResult = new Category("categoryName", "typeKey", "description");
 
         // Run the test
         final Category result = categoryConverterUnderTest.toCategory(dto, category);

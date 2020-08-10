@@ -60,7 +60,7 @@ public class ExcelHelperTest {
         final List<ReportItem> reportItems = Arrays.asList(item);
 
         // Run the test
-        ExcelHelper.writeExcel(reportItems, "excelFilePath");
+        ExcelHelper.writeExcel(reportItems, "excelFilePath", 100);
 
         // Verify the results
     }

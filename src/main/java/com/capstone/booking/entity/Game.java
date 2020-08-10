@@ -21,12 +21,12 @@ public class Game extends BaseEntity{
     private String status;
 
     //Bảng Game qhe n-n với TicketType
-    @ManyToMany(mappedBy = "game")
+    @ManyToMany(mappedBy = "game", fetch = FetchType.LAZY)
     private Set<TicketType> ticketTypes = new HashSet<>();
 
 
     //Bảng Place qhe 1-n với Image
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Place place;
 
