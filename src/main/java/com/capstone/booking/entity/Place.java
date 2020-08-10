@@ -42,7 +42,7 @@ public class Place extends BaseEntity {
     private Set<Category> categories = new HashSet<>();
 
     //Bảng City qhe 1-n với Place
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     private City city;
 

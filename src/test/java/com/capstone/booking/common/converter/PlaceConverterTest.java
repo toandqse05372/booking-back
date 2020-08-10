@@ -52,7 +52,7 @@ public class PlaceConverterTest {
         dto.setCityName("cityName");
 
         // Configure CategoryRepository.findById(...).
-        final Optional<Category> category = Optional.of(new Category("typeName", "typeKey"));
+        final Optional<Category> category = Optional.of(new Category("typeName", "typeKey", "description"));
         when(mockCategoryRepository.findById(0L)).thenReturn(category);
 
         // Configure CityRepository.findById(...).
@@ -116,7 +116,7 @@ public class PlaceConverterTest {
         place.setWeekDays("1,2,3");
 
         // Configure CategoryRepository.findById(...).
-        final Optional<Category> category = Optional.of(new Category("typeName", "typeKey"));
+        final Optional<Category> category = Optional.of(new Category("typeName", "typeKey", "description"));
         when(mockCategoryRepository.findById(0L)).thenReturn(category);
 
         // Configure CityRepository.findById(...).

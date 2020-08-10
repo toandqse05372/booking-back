@@ -11,7 +11,7 @@ public class Code extends BaseEntity{
     @Column(length = 50)
     private String code;
     //Bảng VisitorType qhe 1-n với Code
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "visitor_type_id")
     private VisitorType visitorType;
 }

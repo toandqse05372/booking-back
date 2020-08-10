@@ -129,7 +129,7 @@ public class TicketServiceImpl implements TicketService {
             endDate = new Date(report.getEndDate());
             startDate = new Date(report.getStartDate());
         }
-        ExcelHelper.writeExcel(report.getReportItemList(), "NiceJavaBooks.xls");
+        ExcelHelper.writeExcel(report.getReportItemList(), "NiceJavaBooks.xls", report.getTotalRevenue());
         Place place = placeRepository.findById(report.getPlaceId()).get();
         String content = "";
         if(report.getReportType() == 0){
