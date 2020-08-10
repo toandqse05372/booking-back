@@ -101,29 +101,10 @@ public class PlaceController {
 
     //getTop8ByCityId
     @GetMapping("/topPlace")
-    public ResponseEntity<?> getTop8PlaceByCityId() {
-        return placeService.getTop8PlaceByCityId();
+    public ResponseEntity<?> getTop8PlaceByCityId(@RequestParam(value = "cityId", required = false) Long cityId) {
+        return placeService.getTop8PlaceByCityId(cityId);
     }
 
-    //getPlaceFromHN
-    @GetMapping("/fromHN")
-    public ResponseEntity<?> getPlaceFromHN() {
-        return placeService.getPlaceFromHN();
-    }
-
-
-    //getPlaceFromDN
-    @GetMapping("/fromDN")
-    public ResponseEntity<?> getPlaceFromDN() {
-        return placeService.getPlaceFromDN();
-    }
-
-
-    //getPlaceFromHCM
-    @GetMapping("/fromHCM")
-    public ResponseEntity<?> getPlaceFromHCM() {
-        return placeService.getPlaceFromHCM();
-    }
 
 
 }

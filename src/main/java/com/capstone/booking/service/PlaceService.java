@@ -38,14 +38,6 @@ public interface PlaceService {
     ResponseEntity<?> getPlaceClient(Long id);
 
     //getTop8Place
-    ResponseEntity<?> getTop8PlaceByCityId();
+    ResponseEntity<?> getTop8PlaceByCityId(Long cityId);
 
-    //getPlaceFromHN
-    ResponseEntity<?> getPlaceFromHN();
-
-    //getPlaceFromHN
-    ResponseEntity<?> getPlaceFromDN();
-
-    //getPlaceFromHN
-    ResponseEntity<?> getPlaceFromHCM();
 }
