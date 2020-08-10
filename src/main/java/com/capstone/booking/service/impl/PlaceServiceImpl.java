@@ -103,6 +103,17 @@ public class PlaceServiceImpl implements PlaceService {
         return ResponseEntity.ok(client);
     }
 
+    @Override
+    public ResponseEntity<?> getTop8PlaceByCityId(Long cityId) {
+        List<PlaceDTO> results = new ArrayList<>();
+        List<Place> place = placeRepository.getTop8Place(cityId);
+        for (Place item : place) {
+            PlaceDTO placeDTO = placeConverter.toDTO(item);
+            results.add(placeDTO);
+        }
+        return ResponseEntity.ok(results);
+    }
+
     //add place
     @Override
     public ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile[] files) {

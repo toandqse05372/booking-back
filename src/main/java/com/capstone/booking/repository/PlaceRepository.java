@@ -1,7 +1,9 @@
 package com.capstone.booking.repository;
+import com.capstone.booking.entity.City;
 import com.capstone.booking.entity.Place;
 import com.capstone.booking.repository.customRepository.PlaceRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -11,4 +13,9 @@ public interface PlaceRepository extends JpaRepository<Place, Long>, PlaceReposi
     Place findByName(String name);
 
     List<Place> findAllByStatus(String status);
+
+    //getTop8PlaceByCityId
+    @Query(value="SELECT * FROM t_place p where p.city_id = ? LIMIT 8", nativeQuery = true)
+    List<Place> getTop8Place(Long cityId);
+
 }
