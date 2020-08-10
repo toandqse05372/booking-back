@@ -114,6 +114,39 @@ public class PlaceServiceImpl implements PlaceService {
         return ResponseEntity.ok(results);
     }
 
+    @Override
+    public ResponseEntity<?> getPlaceFromHN() {
+        List<PlaceDTO> results = new ArrayList<>();
+        List<Place> place = placeRepository.getFromHN();
+        for (Place item : place) {
+            PlaceDTO placeDTO = placeConverter.toDTO(item);
+            results.add(placeDTO);
+        }
+        return ResponseEntity.ok(results);
+    }
+
+    @Override
+    public ResponseEntity<?> getPlaceFromDN() {
+        List<PlaceDTO> results = new ArrayList<>();
+        List<Place> place = placeRepository.getFromDN();
+        for (Place item : place) {
+            PlaceDTO placeDTO = placeConverter.toDTO(item);
+            results.add(placeDTO);
+        }
+        return ResponseEntity.ok(results);
+    }
+
+    @Override
+    public ResponseEntity<?> getPlaceFromHCM() {
+        List<PlaceDTO> results = new ArrayList<>();
+        List<Place> place = placeRepository.getFromHCM();
+        for (Place item : place) {
+            PlaceDTO placeDTO = placeConverter.toDTO(item);
+            results.add(placeDTO);
+        }
+        return ResponseEntity.ok(results);
+    }
+
     //add place
     @Override
     public ResponseEntity<?> create(PlaceDTO placeDTO, MultipartFile[] files) {

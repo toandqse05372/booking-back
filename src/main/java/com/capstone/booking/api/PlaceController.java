@@ -105,4 +105,25 @@ public class PlaceController {
         return placeService.getTop8PlaceByCityId();
     }
 
+    //getPlaceFromHN
+    @GetMapping("/fromHN")
+    public ResponseEntity<?> getPlaceFromHN() {
+        return placeService.getPlaceFromHN();
+    }
+
+
+    //getPlaceFromDN
+    @GetMapping("/fromDN")
+    public ResponseEntity<?> getPlaceFromDN() {
+        return placeService.getPlaceFromDN();
+    }
+
+
+    //getPlaceFromHCM
+    @GetMapping("/fromHCM")
+    public ResponseEntity<?> getPlaceFromHCM() {
+        return placeService.getPlaceFromHCM();
+    }
+
+
 }

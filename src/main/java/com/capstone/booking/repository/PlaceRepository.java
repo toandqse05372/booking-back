@@ -17,4 +17,16 @@ public interface PlaceRepository extends JpaRepository<Place, Long>, PlaceReposi
     //getTop8
     @Query(value="SELECT * FROM t_place p ORDER BY p.city_id ASC LIMIT 8", nativeQuery = true)
     List<Place> getTop8();
+
+    //getPlaceFromHN
+    @Query(value="SELECT * FROM t_place p where p.city_id = 1", nativeQuery = true)
+    List<Place> getFromHN();
+
+    //getPlaceFromDN
+    @Query(value="SELECT * FROM t_place p where p.city_id = 2", nativeQuery = true)
+    List<Place> getFromDN();
+
+    //getPlaceFromHCM
+    @Query(value="SELECT * FROM t_place p where p.city_id = 4", nativeQuery = true)
+    List<Place> getFromHCM();
 }
