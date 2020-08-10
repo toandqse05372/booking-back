@@ -99,4 +99,10 @@ public class PlaceController {
         return new ResponseEntity("Delete Successful", HttpStatus.OK);
     }
 
+    //getTop8ByCityId
+    @GetMapping("/topPlace")
+    public ResponseEntity<?> getTop8PlaceByCityId() {
+        return placeService.getTop8PlaceByCityId();
+    }
+
 }

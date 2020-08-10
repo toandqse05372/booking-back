@@ -36,4 +36,10 @@ public interface PlaceService {
                                            List<Long> categoryId, Long limit, Long page);
 
     ResponseEntity<?> getPlaceClient(Long id);
+
+    //getTop8Place
+    ResponseEntity<?> getTop8PlaceByCityId();
+
+//    //getPlaceFromHN
+//    ResponseEntity<?> getPlaceFromHN();
 }
