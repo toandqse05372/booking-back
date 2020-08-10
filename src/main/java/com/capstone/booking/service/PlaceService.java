@@ -1,12 +1,9 @@
 package com.capstone.booking.service;
 
 import com.capstone.booking.entity.dto.PlaceDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
-import java.util.Set;
 
 public interface PlaceService {
 
