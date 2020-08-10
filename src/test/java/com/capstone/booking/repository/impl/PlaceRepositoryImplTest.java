@@ -168,7 +168,7 @@ public class PlaceRepositoryImplTest {
         when(mockEntityManager.createNativeQuery("select count(place0_.id) from t_place place0_ ")).thenReturn(query);
         when(query.getSingleResult()).thenReturn(expectedResult);
         // Run the test
-        final int result = placeRepositoryImplUnderTest.countPlace(params, "select count(place0_.id) from t_place place0_ ");
+        final int result = placeRepositoryImplUnderTest.countPlace(params, "select count(place0_.id) from t_place place0_ ", "CMS");
 
         // Verify the results
         assertThat(result).isEqualTo(0);

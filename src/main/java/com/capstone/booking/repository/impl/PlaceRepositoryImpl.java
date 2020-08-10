@@ -86,9 +86,8 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         if (addedWhere) {
             queryStr += " where ";
         }
-        //String between ="";
         if (!searched) {
-            totalItem = countPlace(params, count + queryStr + where);
+            totalItem = countPlace(params, count + queryStr + where , "CMS");
             totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
         }
         params.put("from", (page - 1) * limit);
@@ -186,7 +185,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
 
         //String between ="";
         if (!searched) {
-            totalItem = countPlace(params, count + queryStr + where);
+            totalItem = countPlace(params, count + queryStr + where, "client");
             totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
         }
         params.put("from", (page - 1) * limit);
@@ -226,8 +225,11 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         return query.getResultList();
     }
 
-    public int countPlace(Map<String, Object> params, String sqlStr) {
-        Query query = entityManager.createNativeQuery("select count(*) from ("+sqlStr+") placecount");
+    public int countPlace(Map<String, Object> params, String sqlStr, String page) {
+        if(!page.equals("CMS")){
+            sqlStr = "select count(*) from ("+sqlStr+") placecount";
+        }
+        Query query = entityManager.createNativeQuery(sqlStr);
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();

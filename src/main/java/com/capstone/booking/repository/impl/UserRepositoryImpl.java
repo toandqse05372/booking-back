@@ -137,7 +137,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     public int countUser(Map<String, Object> params, String sqlStr) {
-        Query query = entityManager.createNativeQuery("select count(*) from ("+sqlStr+") countUser");
+        Query query = entityManager.createNativeQuery(sqlStr);
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();

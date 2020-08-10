@@ -99,7 +99,7 @@ public class CityRepositoryImpl implements CityRepositoryCustom {
     }
 
     public int countCity(Map<String, Object> params, String sqlStr) {
-        Query query = entityManager.createNativeQuery("select count(*) from ("+sqlStr+") countCity");
+        Query query = entityManager.createNativeQuery(sqlStr);
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
