@@ -10,21 +10,17 @@ import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.OrderDTO;
 import com.capstone.booking.entity.dto.OrderItemDTO;
 import com.capstone.booking.repository.*;
-import com.itextpdf.text.DocumentException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -332,7 +328,7 @@ public class OrderServiceImplTest {
         printRequest.setTicketType(ticketType1);
         printRequest.setTickets(tickets);
         printRequests.add(printRequest);
-        when(mockPdfPrinter.printPDF(any())).thenReturn(file);
+        when(mockPdfPrinter.printPDF(any(), place.getPlaceKey())).thenReturn(file);
         // Configure OrderRepository.save(...).
         when(mockOrderRepository.save(order1)).thenReturn(order1);
 
@@ -445,7 +441,7 @@ public class OrderServiceImplTest {
         printRequest.setTicketType(ticketType1);
         printRequest.setTickets(tickets);
         printRequests.add(printRequest);
-        when(mockPdfPrinter.printPDF(printRequests)).thenReturn(file);
+        when(mockPdfPrinter.printPDF(printRequests, place.getPlaceKey())).thenReturn(file);
 
         // Configure OrderRepository.save(...).
         when(mockOrderRepository.save(order1)).thenReturn(order1);

@@ -72,8 +72,8 @@ public class PlaceController {
     @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> searchMUL(@RequestParam(value = "name", required = false) String name,
                                        @RequestParam(value = "address", required = false) String address,
-                                       @RequestParam(value = "limit", required = false) Long limit,
-                                       @RequestParam(value = "page", required = false) Long page,
+                                       @RequestParam(value = "limit", required = true) Long limit,
+                                       @RequestParam(value = "page", required = true) Long page,
                                        @RequestParam(value = "cityId", required = false) Long cityId,
                                        @RequestParam(value = "categoryId", required = false) Long categoryId) {
         return placeService.findByMultipleParam(name, address, cityId, categoryId, limit, page);
@@ -82,12 +82,12 @@ public class PlaceController {
     //search place for client api
     @GetMapping("/place/searchClient")
     public ResponseEntity<?> searchPlaceForClient(@RequestParam(value = "name", required = false) String name,
-                                                  @RequestParam(value = "limit", required = false) Long limit,
-                                                  @RequestParam(value = "page", required = false) Long page,
+                                                  @RequestParam(value = "limit", required = true) Long limit,
+                                                  @RequestParam(value = "page", required = true) Long page,
                                                   @RequestParam(value = "cityId", required = false) List<Long> cityId,
                                                   @RequestParam(value = "categoryId", required = false) List<Long> categoryId,
-                                                  @RequestParam(value = "minValue", required = false) Long minValue,
-                                                  @RequestParam(value = "maxValue", required = false) Long maxValue) {
+                                                  @RequestParam(value = "minValue", required = true) Long minValue,
+                                                  @RequestParam(value = "maxValue", required = true) Long maxValue) {
         return placeService.searchPlaceForClient(name, minValue, maxValue, cityId, categoryId, limit, page);
     }
 

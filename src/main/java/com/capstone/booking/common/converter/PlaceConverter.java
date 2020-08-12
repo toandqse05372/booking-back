@@ -40,6 +40,9 @@ public class PlaceConverter {
                 categories.add(categoryRepository.findById(categoryId).get());
             }
         }
+        if(dto.getPlaceKey() != null){
+            place.setPlaceKey(dto.getPlaceKey());
+        }
         place.setCategories(categories);
         place.setPhoneNumber(dto.getPhoneNumber());
         place.setCancelPolicy(dto.getCancelPolicy());
@@ -77,6 +80,9 @@ public class PlaceConverter {
                 categories.add(categoryRepository.findById(categoryId).get());
             }
             place.setCategories(categories);
+        }
+        if(dto.getPlaceKey() != null){
+            place.setPlaceKey(dto.getPlaceKey());
         }
         place.setCity(cityRepository.findById(dto.getCityId()).get());
         place.setOpeningHours(dto.getOpeningHours());
@@ -116,6 +122,9 @@ public class PlaceConverter {
         dto.setCancelPolicy(place.getCancelPolicy());
         if(place.getBasicPrice() != null){
             dto.setBasicPrice(place.getBasicPrice());
+        }
+        if(place.getPlaceKey() != null){
+            dto.setPlaceKey(place.getPlaceKey());
         }
         //set image link
         if(place.getImagePlace() != null){

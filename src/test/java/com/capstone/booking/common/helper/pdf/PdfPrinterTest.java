@@ -1,13 +1,10 @@
 package com.capstone.booking.common.helper.pdf;
 
 import com.capstone.booking.entity.*;
-import com.itextpdf.text.DocumentException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -115,7 +112,7 @@ public class PdfPrinterTest {
         final File expectedResult = new File("Test.pdf");
 
         // Run the test
-        final File result = pdfPrinterUnderTest.printPDF(printRequests);
+        final File result = pdfPrinterUnderTest.printPDF(printRequests, place.getPlaceKey());
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);

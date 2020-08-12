@@ -166,7 +166,7 @@ public class OrderServiceImpl implements OrderService {
             printRequest.setRedemptionDate(order.getRedemptionDate());
         }
         // create file pdf
-        File file = pdfPrinter.printPDF(printRequests);
+        File file = pdfPrinter.printPDF(printRequests, place.getPlaceKey());
         order.setStatus(OrderStatus.SENT.toString());
         orderRepository.save(order);
         sendEmail(order, file);
@@ -196,7 +196,7 @@ public class OrderServiceImpl implements OrderService {
             printRequests.add(printRequest);
             printRequest.setRedemptionDate(order.getRedemptionDate());
         }
-        File file = pdfPrinter.printPDF(printRequests);
+        File file = pdfPrinter.printPDF(printRequests, place.getPlaceKey());
         order.setStatus(OrderStatus.SENT.toString());
         orderRepository.save(order);
         sendEmail(order, file);
