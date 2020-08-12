@@ -4,7 +4,6 @@ import com.capstone.booking.entity.*;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import org.springframework.stereotype.Component;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,6 +20,9 @@ import java.util.List;
 public class PdfPrinter {
 
     public File printPDF(List<PrintRequest> printRequests, String placeKey) throws IOException, DocumentException, URISyntaxException {
+        if(placeKey == null){
+            placeKey = "";
+        }
         switch(placeKey) {
             case "VIN":
                 return vinFile(printRequests);
@@ -60,7 +62,7 @@ public class PdfPrinter {
             for (Ticket ticket : printRequest.getTickets()) {
                 PdfContentByte pdfContentByte = pdfWriter.getDirectContent();
                 //enter image
-                Path pathI = Paths.get(ClassLoader.getSystemResource("default.png").toURI());
+                Path pathI = Paths.get(ClassLoader.getSystemResource("image/default.png").toURI());
                 Image img = Image.getInstance(pathI.toAbsolutePath().toString());
                 img.scaleAbsolute(200, 40);
                 document.add(img);
@@ -114,7 +116,7 @@ public class PdfPrinter {
             for (Ticket ticket : printRequest.getTickets()) {
                 PdfContentByte pdfContentByte = pdfWriter.getDirectContent();
                 //enter image
-                Path pathI = Paths.get(ClassLoader.getSystemResource("vin.png").toURI());
+                Path pathI = Paths.get(ClassLoader.getSystemResource("image/vin.png").toURI());
                 Image img = Image.getInstance(pathI.toAbsolutePath().toString());
                 img.scaleAbsolute(200, 40);
                 document.add(img);
@@ -187,9 +189,7 @@ public class PdfPrinter {
                 document.add(code128Image);
             }
         }
-
         document.close();
-//        fos.close();
         return file;
     }
 
