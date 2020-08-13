@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
         if (null == user || !new BCryptPasswordEncoder().matches(userDTO.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("WRONG_USERNAME_PASSWORD");
         }
-        if(user.getStatus().equals(UserStatus.NOT)){
+        if(user.getStatus().equals(UserStatus.NOT.toString())){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("ACCOUNT_NOT_ACTIVATED");
         }
 

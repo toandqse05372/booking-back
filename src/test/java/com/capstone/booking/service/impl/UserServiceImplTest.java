@@ -164,7 +164,7 @@ public class UserServiceImplTest {
         permission1.setPermissionName("permissionName");
         role1.setPermissions(new HashSet<>(Arrays.asList(permission1)));
         user1.setRoles(new HashSet<>(Arrays.asList(role1)));
-        verificationToken.setUser(user1);
+        verificationToken.setUid(0l);
         verificationToken.setUsed(false);
         when(mockTokenRepository.save(new VerificationToken())).thenReturn(verificationToken);
 
@@ -243,7 +243,7 @@ public class UserServiceImplTest {
         permission2.setPermissionName("permissionName");
         role2.setPermissions(new HashSet<>(Arrays.asList(permission2)));
         user3.setRoles(new HashSet<>(Arrays.asList(role2)));
-        verificationToken.setUser(user3);
+        verificationToken.setUid(0l);
         verificationToken.setUsed(false);
         when(mockTokenRepository.save(new VerificationToken())).thenReturn(verificationToken);
 
@@ -311,7 +311,7 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user.setRoles(new HashSet<>(Arrays.asList(role)));
-        verificationToken.setUser(user);
+        verificationToken.setUid(0l);
         verificationToken.setUsed(false);
         when(mockTokenRepository.findByConfirmationToken("verificationToken")).thenReturn(verificationToken);
 
@@ -623,7 +623,7 @@ public class UserServiceImplTest {
         permission.setPermissionName("permissionName");
         role.setPermissions(new HashSet<>(Arrays.asList(permission)));
         user.setRoles(new HashSet<>(Arrays.asList(role)));
-        passwordResetToken.setUser(user);
+        passwordResetToken.setUid(0l);
         passwordResetToken.setExpiryDate(new GregorianCalendar(2029, Calendar.JANUARY, 1).getTime());
         when(mockPasswordTokenRepository.findByToken("token")).thenReturn(passwordResetToken);
 
@@ -865,7 +865,7 @@ public class UserServiceImplTest {
         permission1.setPermissionName("permissionName");
         role1.setPermissions(new HashSet<>(Arrays.asList(permission1)));
         user1.setRoles(new HashSet<>(Arrays.asList(role1)));
-        passwordResetToken.setUser(user1);
+        passwordResetToken.setUid(0l);
         passwordResetToken.setExpiryDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
         when(mockPasswordTokenRepository.save(new PasswordResetToken())).thenReturn(passwordResetToken);
 

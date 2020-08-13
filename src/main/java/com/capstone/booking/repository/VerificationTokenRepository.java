@@ -1,6 +1,5 @@
 package com.capstone.booking.repository;
 
-import com.capstone.booking.entity.User;
 import com.capstone.booking.entity.VerificationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,7 +8,7 @@ public interface VerificationTokenRepository extends JpaRepository<VerificationT
     //find token cf saved in db
     VerificationToken findByConfirmationToken(String verificationToken);
 
-    VerificationToken findByUser(User user);
+    VerificationToken findByUid(Long uid);
 
-    void deleteByUser(User user);
+    void deleteByUid(Long uid);
 }

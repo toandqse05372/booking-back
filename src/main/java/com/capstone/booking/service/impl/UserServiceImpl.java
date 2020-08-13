@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         if(user == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("WRONG_EMAIL");
         }
-        tokenRepository.delete(tokenRepository.findByUser(user));
+        tokenRepository.delete(tokenRepository.findByUid(user.getId()));
         sendEmailVerify(user);
         return ResponseEntity.ok(user);
     }
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
     //send verify email
     public void sendEmailVerify(User user){
         VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setUser(user);
+        verificationToken.setUid(user.getId());
         verificationToken.setConfirmationToken(UUID.randomUUID().toString());
         tokenRepository.save(verificationToken);
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -120,10 +120,10 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> verifyEmail(String verificationToken) {
         VerificationToken token = tokenRepository.findByConfirmationToken(verificationToken);
         if(token != null){
-            User user = userRepository.findByMail(token.getUser().getMail());
+            User user = userRepository.findByMail(userRepository.findById(token.getUid()).get().getMail());
             user.setStatus(UserStatus.ACTIVATED.toString());
             userRepository.save(user);
-            tokenRepository.delete(tokenRepository.findByUser(user));
+            tokenRepository.delete(tokenRepository.findByUid(user.getId()));
             return ResponseEntity.ok(authService.returnToken(authService.setPermission(user)));
         }
         else{
@@ -193,7 +193,7 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.findById(id).isPresent()) {
             return new ResponseEntity("USER_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
-        tokenRepository.deleteByUser(userRepository.findById(id).get());
+        tokenRepository.deleteByUid(id);
         userRepository.deleteById(id);
         return new ResponseEntity("Delete Successful", HttpStatus.OK);
     }
@@ -224,7 +224,7 @@ public class UserServiceImpl implements UserService {
         if ((passToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
             return new ResponseEntity("TOKEN_EXPIRED", HttpStatus.BAD_REQUEST);
         }
-        User user = passwordTokenRepository.findByToken(token).getUser();
+        User user = userRepository.findById(passwordTokenRepository.findByToken(token).getUid()).get();
         String randomPass = UUID.randomUUID().toString();
         user.setPassword(randomPass);
         userRepository.save(user);
@@ -266,7 +266,7 @@ public class UserServiceImpl implements UserService {
     //send verify change password email
     public void sendChangePassVerify(User user){
         PasswordResetToken passwordResetToken = new PasswordResetToken();
-        passwordResetToken.setUser(user);
+        passwordResetToken.setUid(user.getId());
         passwordResetToken.setToken(UUID.randomUUID().toString());
         passwordResetToken.setExpiryDate(new Date(System.currentTimeMillis() + 17280000));
         passwordTokenRepository.save(passwordResetToken);
@@ -314,7 +314,7 @@ public class UserServiceImpl implements UserService {
         String tokenStr = UUID.randomUUID().toString();
         PasswordResetToken token = new PasswordResetToken();
         token.setToken(tokenStr);
-        token.setUser(user);
+        token.setUid(user.getId());
         passwordTokenRepository.save(token);
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(user.getMail()); //user email
