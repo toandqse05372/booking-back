@@ -20,5 +20,6 @@ public class OrderDTO extends BaseDTO{
     private int totalPayment;
     private Date purchaseDay;
     private Date redemptionDate;
+    private Long placeId;
     private Set<OrderItemDTO> orderItems;
 }

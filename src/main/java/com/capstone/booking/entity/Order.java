@@ -29,6 +29,7 @@ public class Order extends BaseEntity{
     private int totalPayment;
     private Date purchaseDay;
     private Date redemptionDate;
+    private Long placeId;
 
 
     //Bảng User qhe 1-n với Order
