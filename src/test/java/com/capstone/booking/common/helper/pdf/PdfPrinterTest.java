@@ -87,10 +87,10 @@ public class PdfPrinterTest {
         ticket.setOrderItem(new OrderItem());
         orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
         visitorType.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
+//        final Code code = new Code();
+//        code.setCode("code");
+//        code.setVisitorType(new VisitorType());
+//        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
         printRequest.setVisitorType(visitorType);
         final TicketType ticketType1 = new TicketType();
         ticketType1.setTypeName("typeName");

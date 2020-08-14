@@ -7,4 +7,5 @@ public class ReportItem {
     String ticketTypeName;
     int quantity;
     int total;
+    int remaining;
 }

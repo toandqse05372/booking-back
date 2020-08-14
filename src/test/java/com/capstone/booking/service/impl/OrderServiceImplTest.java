@@ -186,10 +186,10 @@ public class OrderServiceImplTest {
         output.setTotalPage(0);
         output.setListResult(Arrays.asList());
         output.setTotalItems(0);
-        when(mockOrderRepository.findByStatus("status", "code")).thenReturn(output);
+        when(mockOrderRepository.findByStatus("status", "code", 1l)).thenReturn(output);
 
         // Run the test
-        final ResponseEntity<?> result = orderServiceImplUnderTest.findByStatus("status", "code");
+        final ResponseEntity<?> result = orderServiceImplUnderTest.findByStatus("status", "code", 1l);
 
         // Verify the results
         Assertions.assertEquals(200, result.getStatusCodeValue());
@@ -304,7 +304,7 @@ public class OrderServiceImplTest {
         // Configure CodeRepository.findByVisitorTypeIdLimitTo(...).
         List<Code> codes = new ArrayList<>();
         codes.add(code);
-        when(mockCodeRepository.findByVisitorTypeIdLimitTo(orderItem.getQuantity(), visitorType)).thenReturn(codes);
+        when(mockCodeRepository.findByVisitorTypeIdLimitTo(orderItem.getQuantity(), visitorType, new Date())).thenReturn(codes);
 
         List<Ticket> tickets = new ArrayList<>();
 

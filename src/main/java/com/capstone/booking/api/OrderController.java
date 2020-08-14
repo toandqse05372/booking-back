@@ -28,8 +28,9 @@ public class OrderController {
     //search Order by status, code api
     @GetMapping("/order/searchByStatus")
     public ResponseEntity<?> orderFilter(@RequestParam(value = "status", required = false) String status,
-                                         @RequestParam(value = "code", required = false) String code) {
-        return orderService.findByStatus(status, code);
+                                         @RequestParam(value = "code", required = false) String code,
+                                         @RequestParam(value = "placeId", required = false) Long placeId) {
+        return orderService.findByStatus(status, code, placeId);
     }
 
     //add api

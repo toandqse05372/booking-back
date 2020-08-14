@@ -71,7 +71,7 @@ public class OrderRepositoryImplTest {
         when(query.getResultList()).thenReturn(orderList);
         when(orderRepositoryImplUnderTest.orderConverter.toDTO(order)).thenReturn(orderDTO);
         // Run the test
-        final Output result = orderRepositoryImplUnderTest.findByStatus("status", "code");
+        final Output result = orderRepositoryImplUnderTest.findByStatus("status", "code", 1l);
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);

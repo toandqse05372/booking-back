@@ -36,6 +36,7 @@ public class OrderConverter {
         order.setTotalPayment(dto.getTotalPayment());
         order.setPurchaseDay(dto.getPurchaseDay());
         order.setRedemptionDate(dto.getRedemptionDate());
+        order.setPlaceId(dto.getPlaceId());
         return order;
     }
     //convert from dto to entity (for update)
@@ -48,6 +49,7 @@ public class OrderConverter {
         order.setTotalPayment(dto.getTotalPayment());
         order.setPurchaseDay(dto.getPurchaseDay());
         order.setRedemptionDate(dto.getRedemptionDate());
+        order.setPlaceId(dto.getPlaceId());
         return order;
     }
 
@@ -66,6 +68,7 @@ public class OrderConverter {
         dto.setPurchaseDay(order.getPurchaseDay());
         dto.setRedemptionDate(order.getRedemptionDate());
         dto.setStatus(order.getStatus());
+        dto.setPlaceId(order.getPlaceId());
         dto.setTicketTypeName(ticketTypeRepository.findById(order.getTicketTypeId()).get().getTypeName());
         Set<OrderItemDTO> orderItemDTOS = new HashSet<>();
         for (OrderItem orderItem : orderItemRepository.findAllByOrder(order)) {
@@ -78,6 +81,7 @@ public class OrderConverter {
     public OrderDTO toDTOLite(Order order){
         OrderDTO dto = new OrderDTO();
         dto.setId(order.getId());
+        dto.setPlaceId(order.getPlaceId());
         dto.setOrderCode(order.getOrderCode());
         dto.setTotalPayment(order.getTotalPayment());
         dto.setPurchaseDay(order.getPurchaseDay());

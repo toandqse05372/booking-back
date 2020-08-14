@@ -112,8 +112,8 @@ public class OrderServiceImpl implements OrderService {
 
     //find order by status
     @Override
-    public ResponseEntity<?> findByStatus(String status, String code) {
-        Output results = orderRepository.findByStatus(status, code);
+    public ResponseEntity<?> findByStatus(String status, String code, Long placeId) {
+        Output results = orderRepository.findByStatus(status, code, placeId);
         return ResponseEntity.ok(results);
     }
 
@@ -138,9 +138,14 @@ public class OrderServiceImpl implements OrderService {
         Place place = placeRepository.findById(ticketType.getPlaceId()).get();
         List<PrintRequest> printRequests = new ArrayList<>();
         // create tickets for each order item
+        Calendar c = new GregorianCalendar();
+        c.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        Date d1 = c.getTime();
         for (OrderItem item : orderItems) {
             VisitorType type = item.getVisitorType();
-            List<Code> codeToUse = codeRepository.findByVisitorTypeIdLimitTo(item.getQuantity(), type);
+            List<Code> codeToUse = codeRepository.findByVisitorTypeIdLimitTo(item.getQuantity(), type, d1);
             // check if number of code remaining in db is enough
             if (codeToUse.size() < item.getQuantity()) {
                 return new ResponseEntity("CODE_NOT_ENOUGH", HttpStatus.BAD_REQUEST);

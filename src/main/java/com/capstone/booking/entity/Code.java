@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "t_code", uniqueConstraints={ @UniqueConstraint(columnNames = {"visitor_type_id", "code"})})
+@Table(name = "t_code", uniqueConstraints={ @UniqueConstraint(columnNames = {"visitor_type_id", "code", "created_at"})})
 public class Code extends BaseEntity{
     @Column(length = 50)
     private String code;

@@ -59,10 +59,10 @@ public class OrderItemConverterTest {
         ticketType.setGame(new HashSet<>(Arrays.asList(game)));
         visitorType.setTicketType(ticketType);
         visitorType.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(visitorType);
-        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
+//        final Code code = new Code();
+//        code.setCode("code");
+//        code.setVisitorType(visitorType);
+//        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
         orderItem.setVisitorType(visitorType);
         final Order order = new Order();
         order.setTicketTypeId(0L);
@@ -158,10 +158,10 @@ public class OrderItemConverterTest {
         ticket.setOrderItem(new OrderItem());
         orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
         visitorType1.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType1.setCode(new HashSet<>(Arrays.asList(code)));
+//        final Code code = new Code();
+//        code.setCode("code");
+//        code.setVisitorType(new VisitorType());
+//        visitorType1.setCode(new HashSet<>(Arrays.asList(code)));
         final Optional<VisitorType> visitorType = Optional.of(visitorType1);
         when(orderItemConverterUnderTest.visitorTypeRepository.findById(0L)).thenReturn(visitorType);
 

@@ -104,10 +104,10 @@ public class TicketServiceImplTest {
         ticketType.setGame(new HashSet<>(Arrays.asList(game)));
         visitorType1.setTicketType(ticketType);
         visitorType1.setOrderItem(new HashSet<>(Arrays.asList(new OrderItem())));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType1.setCode(new HashSet<>(Arrays.asList(code)));
+//        final Code code = new Code();
+//        code.setCode("code");
+//        code.setVisitorType(new VisitorType());
+//        visitorType1.setCode(new HashSet<>(Arrays.asList(code)));
         orderItem.setVisitorType(visitorType1);
         final Order order = new Order();
         order.setTicketTypeId(0L);
@@ -163,10 +163,10 @@ public class TicketServiceImplTest {
         ticketType1.setGame(new HashSet<>(Arrays.asList(game1)));
         visitorType2.setTicketType(ticketType1);
         visitorType2.setOrderItem(new HashSet<>(Arrays.asList(new OrderItem())));
-        final Code code1 = new Code();
-        code1.setCode("code");
-        code1.setVisitorType(new VisitorType());
-        visitorType2.setCode(new HashSet<>(Arrays.asList(code1)));
+//        final Code code1 = new Code();
+//        code1.setCode("code");
+//        code1.setVisitorType(new VisitorType());
+//        visitorType2.setCode(new HashSet<>(Arrays.asList(code1)));
         orderItem1.setVisitorType(visitorType2);
         final Order order1 = new Order();
         order1.setTicketTypeId(0L);
@@ -249,10 +249,10 @@ public class TicketServiceImplTest {
         ticketType.setGame(new HashSet<>(Arrays.asList(game)));
         visitorType.setTicketType(ticketType);
         visitorType.setOrderItem(new HashSet<>(Arrays.asList(new OrderItem())));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
+//        final Code code = new Code();
+//        code.setCode("code");
+//        code.setVisitorType(new VisitorType());
+//        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
         orderItem.setVisitorType(visitorType);
         final Order order = new Order();
         order.setTicketTypeId(0L);
@@ -316,10 +316,10 @@ public class TicketServiceImplTest {
         ticket.setOrderItem(new OrderItem());
         orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
         visitorType.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
+//        final Code code = new Code();
+//        code.setCode("code");
+//        code.setVisitorType(new VisitorType());
+//        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
         ticketType.setVisitorType(new HashSet<>(Arrays.asList(visitorType)));
         final Game game = new Game();
         game.setGameName("gameName");
@@ -395,10 +395,10 @@ public class TicketServiceImplTest {
         ticket1.setOrderItem(new OrderItem());
         orderItem1.setTicket(new HashSet<>(Arrays.asList(ticket1)));
         visitorType1.setOrderItem(new HashSet<>(Arrays.asList(orderItem1)));
-        final Code code1 = new Code();
-        code1.setCode("code");
-        code1.setVisitorType(new VisitorType());
-        visitorType1.setCode(new HashSet<>(Arrays.asList(code1)));
+//        final Code code1 = new Code();
+//        code1.setCode("code");
+//        code1.setVisitorType(new VisitorType());
+//        visitorType1.setCode(new HashSet<>(Arrays.asList(code1)));
         final List<VisitorType> visitorTypes = Arrays.asList(visitorType1);
         when(mockVisitorTypeRepository.findByTicketType(any(TicketType.class))).thenReturn(visitorTypes);
 
@@ -440,10 +440,10 @@ public class TicketServiceImplTest {
         ticketType2.setGame(new HashSet<>(Arrays.asList(game2)));
         visitorType2.setTicketType(ticketType2);
         visitorType2.setOrderItem(new HashSet<>(Arrays.asList(new OrderItem())));
-        final Code code2 = new Code();
-        code2.setCode("code");
-        code2.setVisitorType(new VisitorType());
-        visitorType2.setCode(new HashSet<>(Arrays.asList(code2)));
+//        final Code code2 = new Code();
+//        code2.setCode("code");
+//        code2.setVisitorType(new VisitorType());
+//        visitorType2.setCode(new HashSet<>(Arrays.asList(code2)));
         orderItem2.setVisitorType(visitorType2);
         final Order order2 = new Order();
         order2.setTicketTypeId(0L);
@@ -460,7 +460,7 @@ public class TicketServiceImplTest {
         orderItem2.setTicket(new HashSet<>(Arrays.asList(new Ticket())));
         ticket2.setOrderItem(orderItem2);
         final List<Ticket> tickets = Arrays.asList(ticket2);
-        when(mockTicketRepository.getAllBetweenDates(0L, new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime(), new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime())).thenReturn(tickets);
+        when(mockTicketRepository.getAllBetweenDates(0L, new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime(), new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime())).thenReturn(1);
 
         // Run the test
         final ResponseEntity<?> result = ticketServiceImplUnderTest.getReport(0L, 0L, 0L, 0L);

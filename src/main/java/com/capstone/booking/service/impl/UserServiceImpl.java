@@ -169,6 +169,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = userConverter.toUser(userDTO);
         user.setUserType(UserType.BASIC.toString());
+        user.setStatus(UserStatus.ACTIVATED.toString());
         Set<Role> roleSet = new HashSet<>();
         for(String roleKey: userDTO.getRoleKey()){
             roleSet.add(roleRepository.findByRoleKey(roleKey));

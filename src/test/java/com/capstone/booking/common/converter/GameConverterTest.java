@@ -129,10 +129,10 @@ public class GameConverterTest {
         ticket.setOrderItem(new OrderItem());
         orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
         visitorType.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
+//        final Code code = new Code();
+//        code.setCode("code");
+//        code.setVisitorType(new VisitorType());
+//        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
         ticketType.setVisitorType(new HashSet<>(Arrays.asList(visitorType)));
         ticketType.setGame(new HashSet<>(Arrays.asList(new Game())));
         game.setTicketTypes(new HashSet<>(Arrays.asList(ticketType)));

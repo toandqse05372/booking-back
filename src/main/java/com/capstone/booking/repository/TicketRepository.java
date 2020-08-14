@@ -13,9 +13,9 @@ import java.util.List;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     //find all tickets between dates
-    @Query(value = "from Ticket t where t.visitorTypeId = :visitorTypeId And t.createdAt " +
+    @Query(value = "select count(t) from Ticket t where t.visitorTypeId = :visitorTypeId And t.createdAt " +
             "BETWEEN :startDate AND :endDate")
-    List<Ticket> getAllBetweenDates
+    int getAllBetweenDates
             (@Param("visitorTypeId") Long id, @Param("startDate") Date startDate,
              @Param("endDate")Date endDate);
 

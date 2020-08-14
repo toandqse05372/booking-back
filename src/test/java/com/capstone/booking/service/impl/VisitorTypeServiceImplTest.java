@@ -308,10 +308,10 @@ public class VisitorTypeServiceImplTest {
         ticket.setOrderItem(new OrderItem());
         orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
         visitorType1.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType1.setCode(new HashSet<>(Arrays.asList(code)));
+//        final Code code = new Code();
+//        code.setCode("code");
+//        code.setVisitorType(new VisitorType());
+//        visitorType1.setCode(new HashSet<>(Arrays.asList(code)));
         final Optional<VisitorType> visitorType = Optional.of(visitorType1);
         when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findById(0L)).thenReturn(visitorType);
 
@@ -368,10 +368,10 @@ public class VisitorTypeServiceImplTest {
         ticket1.setOrderItem(new OrderItem());
         orderItem1.setTicket(new HashSet<>(Arrays.asList(ticket1)));
         visitorType2.setOrderItem(new HashSet<>(Arrays.asList(orderItem1)));
-        final Code code1 = new Code();
-        code1.setCode("code");
-        code1.setVisitorType(new VisitorType());
-        visitorType2.setCode(new HashSet<>(Arrays.asList(code1)));
+//        final Code code1 = new Code();
+//        code1.setCode("code");
+//        code1.setVisitorType(new VisitorType());
+//        visitorType2.setCode(new HashSet<>(Arrays.asList(code1)));
         when(visitorTypeServiceImplUnderTest.visitorTypeRepository.save(new VisitorType())).thenReturn(visitorType2);
 
         // Configure VisitorTypeConverter.toDTO(...).
@@ -449,10 +449,10 @@ public class VisitorTypeServiceImplTest {
         ticket.setOrderItem(new OrderItem());
         orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
         visitorType.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
+//        final Code code = new Code();
+//        code.setCode("code");
+//        code.setVisitorType(new VisitorType());
+//        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
         final List<VisitorType> visitorTypes = Arrays.asList(visitorType);
         when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findByTicketType(any(TicketType.class))).thenReturn(visitorTypes);
 
@@ -490,10 +490,10 @@ public class VisitorTypeServiceImplTest {
         ticket1.setOrderItem(new OrderItem());
         orderItem1.setTicket(new HashSet<>(Arrays.asList(ticket1)));
         visitorType1.setOrderItem(new HashSet<>(Arrays.asList(orderItem1)));
-        final Code code1 = new Code();
-        code1.setCode("code");
-        code1.setVisitorType(new VisitorType());
-        visitorType1.setCode(new HashSet<>(Arrays.asList(code1)));
+//        final Code code1 = new Code();
+//        code1.setCode("code");
+//        code1.setVisitorType(new VisitorType());
+//        visitorType1.setCode(new HashSet<>(Arrays.asList(code1)));
         ticketType2.setVisitorType(new HashSet<>(Arrays.asList(visitorType1)));
         final Game game1 = new Game();
         game1.setGameName("gameName");
@@ -591,10 +591,10 @@ public class VisitorTypeServiceImplTest {
         ticket.setOrderItem(new OrderItem());
         orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
         visitorType1.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-        final Code code = new Code();
-        code.setCode("code");
-        code.setVisitorType(new VisitorType());
-        visitorType1.setCode(new HashSet<>(Arrays.asList(code)));
+//        final Code code = new Code();
+//        code.setCode("code");
+//        code.setVisitorType(new VisitorType());
+//        visitorType1.setCode(new HashSet<>(Arrays.asList(code)));
         final Optional<VisitorType> visitorType = Optional.of(visitorType1);
         when(visitorTypeServiceImplUnderTest.visitorTypeRepository.findById(0L)).thenReturn(visitorType);
 

@@ -66,7 +66,7 @@ public class CodeRepositoryImplTest {
         final Code code = new Code();
         code.setCode("code");
         code.setVisitorType(visitorType);
-        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
+
 
 
         final List<Code> expectedResult = Arrays.asList(code);
@@ -75,8 +75,13 @@ public class CodeRepositoryImplTest {
         when(query.setMaxResults(1)).thenReturn(query);
         when(query.getResultList()).thenReturn(expectedResult);
 
+        Calendar c = new GregorianCalendar();
+        c.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        Date d1 = c.getTime();
         // Run the test
-        final List<Code> result = codeRepositoryImplUnderTest.findByVisitorTypeIdLimitTo(1, visitorType);
+        final List<Code> result = codeRepositoryImplUnderTest.findByVisitorTypeIdLimitTo(1, visitorType, d1);
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);

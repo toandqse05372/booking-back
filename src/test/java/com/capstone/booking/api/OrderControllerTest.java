@@ -4,7 +4,6 @@ import com.capstone.booking.common.helper.pdf.PrintTicketRequest;
 import com.capstone.booking.common.key.OrderStatus;
 import com.capstone.booking.entity.dto.OrderDTO;
 import com.capstone.booking.service.OrderService;
-import com.itextpdf.text.DocumentException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -13,13 +12,8 @@ import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class OrderControllerTest {
@@ -50,10 +44,10 @@ public class OrderControllerTest {
     @Test
     public void testOrderFilter() {
         // Setup
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).findByStatus("status", "code");
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).findByStatus("status", "code", 1l);
 
         // Run the test
-        final ResponseEntity<?> result = orderControllerUnderTest.orderFilter("status", "code");
+        final ResponseEntity<?> result = orderControllerUnderTest.orderFilter("status", "code", 1l);
 
         // Verify the results
         Assertions.assertEquals(100, result.getStatusCodeValue());

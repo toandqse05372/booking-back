@@ -28,7 +28,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     }
 
     @Override
-    public Output findByStatus(String status, String code) {
+    public Output findByStatus(String status, String code, Long placeId) {
         boolean addedWhere = false;
         String queryStr = "select o.* from t_order o ";
         String where = "";
@@ -56,6 +56,16 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
             stack++;
         }
 
+        if (placeId != null && placeId != 0) {
+            if (stack > 1) {
+                where += " and ";
+            }
+            where += "o.place_id = :placeId ";
+            addedWhere = true;
+            params.put("placeId", placeId);
+            stack++;
+        }
+
         if (addedWhere) {
             queryStr += " where ";
         }
@@ -80,10 +90,10 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            if (key.equals("code")) {
-                query.setParameter(key, "%"+ value + "%");
+            if (key.equals("placeId")) {
+                query.setParameter(key,  value );
             } else
-                query.setParameter(key,  value + "%");
+                query.setParameter(key,  "%"+ value + "%");
         }
         return query.getResultList();
     }

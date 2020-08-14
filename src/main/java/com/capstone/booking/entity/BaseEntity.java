@@ -27,6 +27,7 @@ public abstract class BaseEntity implements Serializable {
     private boolean deleted = false;
 
     @CreatedDate
+    @Column(name = "created_at")
     private Date createdAt;
 
     @LastModifiedDate

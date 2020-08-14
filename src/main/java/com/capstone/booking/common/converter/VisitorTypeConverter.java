@@ -6,6 +6,11 @@ import com.capstone.booking.repository.CodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+
 //convert game
 @Component
 public class VisitorTypeConverter {
@@ -39,7 +44,16 @@ public class VisitorTypeConverter {
         dto.setTypeKey(visitorType.getTypeKey());
         dto.setPrice(visitorType.getPrice());
         dto.setBasicType(visitorType.isBasicType());
-        dto.setRemaining(codeRepository.countByVisitorType(visitorType));
+
+        //set timezone to hanoi
+        TimeZone hanoiVietnam = TimeZone.getTimeZone("GMT+7:00");
+        Calendar c = Calendar.getInstance(hanoiVietnam);
+        c.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+
+        Date d1 = c.getTime();
+        dto.setRemaining(codeRepository.countByVisitorTypeReaming(visitorType, d1));
         dto.setTicketTypeId(visitorType.getTicketType().getId());
         dto.setBasicType(visitorType.isBasicType());
 

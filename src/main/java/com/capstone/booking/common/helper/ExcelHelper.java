@@ -113,7 +113,7 @@ public class ExcelHelper {
                     Cell currentCell = cellsInRow.next();
                     switch (cellIdx) {
                         case 1:
-                            code.setVisitorType(visitorTypeRepository. findByTypeKey(currentCell.getStringCellValue()));
+                            code.setVisitorType(visitorTypeRepository.findByTypeKey(currentCell.getStringCellValue()));
                             break;
                         case 2:
                             currentCell.setCellType(CellType.STRING);

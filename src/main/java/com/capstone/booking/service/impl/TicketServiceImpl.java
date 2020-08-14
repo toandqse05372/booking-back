@@ -8,7 +8,6 @@ import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.TicketDTO;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.TicketService;
-import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
@@ -35,6 +34,9 @@ public class TicketServiceImpl implements TicketService {
 
     @Autowired
     private TicketTypeRepository ticketTypeRepository;
+
+    @Autowired
+    private CodeRepository codeRepository;
 
     @Autowired
     private VisitorTypeRepository visitorTypeRepository;
@@ -93,8 +95,10 @@ public class TicketServiceImpl implements TicketService {
                 ReportItem reportItem = new ReportItem();
                 reportItem.setTicketTypeName(ticketType.getTypeName() + " [" + visitorType.getTypeName() + "]");
                 //calculate tickets
-                int quantity = ticketRepository.getAllBetweenDates(visitorType.getId(), startDate, endDate).size();
+                int quantity = ticketRepository.getAllBetweenDates(visitorType.getId(), startDate, endDate);
                 reportItem.setQuantity(quantity);
+                int remaining = codeRepository.getAllBetweenDates(visitorType, startDate, endDate);
+                reportItem.setRemaining(remaining);
                 int total = quantity * visitorType.getPrice() * quantity;
                 reportItem.setTotal(total);
                 reportItems.add(reportItem);

@@ -17,16 +17,16 @@ public class VisitorType extends BaseEntity{
     private boolean isBasicType = false;
     private String status;
 
-    //Bảng TicketType qhe 1-n với VisitorType
-    @ManyToOne
+    // TicketType  1-n relationship with VisitorType
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_type_id")
     private TicketType ticketType;
 
-    //Bảng VisitorType qhe 1-n với OrderItem
-    @OneToMany(mappedBy = "visitorType")
+    //VisitorType  1-n relationship with orderItem
+    @OneToMany(mappedBy = "visitorType", fetch = FetchType.LAZY)
     private Set<OrderItem> orderItem;
 
-    //Bảng VisitorType qhe 1-n với Code
-    @OneToMany(mappedBy = "visitorType")
-    private Set<Code> code;
+//    //Bảng VisitorType qhe 1-n với Code
+//    @OneToMany(mappedBy = "visitorType", fetch = FetchType.LAZY)
+//    private Set<Code> code;
 }

@@ -6,6 +6,7 @@ import com.capstone.booking.repository.customRepository.CodeCustom;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Date;
 import java.util.List;
 
 public class CodeRepositoryImpl implements CodeCustom {
@@ -18,9 +19,10 @@ public class CodeRepositoryImpl implements CodeCustom {
     }
 
     @Override
-    public List<Code> findByVisitorTypeIdLimitTo(int limit, VisitorType visitorType) {
-        return entityManager.createQuery("SELECT p FROM Code p WHERE p.visitorType like :visitorType ORDER BY p.id",
-                Code.class).setParameter("visitorType", visitorType)
+    public List<Code> findByVisitorTypeIdLimitTo(int limit, VisitorType visitorType, Date date) {
+        return entityManager.createQuery("SELECT p FROM Code p WHERE p.visitorType like :visitorType " +
+                        "And p.createdAt > :date ORDER BY p.id",
+                Code.class).setParameter("visitorType", visitorType).setParameter("date", date)
                 .setMaxResults(limit)
                 .getResultList();
     }
