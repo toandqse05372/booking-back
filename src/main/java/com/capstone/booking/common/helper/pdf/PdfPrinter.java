@@ -3,11 +3,13 @@ package com.capstone.booking.common.helper.pdf;
 import com.capstone.booking.entity.*;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+
+import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -18,6 +20,9 @@ import java.util.List;
 
 @Component
 public class PdfPrinter {
+
+    @Value("${aws.bucketLink}")
+    private String bucketLink;
 
     public File printPDF(List<PrintRequest> printRequests, String placeKey) throws IOException, DocumentException, URISyntaxException {
         if(placeKey == null){
@@ -40,16 +45,15 @@ public class PdfPrinter {
         FileOutputStream fos = new FileOutputStream(file);
         PdfWriter pdfWriter = PdfWriter.getInstance(document, fos);
 
+        String content = getContent("default.txt");
+        Image img = getImage("default.png");
+
         //start stream file
         document.open();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         for (PrintRequest printRequest : printRequests) {
             //get template file
-            Path path = Paths.get(ClassLoader.getSystemResource("ticketForm/default.txt").toURI());
-            Charset charset = StandardCharsets.UTF_8;
 
-            //get file
-            String content = new String(Files.readAllBytes(path), charset);
             //change text file
             content = content.replace("NAMEx",
                     printRequest.getTicketType().getTypeName()
@@ -62,14 +66,9 @@ public class PdfPrinter {
             for (Ticket ticket : printRequest.getTickets()) {
                 PdfContentByte pdfContentByte = pdfWriter.getDirectContent();
                 //enter image
-                Path pathI = Paths.get(ClassLoader.getSystemResource("image/default.png").toURI());
-                Image img = Image.getInstance(pathI.toAbsolutePath().toString());
-                img.scaleAbsolute(200, 40);
                 document.add(img);
                 //enter text
-                Font font = new Font(BaseFont.createFont("src\\main\\resources\\font\\vuArial.ttf",
-                        BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
-                Chunk chunk1 = new Chunk(content, font);
+                Chunk chunk1 = new Chunk(content, getFont("vuArial.ttf"));
                 document.add(new Paragraph("\n"));
                 document.add(chunk1);
                 //gen barcode
@@ -83,7 +82,6 @@ public class PdfPrinter {
         }
 
         document.close();
-//        fos.close();
         return file;
     }
 
@@ -94,16 +92,13 @@ public class PdfPrinter {
         FileOutputStream fos = new FileOutputStream(file);
         PdfWriter pdfWriter = PdfWriter.getInstance(document, fos);
 
+        String content = getContent("vin.txt");
+        Image img = getImage("vin.png");
+
         //start stream file
         document.open();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         for (PrintRequest printRequest : printRequests) {
-            //get template file
-            Path path = Paths.get(ClassLoader.getSystemResource("ticketForm/vin.txt").toURI());
-            Charset charset = StandardCharsets.UTF_8;
-
-            //get file
-            String content = new String(Files.readAllBytes(path), charset);
             //change text file
             content = content.replace("NAMEx",
                     printRequest.getTicketType().getTypeName()
@@ -114,16 +109,12 @@ public class PdfPrinter {
                     .replace("PLACEx", printRequest.getPlace().getName());
 
             for (Ticket ticket : printRequest.getTickets()) {
+
                 PdfContentByte pdfContentByte = pdfWriter.getDirectContent();
-                //enter image
-                Path pathI = Paths.get(ClassLoader.getSystemResource("image/vin.png").toURI());
-                Image img = Image.getInstance(pathI.toAbsolutePath().toString());
-                img.scaleAbsolute(200, 40);
+
                 document.add(img);
                 //enter text
-                Font font = new Font(BaseFont.createFont("src\\main\\resources\\font\\vuArial.ttf",
-                        BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
-                Chunk chunk1 = new Chunk(content, font);
+                Chunk chunk1 = new Chunk(content, getFont("vuArial.ttf"));
                 document.add(new Paragraph("\n"));
                 document.add(chunk1);
                 //gen barcode
@@ -137,7 +128,6 @@ public class PdfPrinter {
         }
 
         document.close();
-//        fos.close();
         return file;
     }
 
@@ -148,16 +138,14 @@ public class PdfPrinter {
         FileOutputStream fos = new FileOutputStream(file);
         PdfWriter pdfWriter = PdfWriter.getInstance(document, fos);
 
+        String content = getContent("default.txt");
+        Image img = getImage("default.png");
+
         //start stream file
         document.open();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         for (PrintRequest printRequest : printRequests) {
-            //get template file
-            Path path = Paths.get(ClassLoader.getSystemResource("ticketForm/sunworld.txt").toURI());
-            Charset charset = StandardCharsets.UTF_8;
 
-            //get file
-            String content = new String(Files.readAllBytes(path), charset);
             //change text file
             content = content.replace("NAMEx",
                     printRequest.getTicketType().getTypeName()
@@ -169,15 +157,9 @@ public class PdfPrinter {
 
             for (Ticket ticket : printRequest.getTickets()) {
                 PdfContentByte pdfContentByte = pdfWriter.getDirectContent();
-                //enter image
-                Path pathI = Paths.get(ClassLoader.getSystemResource("image/sunworld.jpg").toURI());
-                Image img = Image.getInstance(pathI.toAbsolutePath().toString());
-                img.scaleAbsolute(200, 40);
                 document.add(img);
                 //enter text
-                Font font = new Font(BaseFont.createFont("src\\main\\resources\\font\\vuArial.ttf",
-                        BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
-                Chunk chunk1 = new Chunk(content, font);
+                Chunk chunk1 = new Chunk(content, getFont("vuArial.ttf"));
                 document.add(new Paragraph("\n"));
                 document.add(chunk1);
                 //gen barcode
@@ -193,6 +175,46 @@ public class PdfPrinter {
         return file;
     }
 
+    public static void saveImage(String imageUrl, String destinationFile) throws IOException {
+        URL url = new URL(imageUrl);
+        InputStream is = url.openStream();
+        OutputStream os = new FileOutputStream(destinationFile);
 
+        byte[] b = new byte[2048];
+        int length;
+
+        while ((length = is.read(b)) != -1) {
+            os.write(b, 0, length);
+        }
+
+        is.close();
+        os.close();
+    }
+
+    public String getContent(String contentFile) throws IOException {
+        URL url = new URL(bucketLink+"ticketForm/"+contentFile);
+        File f = new File("default.txt");
+        FileUtils.copyURLToFile(url, f);
+        Path path = f.toPath();
+        Charset charset = StandardCharsets.UTF_8;
+        //get content
+        return new String(Files.readAllBytes(path), charset);
+    }
+
+    public Image getImage(String imageName) throws IOException, BadElementException {
+        String imageUrl = bucketLink+"image/"+imageName;
+        String imageStr = "image.png";
+        saveImage(imageUrl, imageStr);
+        Image img = Image.getInstance(imageStr);
+        img.scaleAbsolute(200, 40);
+        return  img;
+    }
+
+    public Font getFont(String fontName) throws IOException, DocumentException {
+        URL url = new URL(bucketLink+"font/"+fontName);
+        Font font = new Font(BaseFont.createFont(url.getPath(),
+                BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+        return font;
+    }
 
 }

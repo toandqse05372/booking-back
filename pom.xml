@@ -48,6 +48,12 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
+
         <!-- restfb -->
         <dependency>
             <groupId>com.restfb</groupId>

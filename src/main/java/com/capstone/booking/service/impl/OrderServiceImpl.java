@@ -181,6 +181,11 @@ public class OrderServiceImpl implements OrderService {
     //resent ticket
     @Override
     public ResponseEntity<?> resendTicket(long orderId) throws IOException, MessagingException, URISyntaxException, DocumentException {
+//        try{
+//
+//        }catch (Exception e){
+//            return new ResponseEntity(e, HttpStatus.BAD_REQUEST);
+//        }
         Order order = orderRepository.findById(orderId).get();
         if (!order.getRedemptionDate().after(new Date())) {
             order.setStatus(OrderStatus.EXPIRED.toString());
@@ -229,15 +234,17 @@ public class OrderServiceImpl implements OrderService {
         MimeMessageHelper helper = new MimeMessageHelper(message, multipart);
 
         helper.setTo(order.getMail());
-        helper.setSubject("Đơn hàng mã #" + order.getOrderCode());
+        String orderCode = order.getOrderCode();
+        helper.setSubject("Order code: #" + orderCode);
 
-        helper.setText("Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi. Để sử dụng," +
-                " hãy xuất trình vé này tại địa điểm đã đặt chỗ");
+        helper.setText("Hi " + order.getFirstName() +" "+ order.getLastName()+",\n"+
+                "Thank you for purchasing at Goboki!\n"+
+                "To use the product, please present the code at the location you selected or print it on paper.");
         String path1 = file.getPath();
 
         // Attachment 1
         FileSystemResource file1 = new FileSystemResource(new File(path1));
-        helper.addAttachment(file.getPath(), file1);
+        helper.addAttachment(orderCode+".pdf", file1);
         emailSender.send(message);
     }
 
