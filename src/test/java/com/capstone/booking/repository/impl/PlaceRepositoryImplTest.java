@@ -53,9 +53,7 @@ public class PlaceRepositoryImplTest {
         expectedResult.setTotalItems(1);
         BigInteger counter = BigInteger.valueOf(1);
         String sqlStr = "select count(place0_.id) from t_place place0_ INNER join t_place_category ppt on place0_.id = ppt.place_id where  ppt.category_id = :ptid  and place0_.name like :name  and place0_.address like :address  and place0_.city_id = :cid ";
-        when(mockEntityManager.createNativeQuery("select count(*) from ("
-                + sqlStr +
-                ") placecount")).thenReturn(query);
+        when(mockEntityManager.createNativeQuery( sqlStr )).thenReturn(query);
         when(query.setParameter("name", "")).thenReturn(query);
         when(query.setParameter("address", "")).thenReturn(query);
         when(query.getSingleResult()).thenReturn(counter);
@@ -92,11 +90,17 @@ public class PlaceRepositoryImplTest {
 
         BigInteger counter = BigInteger.valueOf(1);
 
-        when(mockEntityManager.createNativeQuery("select count(place0_.id) from t_place place0_ INNER join t_place_category ppt on place0_.id = ppt.place_id where  place0_.status like 'ACTIVE'  and  ppt.category_id = :ptid0  and place0_.name like :name  and place0_.city_id = :cid0 ")).thenReturn(query);
+        when(mockEntityManager.createNativeQuery("select count(*) from (select count(place0_.id) from t_place place0_ INNER join t_place_category ppt on place0_.id = ppt.place_id where  place0_.status like 'ACTIVE'  and ppt.category_id in ( 1)  and place0_.name like :name  and place0_.city_id in ( 1) and place0_.id \n" +
+                "in ( select tt.place_id from t_ticket_type tt \n" +
+                "inner join t_visitor_type vt on tt.id = vt.ticket_type_id )\n" +
+                "group by place0_.id ) placecount")).thenReturn(query);
         when(query.setParameter("name", "")).thenReturn(query);
         when(query.setParameter("address", "")).thenReturn(query);
         when(query.getSingleResult()).thenReturn(counter);
-        when(mockEntityManager.createNativeQuery("select place0_.* from t_place place0_ INNER join t_place_category ppt on place0_.id = ppt.place_id where  place0_.status like 'ACTIVE'  and  ppt.category_id = :ptid0  and place0_.name like :name  and place0_.city_id = :cid0 limit :from, :limit", Place.class)).thenReturn(query);
+        when(mockEntityManager.createNativeQuery("select place0_.* from t_place place0_ INNER join t_place_category ppt on place0_.id = ppt.place_id where  place0_.status like 'ACTIVE'  and ppt.category_id in ( 1)  and place0_.name like :name  and place0_.city_id in ( 1) and place0_.id \n" +
+                "in ( select tt.place_id from t_ticket_type tt \n" +
+                "inner join t_visitor_type vt on tt.id = vt.ticket_type_id )\n" +
+                "group by place0_.id limit :from, :limit", Place.class)).thenReturn(query);
         when(query.setParameter("from", 1)).thenReturn(query);
         when(query.setParameter("limit", 1)).thenReturn(query);
         when(query.getResultList()).thenReturn(placeList);

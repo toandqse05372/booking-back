@@ -2,14 +2,12 @@ package com.capstone.booking.api;
 
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
 import com.capstone.booking.service.VisitorTypeService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,27 +35,6 @@ public class VisitorTypeControllerTest {
 
         // Run the test
         final ResponseEntity<?> result = visitorTypeControllerUnderTest.create("1", model);
-
-        // Verify the results
-        Assertions.assertEquals(100, result.getStatusCodeValue());
-    }
-
-    @Test
-    public void testUpdate() {
-        // Setup
-        final VisitorTypeDTO model = new VisitorTypeDTO();
-        model.setTypeName("typeName");
-        model.setTypeKey("typeKey");
-        model.setTicketTypeId(0L);
-        model.setPrice(0);
-        model.setBasicType(false);
-        model.setRemaining(0);
-        model.setStatus("status");
-
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(visitorTypeControllerUnderTest.visitorTypeService).update(model);
-
-        // Run the test
-        final ResponseEntity<?> result = visitorTypeControllerUnderTest.update(model, 0L);
 
         // Verify the results
         Assertions.assertEquals(100, result.getStatusCodeValue());

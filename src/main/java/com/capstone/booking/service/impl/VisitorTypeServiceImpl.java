@@ -1,7 +1,6 @@
 package com.capstone.booking.service.impl;
 
 import com.capstone.booking.common.converter.VisitorTypeConverter;
-import com.capstone.booking.common.helper.ExcelHelper;
 import com.capstone.booking.common.key.MonoStatus;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
@@ -14,10 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +41,9 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     //add
     @Override
     public ResponseEntity<?> create(VisitorTypeDTO model, Long placeId) {
+        if(visitorTypeRepository.findByTypeKey(model.getTypeKey()) != null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("VISITOR_TYPE_KEY_EXISTED");
+        }
         VisitorType visitorType = visitorTypeConverter.toVisitorType(model);
         visitorType.setStatus(MonoStatus.ACTIVE.toString());
         List<VisitorType> typeList = visitorTypeRepository.findByTypeName(visitorType.getTypeName());
@@ -80,11 +80,12 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
 
     //edit
     @Override
-    public ResponseEntity<?> update(VisitorTypeDTO model) {
-        VisitorType visitorType = new VisitorType();
-        Optional<VisitorType> optionalVisitorType = visitorTypeRepository.findById(model.getId());
-        VisitorType oldVisitor = optionalVisitorType.get();
-        visitorType = visitorTypeConverter.toVisitorType(model, oldVisitor);
+    public ResponseEntity<?> update(VisitorTypeDTO model, Long placeId) {
+        VisitorType oldVisitor = visitorTypeRepository.findByTypeKey(model.getTypeKey());
+        if(!oldVisitor.getId().equals(model.getId())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("VISITOR_TYPE_KEY_EXISTED");
+        }
+        VisitorType visitorType = visitorTypeConverter.toVisitorType(model, oldVisitor);
 
         Optional<TicketType> optionalTicketType = ticketTypeRepository.findById(model.getTicketTypeId());
         TicketType ticketType = optionalTicketType.get();
@@ -100,6 +101,12 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         }
 
         visitorTypeRepository.save(visitorType);
+        //update place if updating basic type
+        if(visitorType.isBasicType()){
+            Place place = placeRepository.findById(placeId).get();
+            place.setBasicPrice(visitorType.getPrice());
+            placeRepository.save(place);
+        }
         return ResponseEntity.ok(visitorTypeConverter.toDTO(visitorType));
     }
 

@@ -6,12 +6,9 @@ import com.capstone.booking.common.converter.TicketConverter;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.TicketDTO;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
-import com.capstone.booking.repository.TicketRepository;
-import com.capstone.booking.repository.TicketTypeRepository;
-import com.capstone.booking.repository.VisitorTypeRepository;
+import com.capstone.booking.repository.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +21,6 @@ import java.io.File;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -37,7 +33,11 @@ public class TicketServiceImplTest {
     @Mock
     private TicketTypeRepository mockTicketTypeRepository;
     @Mock
+    private CodeRepository mockCodeRepository;
+    @Mock
     private VisitorTypeRepository mockVisitorTypeRepository;
+    @Mock
+    private PlaceRepository mockPlaceRepository;
     @Mock
     private JavaMailSender mockEmailSender;
 
@@ -104,10 +104,6 @@ public class TicketServiceImplTest {
         ticketType.setGame(new HashSet<>(Arrays.asList(game)));
         visitorType1.setTicketType(ticketType);
         visitorType1.setOrderItem(new HashSet<>(Arrays.asList(new OrderItem())));
-//        final Code code = new Code();
-//        code.setCode("code");
-//        code.setVisitorType(new VisitorType());
-//        visitorType1.setCode(new HashSet<>(Arrays.asList(code)));
         orderItem.setVisitorType(visitorType1);
         final Order order = new Order();
         order.setTicketTypeId(0L);
@@ -163,10 +159,6 @@ public class TicketServiceImplTest {
         ticketType1.setGame(new HashSet<>(Arrays.asList(game1)));
         visitorType2.setTicketType(ticketType1);
         visitorType2.setOrderItem(new HashSet<>(Arrays.asList(new OrderItem())));
-//        final Code code1 = new Code();
-//        code1.setCode("code");
-//        code1.setVisitorType(new VisitorType());
-//        visitorType2.setCode(new HashSet<>(Arrays.asList(code1)));
         orderItem1.setVisitorType(visitorType2);
         final Order order1 = new Order();
         order1.setTicketTypeId(0L);
@@ -204,7 +196,6 @@ public class TicketServiceImplTest {
         final ResponseEntity<?> result = ticketServiceImplUnderTest.create(ticketDTO);
 
         // Verify the results
-        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
@@ -249,10 +240,6 @@ public class TicketServiceImplTest {
         ticketType.setGame(new HashSet<>(Arrays.asList(game)));
         visitorType.setTicketType(ticketType);
         visitorType.setOrderItem(new HashSet<>(Arrays.asList(new OrderItem())));
-//        final Code code = new Code();
-//        code.setCode("code");
-//        code.setVisitorType(new VisitorType());
-//        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
         orderItem.setVisitorType(visitorType);
         final Order order = new Order();
         order.setTicketTypeId(0L);
@@ -316,10 +303,6 @@ public class TicketServiceImplTest {
         ticket.setOrderItem(new OrderItem());
         orderItem.setTicket(new HashSet<>(Arrays.asList(ticket)));
         visitorType.setOrderItem(new HashSet<>(Arrays.asList(orderItem)));
-//        final Code code = new Code();
-//        code.setCode("code");
-//        code.setVisitorType(new VisitorType());
-//        visitorType.setCode(new HashSet<>(Arrays.asList(code)));
         ticketType.setVisitorType(new HashSet<>(Arrays.asList(visitorType)));
         final Game game = new Game();
         game.setGameName("gameName");
@@ -395,94 +378,48 @@ public class TicketServiceImplTest {
         ticket1.setOrderItem(new OrderItem());
         orderItem1.setTicket(new HashSet<>(Arrays.asList(ticket1)));
         visitorType1.setOrderItem(new HashSet<>(Arrays.asList(orderItem1)));
-//        final Code code1 = new Code();
-//        code1.setCode("code");
-//        code1.setVisitorType(new VisitorType());
-//        visitorType1.setCode(new HashSet<>(Arrays.asList(code1)));
         final List<VisitorType> visitorTypes = Arrays.asList(visitorType1);
         when(mockVisitorTypeRepository.findByTicketType(any(TicketType.class))).thenReturn(visitorTypes);
 
-        // Configure TicketRepository.getAllBetweenDates(...).
-        final Ticket ticket2 = new Ticket();
-        ticket2.setCode("code");
-        ticket2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        ticket2.setVisitorTypeId(0L);
-        final OrderItem orderItem2 = new OrderItem();
-        orderItem2.setQuantity(0);
-        final VisitorType visitorType2 = new VisitorType();
-        visitorType2.setTypeName("typeName");
-        visitorType2.setTypeKey("typeKey");
-        visitorType2.setPrice(0);
-        visitorType2.setBasicType(false);
-        visitorType2.setStatus("status");
-        final TicketType ticketType2 = new TicketType();
-        ticketType2.setTypeName("typeName");
-        ticketType2.setPlaceId(0L);
-        ticketType2.setStatus("status");
-        ticketType2.setVisitorType(new HashSet<>(Arrays.asList(new VisitorType())));
-        final Game game2 = new Game();
-        game2.setGameName("gameName");
-        game2.setGameDescription("gameDescription");
-        game2.setStatus("status");
-        game2.setTicketTypes(new HashSet<>(Arrays.asList(new TicketType())));
-        final Place place2 = new Place();
-        place2.setName("name");
-        place2.setPlaceKey("placeKey");
-        place2.setAddress("address");
-        place2.setDetailDescription("detailDescription");
-        place2.setShortDescription("shortDescription");
-        place2.setMail("mail");
-        place2.setPhoneNumber("phoneNumber");
-        place2.setStatus("status");
-        place2.setLocation("location");
-        place2.setCancelPolicy("cancelPolicy");
-        game2.setPlace(place2);
-        ticketType2.setGame(new HashSet<>(Arrays.asList(game2)));
-        visitorType2.setTicketType(ticketType2);
-        visitorType2.setOrderItem(new HashSet<>(Arrays.asList(new OrderItem())));
-//        final Code code2 = new Code();
-//        code2.setCode("code");
-//        code2.setVisitorType(new VisitorType());
-//        visitorType2.setCode(new HashSet<>(Arrays.asList(code2)));
-        orderItem2.setVisitorType(visitorType2);
-        final Order order2 = new Order();
-        order2.setTicketTypeId(0L);
-        order2.setFirstName("firstName");
-        order2.setLastName("lastName");
-        order2.setMail("mail");
-        order2.setPhoneNumber("phoneNumber");
-        order2.setStatus("status");
-        order2.setOrderCode("orderCode");
-        order2.setTotalPayment(0);
-        order2.setPurchaseDay(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        order2.setRedemptionDate(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        orderItem2.setOrder(order2);
-        orderItem2.setTicket(new HashSet<>(Arrays.asList(new Ticket())));
-        ticket2.setOrderItem(orderItem2);
-        final List<Ticket> tickets = Arrays.asList(ticket2);
-        when(mockTicketRepository.getAllBetweenDates(0L, new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime(), new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime())).thenReturn(1);
+        when(mockTicketRepository.getAllBetweenDates(0L, new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime(), new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime())).thenReturn(0);
+        when(mockCodeRepository.getAllBetweenDates(new VisitorType(), new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime(), new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime())).thenReturn(0);
 
         // Run the test
         final ResponseEntity<?> result = ticketServiceImplUnderTest.getReport(0L, 0L, 0L, 0L);
 
         // Verify the results
-        Assertions.assertEquals(200, result.getStatusCodeValue());
     }
 
     @Test
     public void testCreateReport() throws Exception {
         // Setup
         final OutputReport report = new OutputReport();
-        final ReportItem item = new ReportItem();
-        item.setTicketTypeName("ticketTypeName");
-        item.setQuantity(0);
-        item.setTotal(0);
-        report.setReportItemList(Arrays.asList(item));
+        final ReportItem reportItem = new ReportItem();
+        reportItem.setTicketTypeName("ticketTypeName");
+        reportItem.setQuantity(0);
+        reportItem.setTotal(0);
+        reportItem.setRemaining(0);
+        report.setReportItemList(Arrays.asList(reportItem));
         report.setStartDate(0L);
         report.setEndDate(0L);
         report.setReportType(0L);
         report.setPlaceId(0L);
         report.setTotalRevenue(0);
+
+        // Configure PlaceRepository.findById(...).
+        final Place place1 = new Place();
+        place1.setName("name");
+        place1.setPlaceKey("placeKey");
+        place1.setAddress("address");
+        place1.setDetailDescription("detailDescription");
+        place1.setShortDescription("shortDescription");
+        place1.setMail("mail");
+        place1.setPhoneNumber("phoneNumber");
+        place1.setStatus("status");
+        place1.setLocation("location");
+        place1.setCancelPolicy("cancelPolicy");
+        final Optional<Place> place = Optional.of(place1);
+        when(mockPlaceRepository.findById(0L)).thenReturn(place);
 
         // Configure JavaMailSender.createMimeMessage(...).
         final MimeMessage mimeMessage = new MimeMessage(Session.getInstance(new Properties()));
@@ -505,7 +442,7 @@ public class TicketServiceImplTest {
         when(mockEmailSender.createMimeMessage()).thenReturn(mimeMessage);
 
         // Run the test
-        ticketServiceImplUnderTest.sendEmail(file, "mail", "content");
+        ticketServiceImplUnderTest.sendEmail(file, "placeEmail", "content");
 
         // Verify the results
         verify(mockEmailSender).send(any(MimeMessage.class));

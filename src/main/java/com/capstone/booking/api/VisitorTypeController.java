@@ -31,9 +31,13 @@ public class VisitorTypeController {
     //edit api
     @PutMapping("/visitorType/{id}")
     @PreAuthorize("hasAnyAuthority('VISITOR_TYPE_EDIT')")
-    public ResponseEntity<?> update(@RequestBody VisitorTypeDTO model, @PathVariable("id") long id) {
-        model.setId(id);
-        return visitorTypeService.update(model);
+    public ResponseEntity<?> update(@RequestPart(value = "placeId") String placeIdStr,
+                                    @RequestPart(value = "visitorType") String model, @PathVariable("id") long id) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        VisitorTypeDTO visitorTypeDTO = mapper.readValue(model, VisitorTypeDTO.class);
+        Long placeId = Long.parseLong(placeIdStr);
+        visitorTypeDTO.setId(id);
+        return visitorTypeService.update(visitorTypeDTO, placeId);
     }
 
     //mark basic price api

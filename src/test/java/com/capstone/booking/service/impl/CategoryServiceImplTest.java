@@ -112,46 +112,6 @@ public class CategoryServiceImplTest {
         verify(mockAmazonS3ClientService).uploadFileToS3Bucket(eq(null), eq(multipartFile), eq("Category_null"), eq(".pdf"), eq(true));
     }
 
-    @SneakyThrows
-    @Test
-    public void testUpdate() {
-        // Setup
-        final CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryName("categoryName");
-        categoryDTO.setTypeKey("typeKey");
-        categoryDTO.setIconLink("iconLink");
-        categoryDTO.setId(0l);
-        when(mockCategoryRepository.findByTypeName("typeName")).thenReturn(new Category("typeName", "typeKey", "description"));
-
-        // Configure CategoryRepository.findById(...).
-        Category category = new Category();
-        category.setId(0l);
-        category.setTypeName("typeName");
-        category.setTypeKey("typeKey");
-        final Optional<Category> categoryOptional = Optional.of(category);
-        when(mockCategoryRepository.findById(0L)).thenReturn(categoryOptional);
-
-        when(mockCategoryConverter.toCategory(categoryDTO, new Category("typeName", "typeKey", "description"))).thenReturn(new Category("typeName", "typeKey", "description"));
-        when(mockCategoryRepository.save(new Category("typeName", "typeKey", "description"))).thenReturn(new Category("typeName", "typeKey", "description"));
-
-        // Configure CategoryConverter.toDTO(...).
-        final CategoryDTO categoryDTO1 = new CategoryDTO();
-        categoryDTO1.setCategoryName("categoryName");
-        categoryDTO1.setTypeKey("typeKey");
-        categoryDTO1.setIconLink("iconLink");
-        when(mockCategoryConverter.toDTO(new Category("typeName", "typeKey", "description"))).thenReturn(categoryDTO1);
-
-        File file = new File("Test.pdf");
-        FileInputStream input = new FileInputStream(file);
-        MultipartFile multipartFile = new MockMultipartFile("file",
-                file.getName(), "text/plain", IOUtils.toByteArray(input));
-        // Run the test
-        final ResponseEntity<?> result = categoryServiceImplUnderTest.update(categoryDTO, multipartFile);
-
-        // Verify the results
-        verify(mockAmazonS3ClientService).uploadFileToS3Bucket(eq(null), eq(multipartFile), eq("Category_null"), eq(".pdf"), eq(true));
-    }
-
     @Test
     public void testFindByTypeName() {
         // Setup

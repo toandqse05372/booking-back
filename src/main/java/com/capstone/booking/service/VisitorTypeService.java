@@ -2,14 +2,13 @@ package com.capstone.booking.service;
 
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface VisitorTypeService {
     //add
     ResponseEntity<?> create(VisitorTypeDTO model, Long placeId);
 
     //edit
-    ResponseEntity<?> update(VisitorTypeDTO model);
+    ResponseEntity<?> update(VisitorTypeDTO model, Long placeId);
 
     //delete
     ResponseEntity<?> delete(long id);

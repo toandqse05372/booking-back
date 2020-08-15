@@ -22,7 +22,7 @@ public class ExcelHelperTest {
     @Test
     public void testHasExcelFormat() {
         // Setup
-        File file = new File("wrong key.xlsx");
+        File file = new File("NiceJavaBooks.xls");
         FileInputStream input = new FileInputStream(file);
         MultipartFile multipartFile = new MockMultipartFile("file",
                 file.getName(), "text/plain", IOUtils.toByteArray(input));
@@ -61,20 +61,6 @@ public class ExcelHelperTest {
 
         // Run the test
         ExcelHelper.writeExcel(reportItems, "excelFilePath", 100);
-
-        // Verify the results
-    }
-
-    @SneakyThrows
-    @Test
-    public void testExcelToCode(){
-        // Setup
-        File file = new File("wrong key.xlsx");
-        FileInputStream input = new FileInputStream(file);
-        MultipartFile multipartFile = new MockMultipartFile("file",
-                file.getName(), "text/plain", IOUtils.toByteArray(input));
-        // Run the test
-        final List<Code> result = ExcelHelper.excelToCode(multipartFile.getInputStream());
 
         // Verify the results
     }

@@ -7,17 +7,11 @@ import com.capstone.booking.repository.CodeRepository;
 import com.capstone.booking.repository.PlaceRepository;
 import com.capstone.booking.repository.TicketTypeRepository;
 import com.capstone.booking.repository.VisitorTypeRepository;
-import lombok.SneakyThrows;
-import org.apache.poi.util.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -178,7 +172,7 @@ public class VisitorTypeServiceImplTest {
         when(visitorTypeServiceImplUnderTest.visitorTypeConverter.toDTO(visitorType1)).thenReturn(visitorTypeDTO);
 
         // Run the test
-        final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.update(model);
+        final ResponseEntity<?> result = visitorTypeServiceImplUnderTest.update(model, 0l);
 
         // Verify the results
         Assertions.assertEquals(200, result.getStatusCodeValue());
