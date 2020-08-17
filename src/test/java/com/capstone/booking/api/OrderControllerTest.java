@@ -35,7 +35,7 @@ public class OrderControllerTest {
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).delete(0L);
 
         // Run the test
-        final ResponseEntity<?> result = orderControllerUnderTest.deleteMethod(0L);
+        final ResponseEntity<?> result = orderControllerUnderTest.delete(0L);
 
         // Verify the results
         Assertions.assertEquals(100, result.getStatusCodeValue());
@@ -71,7 +71,7 @@ public class OrderControllerTest {
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).create(model, OrderStatus.UNPAID);
 
         // Run the test
-        final ResponseEntity<?> result = orderControllerUnderTest.createMethod(model);
+        final ResponseEntity<?> result = orderControllerUnderTest.create(model);
 
         // Verify the results
         Assertions.assertEquals(100, result.getStatusCodeValue());

@@ -58,6 +58,7 @@ public class PlaceController {
 
     //search By Id api
     @GetMapping("/place/{id}")
+    @PreAuthorize("hasAnyAuthority('PLACE_EDIT')")
     public ResponseEntity<?> getPlace(@PathVariable Long id) {
         return placeService.getPlace(id);
     }

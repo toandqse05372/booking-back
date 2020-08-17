@@ -64,6 +64,7 @@ public class CategoryController {
 
     //search By Id
     @GetMapping("/category/{id}")
+    @PreAuthorize("hasAnyAuthority('CATEGORY_EDIT')")
     public ResponseEntity<?> getCategory(@PathVariable Long id) {
         return categoryService.getCategory(id);
     }

@@ -5,7 +5,7 @@ import com.capstone.booking.entity.City;
 import com.capstone.booking.entity.Place;
 import com.capstone.booking.entity.dto.PlaceDTO;
 import com.capstone.booking.entity.dto.PlaceDTOClient;
-import com.capstone.booking.entity.dto.PlaceDTOLite;
+import com.capstone.booking.entity.dto.lite.PlaceDTOLite;
 import com.capstone.booking.repository.CategoryRepository;
 import com.capstone.booking.repository.CityRepository;
 import org.junit.Before;

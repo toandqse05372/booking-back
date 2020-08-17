@@ -41,7 +41,7 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
     @Async
     public void uploadFileToS3Bucket(Long placeId, MultipartFile multipartFile, String name, String ext, boolean enablePublicReadAccess) {
         String fileName = name + ext;
-        String bucketLink = "https://toandqse05372-bucket.s3-ap-southeast-1.amazonaws.com/";
+        String bucketLink = "https://dman-bucket.s3-ap-southeast-1.amazonaws.com/";
         try {
             //creating the file in the server (temporarily)
             File file = new File(fileName);
@@ -55,9 +55,8 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
                 putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead);
             }
             this.amazonS3.putObject(putObjectRequest);
+
             //removing the file created in the server
-
-
             file.delete();
         } catch (IOException | AmazonServiceException ex) {
             logger.error("error [" + ex.getMessage() + "] occurred while uploading [" + fileName + "] ");

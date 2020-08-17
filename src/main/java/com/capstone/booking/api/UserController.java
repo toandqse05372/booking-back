@@ -85,12 +85,14 @@ public class UserController {
 
     //get all role api
     @GetMapping("user/roles")
+    @PreAuthorize("hasAnyAuthority('USER_EDIT')")
     public ResponseEntity<?> findAllRoles(){
         return userService.findAllRoles();
     }
 
     //reset password api
     @PostMapping("user/changePassword")
+    @PreAuthorize("hasAnyAuthority('USER_EDIT_CLIENT')")
     public ResponseEntity<?> changePassword(@RequestPart(value = "uid") String uid,
                                             @RequestPart(value = "old")String oldPassword,
                                             @RequestPart(value = "new")String newPassword){
@@ -106,11 +108,13 @@ public class UserController {
 
     //get user by Id api for client
     @GetMapping("/userClient/{id}")
+    @PreAuthorize("hasAnyAuthority('USER_EDIT_CLIENT')")
     public ResponseEntity<?> getUserClient(@PathVariable Long id) {
         return userService.getUserClient(id);
     }
 
     @PostMapping("/user/avatar/{id}")
+    @PreAuthorize("hasAnyAuthority('USER_EDIT_CLIENT')")
     public ResponseEntity<?> updateAvatar(@PathVariable Long id, @RequestPart(value = "file") MultipartFile file){
         return userService.updateAvatar(id, file);
     }

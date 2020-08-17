@@ -90,7 +90,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            if (key.equals("placeId")) {
+            if (key.equals("placeId") || key.equals("status")) {
                 query.setParameter(key,  value );
             } else
                 query.setParameter(key,  "%"+ value + "%");

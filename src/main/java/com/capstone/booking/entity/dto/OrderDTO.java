@@ -1,5 +1,6 @@
 package com.capstone.booking.entity.dto;
 
+import com.capstone.booking.entity.dto.lite.PlaceDTOLite;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.util.Date;
@@ -22,4 +23,5 @@ public class OrderDTO extends BaseDTO{
     private Date redemptionDate;
     private Long placeId;
     private Set<OrderItemDTO> orderItems;
+    private PlaceDTOLite place;
 }

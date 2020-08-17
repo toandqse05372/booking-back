@@ -3,12 +3,14 @@ package com.capstone.booking.service.impl;
 import com.capstone.booking.api.output.Output;
 import com.capstone.booking.common.converter.OrderConverter;
 import com.capstone.booking.common.converter.OrderItemConverter;
+import com.capstone.booking.common.converter.PlaceConverter;
 import com.capstone.booking.common.helper.pdf.PdfPrinter;
 import com.capstone.booking.common.helper.pdf.PrintRequest;
 import com.capstone.booking.common.key.OrderStatus;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.OrderDTO;
 import com.capstone.booking.entity.dto.OrderItemDTO;
+import com.capstone.booking.entity.dto.lite.PlaceDTOLite;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.OrderService;
 import com.itextpdf.text.DocumentException;
@@ -53,6 +55,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderItemConverter orderItemConverter;
+
+    @Autowired
+    private PlaceConverter placeConverter;
 
     @Autowired
     private PlaceRepository placeRepository;
@@ -129,7 +134,7 @@ public class OrderServiceImpl implements OrderService {
     public ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException, MessagingException {
         Optional<Order> orderOptional = orderRepository.findById(id);
         Order order = orderOptional.get();
-        if (!order.getRedemptionDate().after(new Date())) {
+        if (!order.getRedemptionDate().after(getDateBefore(1))) {
             order.setStatus(OrderStatus.EXPIRED.toString());
             return new ResponseEntity("ORDER_EXPIRED", HttpStatus.BAD_REQUEST);
         }
@@ -138,14 +143,9 @@ public class OrderServiceImpl implements OrderService {
         Place place = placeRepository.findById(ticketType.getPlaceId()).get();
         List<PrintRequest> printRequests = new ArrayList<>();
         // create tickets for each order item
-        Calendar c = new GregorianCalendar();
-        c.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        Date d1 = c.getTime();
         for (OrderItem item : orderItems) {
             VisitorType type = item.getVisitorType();
-            List<Code> codeToUse = codeRepository.findByVisitorTypeIdLimitTo(item.getQuantity(), type, d1);
+            List<Code> codeToUse = codeRepository.findByVisitorTypeIdLimitTo(item.getQuantity(), type, getDateBefore(0));
             // check if number of code remaining in db is enough
             if (codeToUse.size() < item.getQuantity()) {
                 return new ResponseEntity("CODE_NOT_ENOUGH", HttpStatus.BAD_REQUEST);
@@ -181,13 +181,8 @@ public class OrderServiceImpl implements OrderService {
     //resent ticket
     @Override
     public ResponseEntity<?> resendTicket(long orderId) throws IOException, MessagingException, URISyntaxException, DocumentException {
-//        try{
-//
-//        }catch (Exception e){
-//            return new ResponseEntity(e, HttpStatus.BAD_REQUEST);
-//        }
         Order order = orderRepository.findById(orderId).get();
-        if (!order.getRedemptionDate().after(new Date())) {
+        if (!order.getRedemptionDate().after(getDateBefore(1))) {
             order.setStatus(OrderStatus.EXPIRED.toString());
             return new ResponseEntity("ORDER_EXPIRED", HttpStatus.BAD_REQUEST);
         }
@@ -221,7 +216,15 @@ public class OrderServiceImpl implements OrderService {
         }
         List<OrderDTO> dtoList = new ArrayList<>();
         for(Order order: orderRepository.findAllByUserOrderByCreatedAtDesc(user)){
-            dtoList.add(orderConverter.toDTO(order));
+            Place place = placeRepository.findById(order.getPlaceId()).get();
+            PlaceDTOLite placeDTOLite = placeConverter.toPlaceLite(place);
+            for(ImagePlace imagePlace: place.getImagePlace()){
+                placeDTOLite.setImageLink(imagePlace.getImageLink());
+                break;
+            }
+            OrderDTO dto = orderConverter.toDTO(order);
+            dto.setPlace(placeDTOLite);
+            dtoList.add(dto);
         }
         return ResponseEntity.ok(dtoList);
     }
@@ -256,11 +259,28 @@ public class OrderServiceImpl implements OrderService {
         }
         List<OrderDTO> dtoList = new ArrayList<>();
         for(Order order: orderRepository.getTop3(id)){
-            dtoList.add(orderConverter.toDTO(order));
+            Place place = placeRepository.findById(order.getPlaceId()).get();
+            PlaceDTOLite placeDTOLite = placeConverter.toPlaceLite(place);
+            for(ImagePlace imagePlace: place.getImagePlace()){
+                placeDTOLite.setImageLink(imagePlace.getImageLink());
+                break;
+            }
+            OrderDTO dto = orderConverter.toDTO(order);
+            dto.setPlace(placeDTOLite);
+            dtoList.add(dto);
         }
         return ResponseEntity.ok(dtoList);
     }
 
+
+    static Date getDateBefore(int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1 * days);
+        cal.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
 
 
 }

@@ -31,6 +31,7 @@ public class CityController {
 
     //search by Id
     @GetMapping("/city/{id}")
+    @PreAuthorize("hasAnyAuthority('CITY_EDIT')")
     public ResponseEntity<?> getCity(@PathVariable Long id) {
         return cityService.getCity(id);
     }

@@ -7,6 +7,7 @@ import com.capstone.booking.common.converter.VisitorTypeConverter;
 import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.*;
+import com.capstone.booking.entity.dto.lite.PlaceDTOLite;
 import com.capstone.booking.repository.ImagePlaceRepository;
 import com.capstone.booking.repository.PlaceRepository;
 import com.capstone.booking.repository.TicketTypeRepository;

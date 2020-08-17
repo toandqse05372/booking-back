@@ -8,6 +8,7 @@ import com.capstone.booking.common.key.MonoStatus;
 import com.capstone.booking.config.aws.AmazonS3ClientService;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.*;
+import com.capstone.booking.entity.dto.lite.PlaceDTOLite;
 import com.capstone.booking.repository.*;
 import com.capstone.booking.service.PlaceService;
 import org.apache.commons.io.FilenameUtils;

@@ -62,6 +62,7 @@ public class GameController {
 
     //search by Id api
     @GetMapping("/game/{id}")
+    @PreAuthorize("hasAnyAuthority('GAME_EDIT')")
     public ResponseEntity<?> getGame(@PathVariable Long id) {
         return gameService.getGame(id);
     }

@@ -126,10 +126,10 @@ public class CityServiceImpl implements CityService {
     }
 
     //upload file to s3
-    public String uploadFile(MultipartFile file, Long categoryId){
+    public String uploadFile(MultipartFile file, Long cityId){
         String ext = "."+ FilenameUtils.getExtension(file.getOriginalFilename());
-        String name = "City_"+categoryId;
-        this.amazonS3ClientService.uploadFileToS3Bucket(categoryId, file, "City_" + categoryId, ext, true);
+        String name = "City_"+cityId;
+        this.amazonS3ClientService.uploadFileToS3Bucket(cityId, file, "City_" + cityId, ext, true);
         return bucketLink + name + ext;
     }
 

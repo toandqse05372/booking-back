@@ -3,11 +3,7 @@ package com.capstone.booking.common.converter;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.GameDTO;
 import com.capstone.booking.entity.dto.GameDTOLite;
-import com.capstone.booking.entity.dto.PlaceDTOLite;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
-import java.util.Set;
 
 //convert game
 @Component

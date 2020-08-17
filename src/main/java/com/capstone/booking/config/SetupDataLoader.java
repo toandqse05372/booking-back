@@ -57,16 +57,21 @@ public class SetupDataLoader implements
 
     //add admin account, roles and permission
     public void initPermission(){
+        List<Enum> adminKey = Arrays.asList(PermissionKey.AdminPermissionKey.values());
+        List<Enum> userKey = Arrays.asList(PermissionKey.UserPermission.values());
+        List<Enum> staffKey = Arrays.asList(PermissionKey.StaffPermissionKey.values());
         Set<Permission> adminPermission =
-                createPermissionIfNotFound(Arrays.asList(PermissionKey.AdminPermissionKey.values()));
+                createPermissionIfNotFound(adminKey);
         createRoleIfNotFound(RoleKey.ADMIN.toString(), adminPermission);
+        addPermissionForRoleIfNew(RoleKey.ADMIN.toString(), adminKey);
         Set<Permission> userPermission =
-                createPermissionIfNotFound(Arrays.asList(PermissionKey.UserPermission.values()));
+                createPermissionIfNotFound(userKey);
         createRoleIfNotFound(RoleKey.USER.toString(), userPermission);
+        addPermissionForRoleIfNew(RoleKey.USER.toString(), userKey);
         Set<Permission> staffPermission =
-                createPermissionIfNotFound(Arrays.asList(PermissionKey.StaffPermissionKey.values()));
+                createPermissionIfNotFound(staffKey);
         createRoleIfNotFound(RoleKey.STAFF.toString(), staffPermission);
-        addPermissionForRoleIfNew(RoleKey.ADMIN.toString());
+        addPermissionForRoleIfNew(RoleKey.STAFF.toString(), staffKey);
 
         Role adminRole = roleRepository.findByRoleKey(RoleKey.ADMIN.toString());
         List<User> user = userRepository.findByRoles(adminRole);
@@ -76,6 +81,7 @@ public class SetupDataLoader implements
             admin.setLastName("Test");
             admin.setPassword(new BCryptPasswordEncoder().encode("test"));
             admin.setMail("test@test.com");
+            admin.setStatus("ACTIVATED");
             Set<Role> roleSet = new HashSet<>();
             roleSet.add(adminRole);
             admin.setRoles(roleSet);
@@ -114,13 +120,20 @@ public class SetupDataLoader implements
 
     //add permission for role
     @Transactional
-    public void addPermissionForRoleIfNew(String key) {
+    public void addPermissionForRoleIfNew(String key,List<Enum> keyList) {
         Role role = roleRepository.findByRoleKey(key);
-        Set<Permission> newPermissionTemp = new HashSet<>(permissionRepository.findAll());
-        newPermissionTemp.removeAll(role.getPermissions());
-        if (newPermissionTemp.size() > 0) {
-           role.setPermissions(new HashSet<>(permissionRepository.findAll()));
-            roleRepository.save(role);
+        Set<Permission> oldPermission = new HashSet<>(role.getPermissions());
+        boolean hasNew= false;
+        for(Enum permission : keyList){
+            if(!oldPermission.stream().filter(c -> c.getPermissionKey().equals(permission.toString())).findAny().isPresent()){
+                Permission addPermission = permissionRepository.findByPermissionKey(permission.toString());
+                oldPermission.add(addPermission);
+                hasNew = true;
+            }
+        }
+        if (hasNew) {
+           role.setPermissions(oldPermission);
+           roleRepository.save(role);
         }
     }
 }

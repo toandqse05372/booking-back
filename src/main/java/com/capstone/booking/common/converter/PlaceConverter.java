@@ -2,6 +2,7 @@ package com.capstone.booking.common.converter;
 
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.*;
+import com.capstone.booking.entity.dto.lite.PlaceDTOLite;
 import com.capstone.booking.repository.CategoryRepository;
 import com.capstone.booking.repository.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
