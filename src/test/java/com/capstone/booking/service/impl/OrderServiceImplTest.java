@@ -186,10 +186,10 @@ public class OrderServiceImplTest {
         output.setTotalPage(0);
         output.setListResult(Arrays.asList());
         output.setTotalItems(0);
-        when(mockOrderRepository.findByStatus("status", "code", 1l)).thenReturn(output);
+        when(mockOrderRepository.findByStatus("status", "code", 1l, 1l, 10l)).thenReturn(output);
 
         // Run the test
-        final ResponseEntity<?> result = orderServiceImplUnderTest.findByStatus("status", "code", 1l);
+        final ResponseEntity<?> result = orderServiceImplUnderTest.findByStatus("status", "code", 1l, 1l, 10l);
 
         // Verify the results
         Assertions.assertEquals(200, result.getStatusCodeValue());

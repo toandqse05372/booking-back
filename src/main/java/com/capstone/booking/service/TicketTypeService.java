@@ -4,6 +4,8 @@ import com.capstone.booking.entity.dto.TicketTypeDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
+
 public interface TicketTypeService {
     //get All
     ResponseEntity<?> findAll();
@@ -21,10 +23,10 @@ public interface TicketTypeService {
     ResponseEntity<?> changeStatus(Long id);
 
     //search by placeId
-    ResponseEntity<?> findByPlaceId(long placeId);
+    ResponseEntity<?> findByPlaceId(long placeId, Date date);
 
     //search by Id
     ResponseEntity<?> getTicketType(Long id);
 
-    ResponseEntity<?> addCodeFromExcel(MultipartFile file, long l);
+    ResponseEntity<?> addCodeFromExcel(MultipartFile file, long l, Date date);
 }

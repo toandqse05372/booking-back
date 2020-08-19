@@ -32,8 +32,10 @@ public class OrderController {
     @PreAuthorize("hasAnyAuthority('ORDER_READ')")
     public ResponseEntity<?> orderFilter(@RequestParam(value = "status", required = false) String status,
                                          @RequestParam(value = "code", required = false) String code,
-                                         @RequestParam(value = "placeId", required = false) Long placeId) {
-        return orderService.findByStatus(status, code, placeId);
+                                         @RequestParam(value = "placeId", required = false) Long placeId,
+                                         @RequestParam(value = "page", required = false) Long page,
+                                         @RequestParam(value = "limit", required = false) Long limit) {
+        return orderService.findByStatus(status, code, placeId, page, limit);
     }
 
     //add api

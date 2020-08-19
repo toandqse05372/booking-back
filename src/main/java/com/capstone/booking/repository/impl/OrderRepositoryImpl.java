@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,14 +24,19 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     @Autowired
     OrderConverter orderConverter;
 
+    private Integer totalItem = 0;
+    private long totalPage = 1;
+
     public OrderRepositoryImpl(EntityManager entityManager){
         this.entityManager = entityManager;
     }
 
     @Override
-    public Output findByStatus(String status, String code, Long placeId) {
+    public Output findByStatus(String status, String code, Long placeId, Long page, Long limit) {
         boolean addedWhere = false;
-        String queryStr = "select o.* from t_order o ";
+        String count = "select count(o.id)";
+        String getAll = "select o.*";
+        String queryStr = " from t_order o ";
         String where = "";
         Integer stack = 1;
 
@@ -70,8 +76,20 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
             queryStr += " where ";
         }
 
+        totalItem = countOrder(params, count + queryStr + where);
+        totalPage = (totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1;
+
+        params.put("from", (page - 1) * limit);
+        stack++;
+        params.put("limit", limit);
+        stack++;
+        where += "limit :from, :limit";
+
         Output output = new Output();
-        output.setListResult(convertList(queryOrder(params, queryStr + where)));
+        output.setPage(Math.toIntExact(page));
+        output.setTotalItems(totalItem);
+        output.setTotalPage((int) totalPage);
+        output.setListResult(convertList(queryOrder(params, getAll + queryStr + where)));
         return output;
     }
 
@@ -90,11 +108,25 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            if (key.equals("placeId") || key.equals("status")) {
+            if (key.equals("placeId") || key.equals("status") | key.equals("from") || key.equals("limit")) {
                 query.setParameter(key,  value );
             } else
                 query.setParameter(key,  "%"+ value + "%");
         }
         return query.getResultList();
+    }
+
+    public int countOrder(Map<String, Object> params, String sqlStr) {
+        Query query = entityManager.createNativeQuery(sqlStr);
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (key.equals("placeId") || key.equals("status")) {
+                query.setParameter(key,  value );
+            } else
+                query.setParameter(key,  "%"+ value + "%");
+        }
+        BigInteger counter = (BigInteger) query.getSingleResult();
+        return counter.intValue() ;
     }
 }

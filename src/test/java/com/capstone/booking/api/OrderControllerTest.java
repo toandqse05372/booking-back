@@ -44,10 +44,10 @@ public class OrderControllerTest {
     @Test
     public void testOrderFilter() {
         // Setup
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).findByStatus("status", "code", 1l);
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).findByStatus("status", "code", 1l, 1l, 10l);
 
         // Run the test
-        final ResponseEntity<?> result = orderControllerUnderTest.orderFilter("status", "code", 1l);
+        final ResponseEntity<?> result = orderControllerUnderTest.orderFilter("status", "code", 1l, 1l, 10l);
 
         // Verify the results
         Assertions.assertEquals(100, result.getStatusCodeValue());

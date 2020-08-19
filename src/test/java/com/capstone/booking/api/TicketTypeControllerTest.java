@@ -17,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -51,12 +53,12 @@ public class TicketTypeControllerTest {
     }
 
     @Test
-    public void testSearchByPlaceId() {
+    public void testSearchByPlaceId() throws ParseException {
         // Setup
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketTypeService).findByPlaceId(0L);
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketTypeService).findByPlaceId(0L, new Date());
 
         // Run the test
-        final ResponseEntity<?> result = ticketTypeControllerUnderTest.searchByPlaceId(0L);
+        final ResponseEntity<?> result = ticketTypeControllerUnderTest.searchByPlaceId(0L, "31/12/2020");
 
         // Verify the results
         Assertions.assertEquals(100, result.getStatusCodeValue());
@@ -160,10 +162,10 @@ public class TicketTypeControllerTest {
         FileInputStream input = new FileInputStream(file);
         MultipartFile multipartFile = new MockMultipartFile("file",
                 file.getName(), "text/plain", IOUtils.toByteArray(input));
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketTypeService).addCodeFromExcel(any(MultipartFile.class), eq(0L));
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockTicketTypeService).addCodeFromExcel(any(MultipartFile.class), eq(0L), new Date());
 
         // Run the test
-        final ResponseEntity<?> result = ticketTypeControllerUnderTest.uploadFile(multipartFile, "0");
+        final ResponseEntity<?> result = ticketTypeControllerUnderTest.uploadFile(multipartFile, "0", "31/12/2020");
 
         // Verify the results
         Assertions.assertEquals(100, result.getStatusCodeValue());

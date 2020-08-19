@@ -20,7 +20,7 @@ public interface OrderService {
     ResponseEntity<?> delete(long id);
 
     //search Order by status, & paging
-    ResponseEntity<?> findByStatus(String status, String code, Long placeId);
+    ResponseEntity<?> findByStatus(String status, String code, Long placeId, Long page, Long limit);
 
     //search by Id
     ResponseEntity<?> findByOrderId(Long id, Long uid);

@@ -22,7 +22,7 @@ public interface CodeRepository extends JpaRepository<Code, Long>, CodeCustom {
     void deleteByVisitorType(VisitorType type);
 
     //count remaining code
-    @Query(value = "select count(c) from Code c where c.visitorType = :visitorType and c.createdAt > :date ")
+    @Query(value = "select count(c) from Code c where c.visitorType = :visitorType and c.redemptionDate = :date ")
     int countByVisitorTypeReaming(@Param("visitorType") VisitorType type, @Param("date")Date date);
 
     //find all tickets between dates

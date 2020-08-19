@@ -129,7 +129,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 
     //search by placeId
     @Override
-    public ResponseEntity<?> findByPlaceId(long placeId) {
+    public ResponseEntity<?> findByPlaceId(long placeId, Date date) {
         List<TicketTypeDTO> list = new ArrayList<>();
         List<TicketType> ticketTypes = ticketTypeRepository.findByPlaceId(placeId);
         OutputExcel output = new OutputExcel();
@@ -141,7 +141,10 @@ public class TicketTypeServiceImpl implements TicketTypeService {
                     output.setImportExcel(true);
                     List<VisitorTypeDTO> visitorTypeDTOS = new ArrayList<>();
                     for (VisitorType type : visitorTypes) {
-                        visitorTypeDTOS.add(visitorTypeConverter.toDTO(type));
+                        VisitorTypeDTO visitorTypeDTO = visitorTypeConverter.toDTO(type);
+                        visitorTypeDTO.setRemaining(codeRepository.countByVisitorTypeReaming(type, date));
+                        visitorTypeDTOS.add(visitorTypeDTO);
+
                     }
                     ticketTypeDTO.setVisitorTypes(visitorTypeDTOS.stream().sorted(new Comparator<VisitorTypeDTO>() {
                         @Override
@@ -172,7 +175,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 
     // import code from excel
     @Override
-    public ResponseEntity<?> addCodeFromExcel(MultipartFile file, long placeId) {
+    public ResponseEntity<?> addCodeFromExcel(MultipartFile file, long placeId, Date date) {
         if (ExcelHelper.hasExcelFormat(file)) {
             try {
                 //get code from excel 
@@ -183,6 +186,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
                 for (Code code : codes) {
                     if (visitorTypes.contains(code.getVisitorType())) {
                         try {
+                            code.setRedemptionDate(date);
                             codeRepository.save(code);
                         } catch (DataIntegrityViolationException e) {
                             uniqle += 1;

@@ -8,6 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 //ticket type api
 @RestController
 public class TicketTypeController {
@@ -23,8 +28,9 @@ public class TicketTypeController {
 
     //search ticketType by PlaceId
     @GetMapping("/ticketType")
-    public ResponseEntity<?> searchByPlaceId(@RequestParam(value = "placeId", required = true) Long placeId){
-        return ticketTypeService.findByPlaceId(placeId);
+    public ResponseEntity<?> searchByPlaceId(@RequestParam(value = "placeId") Long placeId,
+                                             @RequestParam(value = "date") String date  ) throws ParseException {
+        return ticketTypeService.findByPlaceId(placeId, convertDate(date));
     }
 
     //delete ticketType
@@ -66,7 +72,16 @@ public class TicketTypeController {
     @PostMapping("/upload")
     @PreAuthorize("hasAnyAuthority('TICKET_TYPE_EDIT')")
     public ResponseEntity<?> uploadFile(@RequestPart(value = "file") MultipartFile file,
-                                        @RequestPart(value = "placeId") String placeId){
-        return ticketTypeService.addCodeFromExcel(file, Long.parseLong(placeId));
+                                        @RequestPart(value = "placeId") String placeId,
+                                        @RequestPart(value = "date") String dateStr) throws ParseException {
+        return ticketTypeService.addCodeFromExcel(file, Long.parseLong(placeId), convertDate(dateStr));
+    }
+
+    public Date convertDate(String dateStr) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = dateFormat.parse(dateStr);
+        TimeZone tz = TimeZone.getDefault();
+        date = new Date(date.getTime() + tz.getRawOffset());
+        return date;
     }
 }

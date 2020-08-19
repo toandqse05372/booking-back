@@ -53,7 +53,6 @@ public class VisitorTypeConverter {
         c.set(Calendar.SECOND, 0);
 
         Date d1 = c.getTime();
-        dto.setRemaining(codeRepository.countByVisitorTypeReaming(visitorType, d1));
         dto.setTicketTypeId(visitorType.getTicketType().getId());
         dto.setBasicType(visitorType.isBasicType());
 
