@@ -23,13 +23,15 @@ public interface OrderService {
     ResponseEntity<?> findByStatus(String status, String code, Long placeId);
 
     //search by Id
-    ResponseEntity<?> findByOrderId(Long id);
+    ResponseEntity<?> findByOrderId(Long id, Long uid);
 
     ResponseEntity<?> sendTicket(long id) throws DocumentException, IOException, URISyntaxException, MessagingException;
 
     ResponseEntity<?> resendTicket(long orderId) throws IOException, MessagingException, URISyntaxException, DocumentException;
 
-    ResponseEntity<?> getOrderByUid(long id);
+    ResponseEntity<?> getOrderByUid(long id, Long uid);
 
-    ResponseEntity<?> getOrderByUidTop3(long id);
+    ResponseEntity<?> getOrderByUidTop3(long id, Long uid);
+
+    ResponseEntity<?> findByOrderId(long id);
 }

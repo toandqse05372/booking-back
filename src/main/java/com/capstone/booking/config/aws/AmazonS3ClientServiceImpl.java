@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
@@ -55,11 +56,17 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
                 putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead);
             }
             this.amazonS3.putObject(putObjectRequest);
-
             //removing the file created in the server
+            TimeUnit.SECONDS.sleep(1);
             file.delete();
-        } catch (IOException | AmazonServiceException ex) {
+        } catch (IOException | AmazonServiceException | InterruptedException ex) {
             logger.error("error [" + ex.getMessage() + "] occurred while uploading [" + fileName + "] ");
         }
     }
+
+//    @Async
+//    public void deleteFileFromS3Bucket(String fileUrl) {
+//        String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+//        this.amazonS3.deleteObject(new DeleteObjectRequest(this.awsS3AudioBucket, fileName));
+//    }
 }

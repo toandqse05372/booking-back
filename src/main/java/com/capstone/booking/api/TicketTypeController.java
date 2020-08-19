@@ -23,10 +23,9 @@ public class TicketTypeController {
 
     //search ticketType by PlaceId
     @GetMapping("/ticketType")
-    public ResponseEntity<?> searchByPlaceId(@RequestParam(value = "placeId", required = false) Long placeId){
+    public ResponseEntity<?> searchByPlaceId(@RequestParam(value = "placeId", required = true) Long placeId){
         return ticketTypeService.findByPlaceId(placeId);
     }
-
 
     //delete ticketType
     @DeleteMapping("/ticketType/{id}")

@@ -8,4 +8,5 @@ import java.util.List;
 public class OutputExcel {
     private List<?> listResult;
     private boolean importExcel = false;
+    private List<Integer> weekdays;
 }

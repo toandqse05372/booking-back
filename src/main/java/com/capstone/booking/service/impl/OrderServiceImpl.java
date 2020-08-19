@@ -123,7 +123,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<?> findByOrderId(Long id) {
+    public ResponseEntity<?> findByOrderId(Long id, Long uid) {
+        Order order = orderRepository.findById(id).get();
+        if(uid == null || uid !=  order.getUser().getId()){
+            return new ResponseEntity("NOT_OWNER", HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(orderConverter.toDTO(order));
+    }
+
+    @Override
+    public ResponseEntity<?> findByOrderId(long id) {
         Order order = orderRepository.findById(id).get();
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
@@ -209,8 +218,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<?> getOrderByUid(long id) {
+    public ResponseEntity<?> getOrderByUid(long id, Long uid) {
         User user = userRepository.findById(id).get();
+        if(uid == null || uid !=  id){
+            return new ResponseEntity("NOT_OWNER", HttpStatus.BAD_REQUEST);
+        }
         if(user == null){
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("USER_NOT_EXISTED");
         }
@@ -252,7 +264,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<?> getOrderByUidTop3(long id) {
+    public ResponseEntity<?> getOrderByUidTop3(long id, Long uid) {
+        if(uid == null || uid !=  id){
+            return new ResponseEntity("NOT_OWNER", HttpStatus.BAD_REQUEST);
+        }
         User user = userRepository.findById(id).get();
         if(user == null){
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("USER_NOT_EXISTED");

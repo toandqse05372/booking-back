@@ -96,7 +96,7 @@ public class CategoryRepositoryImpl implements CategoryCustom {
             if (key.equals("from") || key.equals("limit")) {
                 query.setParameter(key, value);
             } else
-                query.setParameter(key, value + "%");
+                query.setParameter(key, "%" + value + "%");
         }
         return query.getResultList();
     }
@@ -106,7 +106,7 @@ public class CategoryRepositoryImpl implements CategoryCustom {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            query.setParameter(key, value + "%");
+            query.setParameter(key, "%" + value + "%");
         }
         BigInteger counter = (BigInteger) query.getSingleResult();
         return counter.intValue() ;

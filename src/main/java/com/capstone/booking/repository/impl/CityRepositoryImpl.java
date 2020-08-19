@@ -103,7 +103,7 @@ public class CityRepositoryImpl implements CityRepositoryCustom {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            query.setParameter(key, value + "%");
+            query.setParameter(key, "%" + value + "%");
         }
         BigInteger counter = (BigInteger) query.getSingleResult();
         return counter.intValue() ;

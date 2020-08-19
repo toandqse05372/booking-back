@@ -54,21 +54,28 @@ public class OrderController {
     }
 
     //search by Id api
-    @GetMapping("/order/{id}")
+    @PostMapping("/order/{id}")
     @PreAuthorize("hasAnyAuthority('OWN_ORDER_READ')")
-    public ResponseEntity<?> getOrderById(@PathVariable("id") long id) {
+    public ResponseEntity<?> getOrderById(@PathVariable("id") long id, @RequestPart(value = "uid") String uid) {
+        return orderService.findByOrderId(id, Long.parseLong(uid));
+    }
+
+    //search by Id api
+    @GetMapping("/orderCMS/{id}")
+    @PreAuthorize("hasAnyAuthority('ORDER_EDIT')")
+    public ResponseEntity<?> getOrderByIdCMS(@PathVariable("id") long id) {
         return orderService.findByOrderId(id);
     }
 
-    @GetMapping("/order/user/{id}")
+    @PostMapping("/order/user/{id}")
     @PreAuthorize("hasAnyAuthority('OWN_ORDER_READ')")
-    public ResponseEntity<?> getOrdersByUid(@PathVariable("id") long id){
-        return orderService.getOrderByUid(id);
+    public ResponseEntity<?> getOrdersByUid(@PathVariable("id") long id, @RequestPart(value = "uid") String uid){
+        return orderService.getOrderByUid(id, Long.parseLong(uid));
     }
 
-    @GetMapping("/order/top3/{id}")
+    @PostMapping("/order/top3/{id}")
     @PreAuthorize("hasAnyAuthority('OWN_ORDER_READ')")
     public ResponseEntity<?> getOrdersByUidTop3(@PathVariable("id") long id){
-        return orderService.getOrderByUidTop3(id);
+        return orderService.getOrderByUidTop3(id, 3l);
     }
 }

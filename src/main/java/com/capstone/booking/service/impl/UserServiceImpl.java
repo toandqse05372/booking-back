@@ -191,8 +191,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public ResponseEntity<?> delete(long id) {
-        if (!userRepository.findById(id).isPresent()) {
+        User user = userRepository.findById(id).get();
+        if (user == null) {
             return new ResponseEntity("USER_NOT_FOUND", HttpStatus.BAD_REQUEST);
+        }
+        if(user.getRoles().contains(roleRepository.findByRoleKey("ADMIN"))){
+            return new ResponseEntity("IS_ADMIN", HttpStatus.BAD_REQUEST);
         }
         tokenRepository.deleteByUid(id);
         userRepository.deleteById(id);
@@ -293,16 +297,21 @@ public class UserServiceImpl implements UserService {
         if(user == null){
             return new ResponseEntity("USER_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
-        user.setAvatarLink(uploadFile(file, id));
+        try{
+            user.setAvatarLink(uploadFile(file, user));
+        }catch (Exception e){
+            return new ResponseEntity(e, HttpStatus.BAD_REQUEST);
+        }
         User saved = userRepository.save(user);
         return ResponseEntity.ok(userConverter.toDTOClient(saved));
     }
 
     //upload file to s3
-    public String uploadFile(MultipartFile file, Long userId){
+    public String uploadFile(MultipartFile file, User user){
         String ext = "."+ FilenameUtils.getExtension(file.getOriginalFilename());
-        String name = "User_"+userId;
-        this.amazonS3ClientService.uploadFileToS3Bucket(userId, file, "User_" + userId, ext, true);
+        String name = "User_"+user.getId();
+//        this.amazonS3ClientService.deleteFileFromS3Bucket(user.getAvatarLink());
+            this.amazonS3ClientService.uploadFileToS3Bucket(user.getId(), file, "User_" + user.getId(), ext, true);
         return bucketLink + name + ext;
     }
 

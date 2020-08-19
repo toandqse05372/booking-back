@@ -467,7 +467,7 @@ public class UserServiceImplTest {
                 file.getName(), "text/plain", IOUtils.toByteArray(input));
 
         // Run the test
-        final String result = userServiceImplUnderTest.uploadFile(multipartFile, 0L);
+        final String result = userServiceImplUnderTest.uploadFile(multipartFile, new User());
 
         // Verify the results
         assertThat(result).isEqualTo("nullUser_0.pdf");

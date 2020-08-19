@@ -229,7 +229,7 @@ public class OrderServiceImplTest {
         when(mockOrderConverter.toDTO(any(Order.class))).thenReturn(orderDTO);
 
         // Run the test
-        final ResponseEntity<?> result = orderServiceImplUnderTest.findByOrderId(0L);
+        final ResponseEntity<?> result = orderServiceImplUnderTest.findByOrderId(0L, 0l);
 
         // Verify the results
         Assertions.assertEquals(200, result.getStatusCodeValue());
@@ -404,7 +404,7 @@ public class OrderServiceImplTest {
         when(mockOrderConverter.toDTO(any(Order.class))).thenReturn(orderDTO);
 
         // Run the test
-        final ResponseEntity<?> result = orderServiceImplUnderTest.getOrderByUid(0L);
+        final ResponseEntity<?> result = orderServiceImplUnderTest.getOrderByUid(0L, 0l);
 
         // Verify the results
         Assertions.assertEquals(200, result.getStatusCodeValue());
@@ -494,7 +494,7 @@ public class OrderServiceImplTest {
         when(mockOrderConverter.toDTO(any(Order.class))).thenReturn(orderDTO);
 
         // Run the test
-        final ResponseEntity<?> result = orderServiceImplUnderTest.getOrderByUidTop3(0L);
+        final ResponseEntity<?> result = orderServiceImplUnderTest.getOrderByUidTop3(0L, 0l);
 
         // Verify the results
         Assertions.assertEquals(200, result.getStatusCodeValue());

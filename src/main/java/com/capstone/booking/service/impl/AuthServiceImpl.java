@@ -54,29 +54,48 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public ResponseEntity<?> findByEmail(UserDTO userDTO, String page) {
         User user = userRepository.findByMail(userDTO.getMail());
-        if (null == user || !new BCryptPasswordEncoder().matches(userDTO.getPassword(), user.getPassword())) {
+        if(null == user){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("NOT_EMAIL_SIGNED_IN");
+        }
+        if (!new BCryptPasswordEncoder().matches(userDTO.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("WRONG_USERNAME_PASSWORD");
         }
         if(user.getStatus().equals(UserStatus.NOT.toString())){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("ACCOUNT_NOT_ACTIVATED");
         }
-
+        Set<Role> userRoles = user.getRoles();
         if (page != null) {
             // check if user logging in from cms site
             if (page.equals("CMS")) {
                 boolean cmsAble = false;
-                Set<Role> userRoles = user.getRoles();
+
                 List<CMSRoles> cmsRoles = Arrays.asList(CMSRoles.values());
                 for (Role role : userRoles) {
                     for (CMSRoles cmsRole : cmsRoles) {
                         if (cmsRole.toString().equals(role.getRoleKey())) {
                             cmsAble = true;
+                            break;
                         }
+                    }
+                    if(cmsAble){
+                        break;
                     }
                 }
                 if (!cmsAble) {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("NO_PERMISSION_HERE");
                 }
+            }
+        }else{
+            // check if user logging in from client site
+            boolean clientAble = false;
+            for (Role role : userRoles) {
+                if(role.getRoleKey().equals("USER")){
+                    clientAble = true;
+                    break;
+                }
+            }
+            if (!clientAble) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("NO_PERMISSION_HERE");
             }
         }
         return ResponseEntity.ok(returnToken(setPermission(user)).getToken());
@@ -141,7 +160,6 @@ public class AuthServiceImpl implements AuthService {
         userPrincipal.setPassword(user.getPassword());
         userPrincipal.setAuthorities(authorities);
         userPrincipal.setPhoneNumber(user.getPhoneNumber());
-        userPrincipal.setDob(user.getDob());
         return userPrincipal;
     }
 

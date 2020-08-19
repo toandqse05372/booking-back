@@ -112,10 +112,10 @@ public class OrderControllerTest {
     @Test
     public void testGetOrderById() {
         // Setup
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).findByOrderId(0L);
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).findByOrderId(0L, 0l);
 
         // Run the test
-        final ResponseEntity<?> result = orderControllerUnderTest.getOrderById(0L);
+        final ResponseEntity<?> result = orderControllerUnderTest.getOrderById(0L, "0l");
 
         // Verify the results
         Assertions.assertEquals(100, result.getStatusCodeValue());
@@ -124,10 +124,10 @@ public class OrderControllerTest {
     @Test
     public void testGetOrdersByUid() {
         // Setup
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).getOrderByUid(0L);
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).getOrderByUid(0L, 0l);
 
         // Run the test
-        final ResponseEntity<?> result = orderControllerUnderTest.getOrdersByUid(0L);
+        final ResponseEntity<?> result = orderControllerUnderTest.getOrdersByUid(0L, "0l");
 
         // Verify the results
         Assertions.assertEquals(100, result.getStatusCodeValue());
@@ -136,7 +136,7 @@ public class OrderControllerTest {
     @Test
     public void testGetOrdersByUidTop3() {
         // Setup
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).getOrderByUidTop3(0L);
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).getOrderByUidTop3(0L, 0l);
 
         // Run the test
         final ResponseEntity<?> result = orderControllerUnderTest.getOrdersByUidTop3(0L);

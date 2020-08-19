@@ -8,10 +8,7 @@ import com.capstone.booking.common.key.MonoStatus;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.TicketTypeDTO;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
-import com.capstone.booking.repository.CodeRepository;
-import com.capstone.booking.repository.GameRepository;
-import com.capstone.booking.repository.TicketTypeRepository;
-import com.capstone.booking.repository.VisitorTypeRepository;
+import com.capstone.booking.repository.*;
 import com.capstone.booking.service.TicketTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,6 +27,9 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 
     @Autowired
     TicketTypeRepository ticketTypeRepository;
+
+    @Autowired
+    PlaceRepository placeRepository;
 
     @Autowired
     TicketTypeConverter ticketTypeConverter;
@@ -153,6 +153,12 @@ public class TicketTypeServiceImpl implements TicketTypeService {
                 list.add(ticketTypeDTO);
             }
         }
+        String[] days = placeRepository.getWeekdaysById(placeId).split(",");
+        List<Integer> weekDays = new ArrayList<>();
+        for(String day: days){
+            weekDays.add(Integer.parseInt(day));
+        }
+        output.setWeekdays(weekDays);
         output.setListResult(list);
         return ResponseEntity.ok(output);
     }

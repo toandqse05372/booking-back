@@ -140,7 +140,7 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
             if (key.equals("id") || key.equals("from") || key.equals("limit")) {
                 query.setParameter(key, value);
             } else
-                query.setParameter(key, value + "%");
+                query.setParameter(key, "%" + value + "%");
         }
         return query.getResultList();
     }
@@ -150,7 +150,7 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            query.setParameter(key, value + "%");
+            query.setParameter(key, "%" + value + "%");
         }
         BigInteger counter = (BigInteger) query.getSingleResult();
         return counter.intValue() ;

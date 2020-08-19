@@ -18,4 +18,8 @@ public interface PlaceRepository extends JpaRepository<Place, Long>, PlaceReposi
     @Query(value="SELECT * FROM t_place p where p.city_id = ? LIMIT 8", nativeQuery = true)
     List<Place> getTop8Place(Long cityId);
 
+    //get opening dáy of place
+    @Query(value="SELECT p.week_days FROM t_place p where p.id = ?", nativeQuery = true)
+    String getWeekdaysById(Long id);
+
 }
