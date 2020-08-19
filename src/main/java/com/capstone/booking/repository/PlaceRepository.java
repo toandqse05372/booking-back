@@ -15,7 +15,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long>, PlaceReposi
     List<Place> findAllByStatus(String status);
 
     //getTop8PlaceByCityId
-    @Query(value="SELECT * FROM t_place p where p.city_id = ? LIMIT 8", nativeQuery = true)
+    @Query(value="SELECT * FROM t_place p where p.city_id = ? ORDER BY RAND() LIMIT 8", nativeQuery = true)
     List<Place> getTop8Place(Long cityId);
 
     //get opening dáy of place
