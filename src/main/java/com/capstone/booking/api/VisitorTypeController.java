@@ -10,6 +10,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 //visitor type api
 @RestController
 public class VisitorTypeController {
@@ -75,18 +80,18 @@ public class VisitorTypeController {
     }
 
     //search by ticketTypeId and date
-    @GetMapping("/visitorType")
+    @GetMapping("/visitorType/ticketType")
     public ResponseEntity<?> findByTicketTypeIdAndDate(@RequestParam(value = "ticketTypeId") Long ticketTypeId,
-                                                       @RequestParam(value = "date") String date) {
-        return visitorTypeService.findByTicketTypeId(ticketTypeId);
+                                                       @RequestParam(value = "date") String date) throws ParseException {
+        return visitorTypeService.findByTicketTypeIdAndDate(ticketTypeId, convertDate(date));
     }
 
-    //not used
-//    @PostMapping("/uploadVisitorFile")
-//    @PreAuthorize("hasAnyAuthority('TICKET_TYPE_EDIT')")
-//    public ResponseEntity<?> uploadFile(@RequestPart(value = "file") MultipartFile file,
-//                                        @RequestPart(value = "codeType") String codeType) {
-//        return visitorTypeService.addCodeForTicketType(file, codeType);
-//    }
+    public Date convertDate(String dateStr) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = dateFormat.parse(dateStr);
+        TimeZone tz = TimeZone.getDefault();
+        date = new Date(date.getTime() + tz.getRawOffset());
+        return date;
+    }
 
 }

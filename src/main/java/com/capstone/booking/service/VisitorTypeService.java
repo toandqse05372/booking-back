@@ -3,6 +3,8 @@ package com.capstone.booking.service;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Date;
+
 public interface VisitorTypeService {
     //add
     ResponseEntity<?> create(VisitorTypeDTO model, Long placeId);
@@ -28,4 +30,5 @@ public interface VisitorTypeService {
     //set visitor type's price as basic place
     ResponseEntity<?> markBasicPrice(long id, long placeId);
 
+    ResponseEntity<?> findByTicketTypeIdAndDate(Long ticketTypeId, Date convertDate);
 }

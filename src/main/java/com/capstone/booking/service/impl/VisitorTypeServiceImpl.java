@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -200,5 +201,16 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         placeRepository.save(place);
 
         return ResponseEntity.status((HttpStatus.OK)).body("UPDATED");
+    }
+
+    @Override
+    public ResponseEntity<?> findByTicketTypeIdAndDate(Long ticketTypeId, Date date) {
+        List<VisitorTypeDTO> list = new ArrayList<>();
+        for (VisitorType type : visitorTypeRepository.findByTicketType(ticketTypeRepository.findById(ticketTypeId).get())) {
+            VisitorTypeDTO dto = visitorTypeConverter.toDTO(type);
+            dto.setRemaining(codeRepository.countByVisitorTypeReaming(type, date));
+            list.add(dto);
+        }
+        return ResponseEntity.ok(list);
     }
 }
