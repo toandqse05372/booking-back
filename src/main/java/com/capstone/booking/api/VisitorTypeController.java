@@ -74,6 +74,13 @@ public class VisitorTypeController {
         return visitorTypeService.findByTicketTypeId(ticketTypeId);
     }
 
+    //search by ticketTypeId and date
+    @GetMapping("/visitorType")
+    public ResponseEntity<?> findByTicketTypeIdAndDate(@RequestParam(value = "ticketTypeId") Long ticketTypeId,
+                                                       @RequestParam(value = "date") String date) {
+        return visitorTypeService.findByTicketTypeId(ticketTypeId);
+    }
+
     //not used
 //    @PostMapping("/uploadVisitorFile")
 //    @PreAuthorize("hasAnyAuthority('TICKET_TYPE_EDIT')")

@@ -139,7 +139,7 @@ public class OrderControllerTest {
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).getOrderByUidTop3(0L, 0l);
 
         // Run the test
-        final ResponseEntity<?> result = orderControllerUnderTest.getOrdersByUidTop3(0L);
+        final ResponseEntity<?> result = orderControllerUnderTest.getOrdersByUidTop3(0L, "3");
 
         // Verify the results
         Assertions.assertEquals(100, result.getStatusCodeValue());

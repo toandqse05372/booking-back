@@ -80,7 +80,7 @@ public class OrderController {
 
     @PostMapping("/order/top3/{id}")
     @PreAuthorize("hasAnyAuthority('OWN_ORDER_READ')")
-    public ResponseEntity<?> getOrdersByUidTop3(@PathVariable("id") long id){
-        return orderService.getOrderByUidTop3(id, 3l);
+    public ResponseEntity<?> getOrdersByUidTop3(@PathVariable("id") long id, @RequestPart(value = "uid") String uid){
+        return orderService.getOrderByUidTop3(id, Long.parseLong(uid));
     }
 }
