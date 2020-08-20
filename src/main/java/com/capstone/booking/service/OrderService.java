@@ -31,6 +31,8 @@ public interface OrderService {
 
     ResponseEntity<?> getOrderByUid(long id, Long uid);
 
+    ResponseEntity<?> getOrderByUid(long id, Long uid, int limit, int page);
+
     ResponseEntity<?> getOrderByUidTop3(long id, Long uid);
 
     ResponseEntity<?> findByOrderId(long id);

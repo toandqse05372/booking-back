@@ -71,8 +71,11 @@ public class OrderController {
 
     @PostMapping("/order/user/{id}")
     @PreAuthorize("hasAnyAuthority('OWN_ORDER_READ')")
-    public ResponseEntity<?> getOrdersByUid(@PathVariable("id") long id, @RequestPart(value = "uid") String uid){
-        return orderService.getOrderByUid(id, Long.parseLong(uid));
+    public ResponseEntity<?> getOrdersByUid(@PathVariable("id") long id,
+                                            @RequestPart(value = "uid") String uid,
+                                            @RequestPart(value = "page") String page,
+                                            @RequestPart(value = "limit") String limit){
+        return orderService.getOrderByUid(id, Long.parseLong(uid), Integer.parseInt(limit), Integer.parseInt(page));
     }
 
     @PostMapping("/order/top3/{id}")

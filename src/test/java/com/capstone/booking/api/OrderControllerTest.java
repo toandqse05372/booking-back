@@ -127,7 +127,7 @@ public class OrderControllerTest {
         doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).getOrderByUid(0L, 0l);
 
         // Run the test
-        final ResponseEntity<?> result = orderControllerUnderTest.getOrdersByUid(0L, "0l");
+        final ResponseEntity<?> result = orderControllerUnderTest.getOrdersByUid(0L, "3", "1", "10");
 
         // Verify the results
         Assertions.assertEquals(100, result.getStatusCodeValue());

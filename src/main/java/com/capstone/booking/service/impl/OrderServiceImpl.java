@@ -16,6 +16,7 @@ import com.capstone.booking.service.OrderService;
 import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
+import java.awt.print.Pageable;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -239,6 +241,36 @@ public class OrderServiceImpl implements OrderService {
             dtoList.add(dto);
         }
         return ResponseEntity.ok(dtoList);
+    }
+
+    @Override
+    public ResponseEntity<?> getOrderByUid(long id, Long uid, int limit, int page) {
+        User user = userRepository.findById(id).get();
+        if(uid == null || uid !=  id){
+            return new ResponseEntity("NOT_OWNER", HttpStatus.BAD_REQUEST);
+        }
+        if(user == null){
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("USER_NOT_EXISTED");
+        }
+        List<OrderDTO> dtoList = new ArrayList<>();
+        for(Order order: orderRepository.findAllByUserPaging(user.getId(), limit, (page - 1) * limit)){
+            Place place = placeRepository.findById(order.getPlaceId()).get();
+            PlaceDTOLite placeDTOLite = placeConverter.toPlaceLite(place);
+            for(ImagePlace imagePlace: place.getImagePlace()){
+                placeDTOLite.setImageLink(imagePlace.getImageLink());
+                break;
+            }
+            OrderDTO dto = orderConverter.toDTO(order);
+            dto.setPlace(placeDTOLite);
+            dtoList.add(dto);
+        }
+        Output output = new Output();
+        output.setListResult(dtoList);
+        output.setPage(page);
+        int totalItem = orderRepository.countByUser(user);
+        output.setTotalItems(totalItem);
+        output.setTotalPage((totalItem % limit == 0) ? totalItem / limit : (totalItem / limit) + 1);
+        return ResponseEntity.ok(output);
     }
 
     // send ticket.pdf file to user
