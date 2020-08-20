@@ -29,6 +29,9 @@ import javax.transaction.Transactional;
 import java.awt.print.Pageable;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -156,7 +159,7 @@ public class OrderServiceImpl implements OrderService {
         // create tickets for each order item
         for (OrderItem item : orderItems) {
             VisitorType type = item.getVisitorType();
-            List<Code> codeToUse = codeRepository.findByVisitorTypeIdLimitTo(item.getQuantity(), type, getDateBefore(0));
+            List<Code> codeToUse = codeRepository.findByVisitorTypeIdLimitTo(item.getQuantity(), type, returnToMidnight(order.getRedemptionDate()));
             // check if number of code remaining in db is enough
             if (codeToUse.size() < item.getQuantity()) {
                 return new ResponseEntity("CODE_NOT_ENOUGH", HttpStatus.BAD_REQUEST);
@@ -209,8 +212,8 @@ public class OrderServiceImpl implements OrderService {
             printRequest.setVisitorType(type);
             printRequest.setTicketType(ticketType);
             printRequest.setPlace(place);
-            printRequests.add(printRequest);
             printRequest.setRedemptionDate(order.getRedemptionDate());
+            printRequests.add(printRequest);
         }
         File file = pdfPrinter.printPDF(printRequests, place.getPlaceKey());
         order.setStatus(OrderStatus.SENT.toString());
@@ -282,11 +285,11 @@ public class OrderServiceImpl implements OrderService {
 
         helper.setTo(order.getMail());
         String orderCode = order.getOrderCode();
-        helper.setSubject("Order code: #" + orderCode);
+        helper.setSubject("Ma don hang: #" + orderCode);
 
         helper.setText("Hi " + order.getFirstName() +" "+ order.getLastName()+",\n"+
-                "Thank you for purchasing at Goboki!\n"+
-                "To use the product, please present the code at the location you selected or print it on paper.");
+                "Cam on ban da su dung dich vu cua GOBOKI!\n"+
+                "De su dung san pham, vui long xuat trinh tai dia diem da lua chon, hoac in ve ra giay.");
         String path1 = file.getPath();
 
         // Attachment 1
@@ -327,6 +330,16 @@ public class OrderServiceImpl implements OrderService {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         return cal.getTime();
+    }
+
+    private Date returnToMidnight(Date redemptionDate) {
+        Instant inst = redemptionDate.toInstant();
+        LocalDate localDate = inst.atZone(ZoneId.systemDefault()).toLocalDate();
+        Instant dayInst = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Date day = Date.from(dayInst);
+        TimeZone tz = TimeZone.getDefault();
+        day = new Date(day.getTime() + tz.getRawOffset());
+        return day;
     }
 
 

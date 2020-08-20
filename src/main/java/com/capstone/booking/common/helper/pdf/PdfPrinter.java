@@ -55,7 +55,7 @@ public class PdfPrinter {
             //get template file
 
             //change text file
-            content = content.replace("NAMEx",
+            String fillContent = content.replace("NAMEx",
                     printRequest.getTicketType().getTypeName()
                             + "[" + printRequest.getVisitorType().getTypeName() + "]")
                     .replace("PRICEx",
@@ -68,7 +68,7 @@ public class PdfPrinter {
                 //enter image
                 document.add(img);
                 //enter text
-                Chunk chunk1 = new Chunk(content, getFont("vuArial.ttf"));
+                Chunk chunk1 = new Chunk(fillContent, getFont("vuArial.ttf"));
                 document.add(new Paragraph("\n"));
                 document.add(chunk1);
                 //gen barcode

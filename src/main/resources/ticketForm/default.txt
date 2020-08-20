@@ -1,4 +1,4 @@
-Place: PLACEx
-Name: NAMEx
-Price: PRICEx
-Redemption Date: REDEMPTION_DATEx
+Địa điểm: PLACEx
+Tên vé: NAMEx
+Giá: PRICEx
+Ngày sử dụng: REDEMPTION_DATEx

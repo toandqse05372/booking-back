@@ -206,7 +206,7 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
     @Override
     public ResponseEntity<?> findByTicketTypeIdAndDate(Long ticketTypeId, Date date) {
         List<VisitorTypeDTO> list = new ArrayList<>();
-        for (VisitorType type : visitorTypeRepository.findByTicketType(ticketTypeRepository.findById(ticketTypeId).get())) {
+        for (VisitorType type : visitorTypeRepository.findByTicketTypeAndStatus(ticketTypeRepository.findById(ticketTypeId).get(), MonoStatus.ACTIVE.toString())) {
             VisitorTypeDTO dto = visitorTypeConverter.toDTO(type);
             dto.setRemaining(codeRepository.countByVisitorTypeReaming(type, date));
             list.add(dto);

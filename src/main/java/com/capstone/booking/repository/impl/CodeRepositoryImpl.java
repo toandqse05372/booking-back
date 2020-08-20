@@ -21,7 +21,7 @@ public class CodeRepositoryImpl implements CodeCustom {
     @Override
     public List<Code> findByVisitorTypeIdLimitTo(int limit, VisitorType visitorType, Date date) {
         return entityManager.createQuery("SELECT p FROM Code p WHERE p.visitorType like :visitorType " +
-                        "And p.createdAt > :date ORDER BY p.id",
+                        "And p.redemptionDate = :date ORDER BY p.id",
                 Code.class).setParameter("visitorType", visitorType).setParameter("date", date)
                 .setMaxResults(limit)
                 .getResultList();
