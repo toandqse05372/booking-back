@@ -26,7 +26,7 @@ public interface CodeRepository extends JpaRepository<Code, Long>, CodeCustom {
     int countByVisitorTypeReaming(@Param("visitorType") VisitorType type, @Param("date")Date date);
 
     //find all tickets between dates
-    @Query(value = "select count(c) from Code c where c.visitorType = :visitorType And c.createdAt " +
+    @Query(value = "select count(c) from Code c where c.visitorType = :visitorType And c.redemptionDate " +
             "BETWEEN :startDate AND :endDate")
     int getAllBetweenDates
     (@Param("visitorType") VisitorType visitorType, @Param("startDate") Date startDate,

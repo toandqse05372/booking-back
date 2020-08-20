@@ -82,22 +82,23 @@ public class PlaceServiceImpl implements PlaceService {
         if(ticketTypes.size() > 0){
             for(TicketType ticketType: ticketTypes){
                 TicketTypeDTO ticketTypeDTO = ticketTypeConverter.toDTO(ticketType);
-                List<VisitorType> visitorTypes = visitorTypeRepository.
-                        findByTicketTypeAndStatus(ticketType, MonoStatus.ACTIVE.toString());
-                if(visitorTypes.size() > 0){
-                    List<VisitorTypeDTO> visitorTypeDTOS = new ArrayList<>();
-                    for(VisitorType type: visitorTypes){
-                        visitorTypeDTOS.add(visitorTypeConverter.toDTO(type));
-                    }
-                    ticketTypeDTO.setVisitorTypes(visitorTypeDTOS.stream().sorted(new Comparator<VisitorTypeDTO>() {
-                        @Override
-                        public int compare(VisitorTypeDTO o1, VisitorTypeDTO o2) {
-                            return o1.getId().compareTo(o2.getId());
-                        }
-                    }).collect(Collectors.toList()));
-                    //if place has ticket type and visitor type, add to list
-                    list.add(ticketTypeDTO);
-                }
+//                List<VisitorType> visitorTypes = visitorTypeRepository.
+//                        findByTicketTypeAndStatus(ticketType, MonoStatus.ACTIVE.toString());
+//                if(visitorTypes.size() > 0){
+//                    List<VisitorTypeDTO> visitorTypeDTOS = new ArrayList<>();
+//                    for(VisitorType type: visitorTypes){
+//                        visitorTypeDTOS.add(visitorTypeConverter.toDTO(type));
+//                    }
+//                    ticketTypeDTO.setVisitorTypes(visitorTypeDTOS.stream().sorted(new Comparator<VisitorTypeDTO>() {
+//                        @Override
+//                        public int compare(VisitorTypeDTO o1, VisitorTypeDTO o2) {
+//                            return o1.getId().compareTo(o2.getId());
+//                        }
+//                    }).collect(Collectors.toList()));
+//                    //if place has ticket type and visitor type, add to list
+//                    list.add(ticketTypeDTO);
+//                }
+                list.add(ticketTypeDTO);
             }
         }
         client.setTicketTypes(list);

@@ -81,9 +81,9 @@ public class VisitorTypeController {
 
     //search by ticketTypeId and date
     @GetMapping("/visitorType/ticketType")
-    public ResponseEntity<?> findByTicketTypeIdAndDate(@RequestParam(value = "ticketTypeId") Long ticketTypeId,
-                                                       @RequestParam(value = "date") String date) throws ParseException {
-        return visitorTypeService.findByTicketTypeIdAndDate(ticketTypeId, convertDate(date));
+    public ResponseEntity<?> findByTicketTypeIdAndDate(@RequestPart(value = "ticketTypeId") String ticketTypeId,
+                                                       @RequestPart(value = "date") String date) throws ParseException {
+        return visitorTypeService.findByTicketTypeIdAndDate(Long.parseLong(ticketTypeId), convertDate(date));
     }
 
     public Date convertDate(String dateStr) throws ParseException {
