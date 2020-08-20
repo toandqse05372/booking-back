@@ -260,8 +260,10 @@ public class OrderServiceImpl implements OrderService {
             Place place = placeRepository.findById(order.getPlaceId()).get();
             PlaceDTOLite placeDTOLite = placeConverter.toPlaceLite(place);
             for(ImagePlace imagePlace: place.getImagePlace()){
-                placeDTOLite.setImageLink(imagePlace.getImageLink());
-                break;
+                if(imagePlace.getImageName().contains("_1")){
+                    placeDTOLite.setImageLink(imagePlace.getImageLink());
+                    break;
+                }
             }
             OrderDTO dto = orderConverter.toDTO(order);
             dto.setPlace(placeDTOLite);
