@@ -9,8 +9,13 @@ import com.capstone.booking.repository.TicketTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TimeZone;
 
 //convert order
 @Component
@@ -35,7 +40,6 @@ public class OrderConverter {
         order.setPhoneNumber(dto.getPhoneNumber());
         order.setTotalPayment(dto.getTotalPayment());
         order.setPurchaseDay(dto.getPurchaseDay());
-        order.setRedemptionDate(dto.getRedemptionDate());
         order.setPlaceId(dto.getPlaceId());
         return order;
     }
@@ -48,7 +52,6 @@ public class OrderConverter {
         order.setPhoneNumber(dto.getPhoneNumber());
         order.setTotalPayment(dto.getTotalPayment());
         order.setPurchaseDay(dto.getPurchaseDay());
-        order.setRedemptionDate(dto.getRedemptionDate());
         order.setPlaceId(dto.getPlaceId());
         return order;
     }
@@ -88,4 +91,5 @@ public class OrderConverter {
         dto.setRedemptionDate(order.getRedemptionDate());
         return dto;
     }
+
 }

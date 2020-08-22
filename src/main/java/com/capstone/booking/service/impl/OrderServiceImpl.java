@@ -96,6 +96,7 @@ public class OrderServiceImpl implements OrderService {
             order.setOrderCode("ORDER" + 1);
         }
         order.setStatus(status.toString());
+        order.setRedemptionDate(returnToMidnight(orderDTO.getRedemptionDate()));
         Order saved = orderRepository.save(order);
         List<OrderItem> orderItems = new ArrayList<>();
         for (OrderItemDTO dto : orderDTO.getOrderItems()) {
@@ -109,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
         }
         orderItemRepository.saveAll(orderItems);
 
-        if(status.equals(OrderStatus.UNPAID.toString())){
+        if(status.equals(OrderStatus.UNPAID)){
             OrderToken token = new OrderToken();
             token.setOrderId(saved.getId());
             orderTokenRepository.save(token);
@@ -122,6 +123,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         Order oldOrder = orderRepository.findById(orderDTO.getId()).get();
         order = orderConverter.toOrder(orderDTO, oldOrder);
+        order.setRedemptionDate(returnToMidnight(orderDTO.getRedemptionDate()));
         order.setStatus(status.toString());
         orderRepository.save(order);
         return ResponseEntity.ok(orderConverter.toDTO(order));

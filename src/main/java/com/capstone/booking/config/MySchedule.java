@@ -2,19 +2,19 @@ package com.capstone.booking.config;
 
 import com.capstone.booking.common.key.MonoStatus;
 import com.capstone.booking.common.key.OrderStatus;
-import com.capstone.booking.entity.Order;
-import com.capstone.booking.entity.OrderToken;
-import com.capstone.booking.entity.Token;
-import com.capstone.booking.repository.OrderRepository;
-import com.capstone.booking.repository.OrderTokenRepository;
-import com.capstone.booking.repository.TokenRepository;
+import com.capstone.booking.entity.*;
+import com.capstone.booking.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 @Component
 public class MySchedule {
@@ -24,6 +24,12 @@ public class MySchedule {
 
     @Autowired
     OrderTokenRepository orderTokenRepository;
+
+    @Autowired
+    OrderItemRepository orderItemRepository;
+
+    @Autowired
+    RemainingRepository remainingRepository;
 
     @Autowired
     OrderRepository orderRepository;
@@ -44,6 +50,7 @@ public class MySchedule {
         orderRepository.saveAll(updateOrders);
     }
 
+    //make unpaid order be expired if after 2 hours user not paid for it every 15 minutes
     @Scheduled(cron="0 0/15 * * * ?")
     public void expiredOrderToken(){
         List<OrderToken> orderTokens = orderTokenRepository.findExpOrderToken(new Date());
@@ -51,9 +58,24 @@ public class MySchedule {
             Order order = orderRepository.findById(token.getOrderId()).get();
             order.setStatus(OrderStatus.EXPIRED.toString());
             orderRepository.save(order);
+            for(OrderItem orderItem: orderItemRepository.findAllByOrder(order)){
+                Remaining remaining = remainingRepository.findByRedemptionDateAndVisitorTypeId(
+                        returnToMidnight(order.getRedemptionDate()), orderItem.getVisitorType().getId());
+                remaining.setTotal(remaining.getTotal()+orderItem.getQuantity());
+                remainingRepository.save(remaining);
+            }
         }
         orderTokenRepository.deleteAll(orderTokens);
     }
 
+    private Date returnToMidnight(Date redemptionDate) {
+        Instant inst = redemptionDate.toInstant();
+        LocalDate localDate = inst.atZone(ZoneId.systemDefault()).toLocalDate();
+        Instant dayInst = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Date day = Date.from(dayInst);
+        TimeZone tz = TimeZone.getDefault();
+        day = new Date(day.getTime() + tz.getRawOffset());
+        return day;
+    }
 
 }

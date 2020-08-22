@@ -1,7 +1,6 @@
 package com.capstone.booking.repository;
 
 import com.capstone.booking.entity.OrderToken;
-import com.capstone.booking.repository.customRepository.OrderRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,6 +10,6 @@ import java.util.List;
 public interface OrderTokenRepository extends JpaRepository<OrderToken, Long> {
     OrderToken findByOrderId(long id);
 
-    @Query(value = "select ot.* from oder_token ot where ot.token_exp_date <= :date", nativeQuery = true)
+    @Query(value = "select ot.* from order_token ot where ot.token_exp_date <= :date", nativeQuery = true)
     List<OrderToken> findExpOrderToken(Date date);
 }
