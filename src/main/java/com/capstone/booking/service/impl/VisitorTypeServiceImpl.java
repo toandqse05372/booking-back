@@ -208,7 +208,12 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         List<VisitorTypeDTO> list = new ArrayList<>();
         for (VisitorType type : visitorTypeRepository.findByTicketTypeAndStatus(ticketTypeRepository.findById(ticketTypeId).get(), MonoStatus.ACTIVE.toString())) {
             VisitorTypeDTO dto = visitorTypeConverter.toDTO(type);
-            dto.setRemaining(remainingRepository.findByRedemptionDateAndVisitorTypeId(date, type.getId()).getTotal());
+            Remaining remaining = remainingRepository.findByRedemptionDateAndVisitorTypeId(date, type.getId());
+            if(remaining != null){
+                dto.setRemaining(remaining.getTotal());
+            }else{
+                dto.setRemaining(0);
+            }
             list.add(dto);
         }
         return ResponseEntity.ok(list);
