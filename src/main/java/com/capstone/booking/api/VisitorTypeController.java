@@ -86,6 +86,12 @@ public class VisitorTypeController {
         return visitorTypeService.findByTicketTypeIdAndDate(Long.parseLong(ticketTypeId), convertDate(date));
     }
 
+    @PostMapping("/visitorType/remaining")
+    public ResponseEntity<?> getRemaining(@RequestPart(value = "idList") String idList,
+                                          @RequestPart(value = "date") String date) throws ParseException {
+        return visitorTypeService.getVisitorTypeRemaining(idList, convertDate(date));
+    }
+
     public Date convertDate(String dateStr) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = dateFormat.parse(dateStr);

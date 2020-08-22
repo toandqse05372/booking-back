@@ -31,4 +31,6 @@ public interface VisitorTypeService {
     ResponseEntity<?> markBasicPrice(long id, long placeId);
 
     ResponseEntity<?> findByTicketTypeIdAndDate(Long ticketTypeId, Date convertDate);
+
+    ResponseEntity<?> getVisitorTypeRemaining(String visitorTypeIds, Date date);
 }

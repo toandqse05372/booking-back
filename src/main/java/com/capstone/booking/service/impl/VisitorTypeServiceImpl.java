@@ -218,4 +218,22 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         }
         return ResponseEntity.ok(list);
     }
+
+    @Override
+    public ResponseEntity<?> getVisitorTypeRemaining(String visitorTypeIds, Date date) {
+        String[] visitorTypeSplit =  visitorTypeIds.split(",");
+        List<VisitorTypeDTO> typeDTOS = new ArrayList<>();
+        for(String id: visitorTypeSplit){
+            VisitorTypeDTO dto = new VisitorTypeDTO();
+            dto.setId(Long.parseLong(id));
+            Remaining remaining = remainingRepository.findByRedemptionDateAndVisitorTypeId(date, Integer.parseInt(id));
+            if(remaining != null){
+                dto.setRemaining(remaining.getTotal());
+            }else{
+                dto.setRemaining(0);
+            }
+            typeDTOS.add(dto);
+        }
+        return ResponseEntity.ok(typeDTOS);
+    }
 }
