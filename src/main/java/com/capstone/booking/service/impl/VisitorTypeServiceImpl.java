@@ -4,10 +4,7 @@ import com.capstone.booking.common.converter.VisitorTypeConverter;
 import com.capstone.booking.common.key.MonoStatus;
 import com.capstone.booking.entity.*;
 import com.capstone.booking.entity.dto.VisitorTypeDTO;
-import com.capstone.booking.repository.CodeRepository;
-import com.capstone.booking.repository.PlaceRepository;
-import com.capstone.booking.repository.TicketTypeRepository;
-import com.capstone.booking.repository.VisitorTypeRepository;
+import com.capstone.booking.repository.*;
 import com.capstone.booking.service.VisitorTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +29,9 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
 
     @Autowired
     TicketTypeRepository ticketTypeRepository;
+
+    @Autowired
+    RemainingRepository remainingRepository;
 
     @Autowired
     CodeRepository codeRepository;
@@ -208,7 +208,7 @@ public class VisitorTypeServiceImpl implements VisitorTypeService {
         List<VisitorTypeDTO> list = new ArrayList<>();
         for (VisitorType type : visitorTypeRepository.findByTicketTypeAndStatus(ticketTypeRepository.findById(ticketTypeId).get(), MonoStatus.ACTIVE.toString())) {
             VisitorTypeDTO dto = visitorTypeConverter.toDTO(type);
-            dto.setRemaining(codeRepository.countByVisitorTypeReaming(type, date));
+            dto.setRemaining(remainingRepository.findByRedemptionDateAndVisitorTypeId(date, type.getId()).getTotal());
             list.add(dto);
         }
         return ResponseEntity.ok(list);

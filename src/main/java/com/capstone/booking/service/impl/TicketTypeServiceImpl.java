@@ -41,6 +41,9 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     CodeRepository codeRepository;
 
     @Autowired
+    RemainingRepository remainingRepository;
+
+    @Autowired
     VisitorTypeConverter visitorTypeConverter;
 
     @Autowired
@@ -183,17 +186,33 @@ public class TicketTypeServiceImpl implements TicketTypeService {
                 List<VisitorType> visitorTypes = visitorTypeRepository.findByPlaceId(placeId);
                 int uniqle = 0;
                 int wrongKey = 0;
-                for (Code code : codes) {
+                for (Iterator<Code> it = codes.iterator(); it.hasNext(); ) {
+                    Code code = it.next();
                     if (visitorTypes.contains(code.getVisitorType())) {
                         try {
                             code.setRedemptionDate(date);
                             codeRepository.save(code);
                         } catch (DataIntegrityViolationException e) {
                             uniqle += 1;
+                            it.remove();
                         }
                     } else {
                         wrongKey += 1;
+                        it.remove();
                     }
+                }
+                for(VisitorType visitorType: visitorTypes){
+                    int count = Math.toIntExact(codes.stream().filter(c -> c.getVisitorType().equals(visitorType)).count());
+                    Remaining remaining = remainingRepository.findByRedemptionDateAndVisitorTypeId(date, visitorType.getId());
+                    if(remaining == null){
+                        remaining = new Remaining();
+                        remaining.setRedemptionDate(date);
+                        remaining.setTotal(count);
+                        remaining.setVisitorTypeId(visitorType.getId());
+                    }else{
+                        remaining.setTotal(remaining.getTotal() + count);
+                    }
+                    remainingRepository.save(remaining);
                 }
                 if (wrongKey > 0 || uniqle > 0) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)

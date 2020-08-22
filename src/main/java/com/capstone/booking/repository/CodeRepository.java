@@ -21,7 +21,7 @@ public interface CodeRepository extends JpaRepository<Code, Long>, CodeCustom {
     //delete by visitor type
     void deleteByVisitorType(VisitorType type);
 
-    //count remaining code
+    //count remaining code by date
     @Query(value = "select count(c) from Code c where c.visitorType = :visitorType and c.redemptionDate = :date ")
     int countByVisitorTypeReaming(@Param("visitorType") VisitorType type, @Param("date")Date date);
 

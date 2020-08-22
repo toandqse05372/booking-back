@@ -68,10 +68,16 @@ public class OrderServiceImpl implements OrderService {
     private PlaceRepository placeRepository;
 
     @Autowired
+    private RemainingRepository remainingRepository;
+
+    @Autowired
     private PdfPrinter pdfPrinter;
 
     @Autowired
     public JavaMailSender emailSender;
+
+    @Autowired
+    private ImagePlaceRepository imagePlaceRepository;
 
     //create order
     @Override
@@ -93,8 +99,13 @@ public class OrderServiceImpl implements OrderService {
             OrderItem orderItem = orderItemConverter.toItem(dto);
             orderItem.setOrder(saved);
             orderItems.add(orderItem);
+            Remaining remaining = remainingRepository.findByRedemptionDateAndVisitorTypeId(order.getRedemptionDate(),
+                    dto.getVisitorTypeId());
+            remaining.setTotal(remaining.getTotal() - dto.getQuantity());
+            remainingRepository.save(remaining);
         }
         orderItemRepository.saveAll(orderItems);
+
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
 
@@ -259,12 +270,8 @@ public class OrderServiceImpl implements OrderService {
         for(Order order: orderRepository.findAllByUserPaging(user.getId(), limit, (page - 1) * limit)){
             Place place = placeRepository.findById(order.getPlaceId()).get();
             PlaceDTOLite placeDTOLite = placeConverter.toPlaceLite(place);
-            for(ImagePlace imagePlace: place.getImagePlace()){
-                if(imagePlace.getImageName().contains("_1")){
-                    placeDTOLite.setImageLink(imagePlace.getImageLink());
-                    break;
-                }
-            }
+            String imageName = "Place_"+place.getId()+"_1";
+            placeDTOLite.setImageLink(imagePlaceRepository.findByImageName(imageName).getImageLink());
             OrderDTO dto = orderConverter.toDTO(order);
             dto.setPlace(placeDTOLite);
             dtoList.add(dto);
@@ -313,10 +320,8 @@ public class OrderServiceImpl implements OrderService {
         for(Order order: orderRepository.getTop3(id)){
             Place place = placeRepository.findById(order.getPlaceId()).get();
             PlaceDTOLite placeDTOLite = placeConverter.toPlaceLite(place);
-            for(ImagePlace imagePlace: place.getImagePlace()){
-                placeDTOLite.setImageLink(imagePlace.getImageLink());
-                break;
-            }
+            String imageName = "Place_"+place.getId()+"_1";
+            placeDTOLite.setImageLink(imagePlaceRepository.findByImageName(imageName).getImageLink());
             OrderDTO dto = orderConverter.toDTO(order);
             dto.setPlace(placeDTOLite);
             dtoList.add(dto);
