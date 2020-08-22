@@ -3,8 +3,10 @@ package com.capstone.booking.config;
 import com.capstone.booking.common.key.MonoStatus;
 import com.capstone.booking.common.key.OrderStatus;
 import com.capstone.booking.entity.Order;
+import com.capstone.booking.entity.OrderToken;
 import com.capstone.booking.entity.Token;
 import com.capstone.booking.repository.OrderRepository;
+import com.capstone.booking.repository.OrderTokenRepository;
 import com.capstone.booking.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,6 +21,9 @@ public class MySchedule {
 
     @Autowired
     TokenRepository tokenRepository;
+
+    @Autowired
+    OrderTokenRepository orderTokenRepository;
 
     @Autowired
     OrderRepository orderRepository;
@@ -38,5 +43,17 @@ public class MySchedule {
         }
         orderRepository.saveAll(updateOrders);
     }
+
+    @Scheduled(cron="0 0/15 * * * ?")
+    public void expiredOrderToken(){
+        List<OrderToken> orderTokens = orderTokenRepository.findExpOrderToken(new Date());
+        for(OrderToken token: orderTokens){
+            Order order = orderRepository.findById(token.getOrderId()).get();
+            order.setStatus(OrderStatus.EXPIRED.toString());
+            orderRepository.save(order);
+        }
+        orderTokenRepository.deleteAll(orderTokens);
+    }
+
 
 }

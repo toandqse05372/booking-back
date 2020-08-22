@@ -71,6 +71,9 @@ public class OrderServiceImpl implements OrderService {
     private RemainingRepository remainingRepository;
 
     @Autowired
+    private OrderTokenRepository orderTokenRepository;
+
+    @Autowired
     private PdfPrinter pdfPrinter;
 
     @Autowired
@@ -99,13 +102,18 @@ public class OrderServiceImpl implements OrderService {
             OrderItem orderItem = orderItemConverter.toItem(dto);
             orderItem.setOrder(saved);
             orderItems.add(orderItem);
-            Remaining remaining = remainingRepository.findByRedemptionDateAndVisitorTypeId(order.getRedemptionDate(),
+            Remaining remaining = remainingRepository.findByRedemptionDateAndVisitorTypeId(returnToMidnight(order.getRedemptionDate()),
                     dto.getVisitorTypeId());
             remaining.setTotal(remaining.getTotal() - dto.getQuantity());
             remainingRepository.save(remaining);
         }
         orderItemRepository.saveAll(orderItems);
 
+        if(status.equals(OrderStatus.UNPAID.toString())){
+            OrderToken token = new OrderToken();
+            token.setOrderId(saved.getId());
+            orderTokenRepository.save(token);
+        }
         return ResponseEntity.ok(orderConverter.toDTO(order));
     }
 
