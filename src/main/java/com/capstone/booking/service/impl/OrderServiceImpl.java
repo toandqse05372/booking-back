@@ -154,7 +154,17 @@ public class OrderServiceImpl implements OrderService {
         if(uid == null || uid !=  order.getUser().getId()){
             return new ResponseEntity("NOT_OWNER", HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(orderConverter.toDTO(order));
+        OrderDTO dto = orderConverter.toDTO(order);
+        dto.setPlace(getPlaceLite(order.getPlaceId()));
+        return ResponseEntity.ok(dto);
+    }
+
+    private PlaceDTOLite getPlaceLite(long placeId) {
+        Place place = placeRepository.findById(placeId).get();
+        PlaceDTOLite placeDTOLite = placeConverter.toPlaceLite(place);
+        String imageName = "Place_"+place.getId()+"_1";
+        placeDTOLite.setImageLink(imagePlaceRepository.findByImageName(imageName).getImageLink());
+        return  placeDTOLite;
     }
 
     @Override
@@ -278,12 +288,8 @@ public class OrderServiceImpl implements OrderService {
         }
         List<OrderDTO> dtoList = new ArrayList<>();
         for(Order order: orderRepository.findAllByUserPaging(user.getId(), limit, (page - 1) * limit)){
-            Place place = placeRepository.findById(order.getPlaceId()).get();
-            PlaceDTOLite placeDTOLite = placeConverter.toPlaceLite(place);
-            String imageName = "Place_"+place.getId()+"_1";
-            placeDTOLite.setImageLink(imagePlaceRepository.findByImageName(imageName).getImageLink());
             OrderDTO dto = orderConverter.toDTO(order);
-            dto.setPlace(placeDTOLite);
+            dto.setPlace(getPlaceLite(order.getPlaceId()));
             dtoList.add(dto);
         }
         Output output = new Output();
@@ -328,12 +334,8 @@ public class OrderServiceImpl implements OrderService {
         }
         List<OrderDTO> dtoList = new ArrayList<>();
         for(Order order: orderRepository.getTop3(id)){
-            Place place = placeRepository.findById(order.getPlaceId()).get();
-            PlaceDTOLite placeDTOLite = placeConverter.toPlaceLite(place);
-            String imageName = "Place_"+place.getId()+"_1";
-            placeDTOLite.setImageLink(imagePlaceRepository.findByImageName(imageName).getImageLink());
             OrderDTO dto = orderConverter.toDTO(order);
-            dto.setPlace(placeDTOLite);
+            dto.setPlace(getPlaceLite(order.getPlaceId()));
             dtoList.add(dto);
         }
         return ResponseEntity.ok(dtoList);

@@ -61,8 +61,10 @@ public class MySchedule {
             for(OrderItem orderItem: orderItemRepository.findAllByOrder(order)){
                 Remaining remaining = remainingRepository.findByRedemptionDateAndVisitorTypeId(
                         returnToMidnight(order.getRedemptionDate()), orderItem.getVisitorType().getId());
-                remaining.setTotal(remaining.getTotal()+orderItem.getQuantity());
-                remainingRepository.save(remaining);
+                if(remaining != null){
+                    remaining.setTotal(remaining.getTotal()+orderItem.getQuantity());
+                    remainingRepository.save(remaining);
+                }
             }
         }
         orderTokenRepository.deleteAll(orderTokens);

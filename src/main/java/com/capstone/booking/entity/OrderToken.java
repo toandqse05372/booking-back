@@ -9,5 +9,5 @@ import java.util.Date;
 @Entity
 public class OrderToken extends BaseEntity{
     private long orderId;
-    private Date tokenExpDate = new Date(System.currentTimeMillis() + 120000);
+    private Date tokenExpDate = new Date(System.currentTimeMillis() + 7200000);
 }
