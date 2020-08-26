@@ -26,7 +26,7 @@ public class PaymentController {
     @RequestMapping(value = "/payment", method = RequestMethod.POST)
     @PreAuthorize("hasAnyAuthority('PAYMENT')")
     public ResponseEntity<?> payForOrder(@RequestPart(value = "order") String orderRequest,
-                                        @RequestPart(value = "token") String stripetoken,
+                                         @RequestPart(value = "token") String stripetoken,
                                          @RequestPart(value = "action") String action) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         OrderDTO order = mapper.readValue(orderRequest, OrderDTO.class);

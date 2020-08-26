@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "t_order")
+@Table(name = "t_order", uniqueConstraints = { @UniqueConstraint(columnNames = {"orderCode"})})
 @Setter
 @Getter
 public class Order extends BaseEntity{

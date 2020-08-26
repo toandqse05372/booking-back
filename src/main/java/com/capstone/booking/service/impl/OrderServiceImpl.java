@@ -85,6 +85,13 @@ public class OrderServiceImpl implements OrderService {
     //create order
     @Override
     public ResponseEntity<?> create(OrderDTO orderDTO, OrderStatus status) {
+        for (OrderItemDTO dto : orderDTO.getOrderItems()) {
+            Remaining remaining = remainingRepository.findByRedemptionDateAndVisitorTypeId(returnToMidnight(orderDTO.getRedemptionDate()),
+                    dto.getVisitorTypeId());
+            if ((remaining.getTotal() - dto.getQuantity()) < 0) {
+                return new ResponseEntity("NOT_ENOUGH", HttpStatus.OK);
+            }
+        }
         Order order = orderConverter.toOrder(orderDTO);
         Optional<User> optionalUser = userRepository.findById(orderDTO.getUserId());
         User user = optionalUser.get();
@@ -97,25 +104,29 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setStatus(status.toString());
         order.setRedemptionDate(returnToMidnight(orderDTO.getRedemptionDate()));
-        Order saved = orderRepository.save(order);
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderItemDTO dto : orderDTO.getOrderItems()) {
-            OrderItem orderItem = orderItemConverter.toItem(dto);
-            orderItem.setOrder(saved);
-            orderItems.add(orderItem);
-            Remaining remaining = remainingRepository.findByRedemptionDateAndVisitorTypeId(returnToMidnight(order.getRedemptionDate()),
-                    dto.getVisitorTypeId());
-            remaining.setTotal(remaining.getTotal() - dto.getQuantity());
-            remainingRepository.save(remaining);
-        }
-        orderItemRepository.saveAll(orderItems);
+        try {
+            Order saved = orderRepository.save(order);
+            List<OrderItem> orderItems = new ArrayList<>();
+            for (OrderItemDTO dto : orderDTO.getOrderItems()) {
+                OrderItem orderItem = orderItemConverter.toItem(dto);
+                orderItem.setOrder(saved);
+                orderItems.add(orderItem);
+                Remaining remaining = remainingRepository.findByRedemptionDateAndVisitorTypeId(returnToMidnight(order.getRedemptionDate()),
+                        dto.getVisitorTypeId());
+                remaining.setTotal(remaining.getTotal() - dto.getQuantity());
+                remainingRepository.save(remaining);
+            }
+            orderItemRepository.saveAll(orderItems);
 
-        if(status.equals(OrderStatus.UNPAID)){
-            OrderToken token = new OrderToken();
-            token.setOrderId(saved.getId());
-            orderTokenRepository.save(token);
+            if (status.equals(OrderStatus.UNPAID)) {
+                OrderToken token = new OrderToken();
+                token.setOrderId(saved.getId());
+                orderTokenRepository.save(token);
+            }
+            return ResponseEntity.ok(orderConverter.toDTO(order));
+        } catch (Exception e) {
+            return new ResponseEntity("SPAM_REQUEST", HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(orderConverter.toDTO(order));
     }
 
     @Override
@@ -151,7 +162,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<?> findByOrderId(Long id, Long uid) {
         Order order = orderRepository.findById(id).get();
-        if(uid == null || uid !=  order.getUser().getId()){
+        if (uid == null || uid != order.getUser().getId()) {
             return new ResponseEntity("NOT_OWNER", HttpStatus.BAD_REQUEST);
         }
         OrderDTO dto = orderConverter.toDTO(order);
@@ -162,9 +173,9 @@ public class OrderServiceImpl implements OrderService {
     private PlaceDTOLite getPlaceLite(long placeId) {
         Place place = placeRepository.findById(placeId).get();
         PlaceDTOLite placeDTOLite = placeConverter.toPlaceLite(place);
-        String imageName = "Place_"+place.getId()+"_1";
+        String imageName = "Place_" + place.getId() + "_1";
         placeDTOLite.setImageLink(imagePlaceRepository.findByImageName(imageName).getImageLink());
-        return  placeDTOLite;
+        return placeDTOLite;
     }
 
     @Override
@@ -256,17 +267,17 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<?> getOrderByUid(long id, Long uid) {
         User user = userRepository.findById(id).get();
-        if(uid == null || uid !=  id){
+        if (uid == null || uid != id) {
             return new ResponseEntity("NOT_OWNER", HttpStatus.BAD_REQUEST);
         }
-        if(user == null){
+        if (user == null) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("USER_NOT_EXISTED");
         }
         List<OrderDTO> dtoList = new ArrayList<>();
-        for(Order order: orderRepository.findAllByUserOrderByCreatedAtDesc(user)){
+        for (Order order : orderRepository.findAllByUserOrderByCreatedAtDesc(user)) {
             Place place = placeRepository.findById(order.getPlaceId()).get();
             PlaceDTOLite placeDTOLite = placeConverter.toPlaceLite(place);
-            for(ImagePlace imagePlace: place.getImagePlace()){
+            for (ImagePlace imagePlace : place.getImagePlace()) {
                 placeDTOLite.setImageLink(imagePlace.getImageLink());
                 break;
             }
@@ -280,14 +291,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<?> getOrderByUid(long id, Long uid, int limit, int page) {
         User user = userRepository.findById(id).get();
-        if(uid == null || uid !=  id){
+        if (uid == null || uid != id) {
             return new ResponseEntity("NOT_OWNER", HttpStatus.BAD_REQUEST);
         }
-        if(user == null){
+        if (user == null) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("USER_NOT_EXISTED");
         }
         List<OrderDTO> dtoList = new ArrayList<>();
-        for(Order order: orderRepository.findAllByUserPaging(user.getId(), limit, (page - 1) * limit)){
+        for (Order order : orderRepository.findAllByUserPaging(user.getId(), limit, (page - 1) * limit)) {
             OrderDTO dto = orderConverter.toDTO(order);
             dto.setPlace(getPlaceLite(order.getPlaceId()));
             dtoList.add(dto);
@@ -312,28 +323,28 @@ public class OrderServiceImpl implements OrderService {
         String orderCode = order.getOrderCode();
         helper.setSubject("Ma don hang: #" + orderCode);
 
-        helper.setText("Hi " + order.getFirstName() +" "+ order.getLastName()+",\n"+
-                "Cam on ban da su dung dich vu cua GOBOKI!\n"+
+        helper.setText("Hi " + order.getFirstName() + " " + order.getLastName() + ",\n" +
+                "Cam on ban da su dung dich vu cua GOBOKI!\n" +
                 "De su dung san pham, vui long xuat trinh tai dia diem da lua chon, hoac in ve ra giay.");
         String path1 = file.getPath();
 
         // Attachment 1
         FileSystemResource file1 = new FileSystemResource(new File(path1));
-        helper.addAttachment(orderCode+".pdf", file1);
+        helper.addAttachment(orderCode + ".pdf", file1);
         emailSender.send(message);
     }
 
     @Override
     public ResponseEntity<?> getOrderByUidTop3(long id, Long uid) {
-        if(uid == null || uid !=  id){
+        if (uid == null || uid != id) {
             return new ResponseEntity("NOT_OWNER", HttpStatus.BAD_REQUEST);
         }
         User user = userRepository.findById(id).get();
-        if(user == null){
+        if (user == null) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("USER_NOT_EXISTED");
         }
         List<OrderDTO> dtoList = new ArrayList<>();
-        for(Order order: orderRepository.getTop3(id)){
+        for (Order order : orderRepository.getTop3(id)) {
             OrderDTO dto = orderConverter.toDTO(order);
             dto.setPlace(getPlaceLite(order.getPlaceId()));
             dtoList.add(dto);

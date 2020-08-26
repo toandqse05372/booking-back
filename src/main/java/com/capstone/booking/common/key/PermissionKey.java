@@ -7,7 +7,7 @@ public interface PermissionKey {
     }
 
     enum StaffPermissionKey{
-        ORDER_EDIT, REPORT_READ
+        ORDER_EDIT, REPORT_READ, ORDER_READ, VISITOR_TYPE_EDIT, TICKET_TYPE_EDIT
     }
 
     enum UserPermission{

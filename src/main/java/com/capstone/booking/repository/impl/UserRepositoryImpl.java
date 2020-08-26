@@ -28,7 +28,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     @Autowired
     UserConverter userConverter;
 
-    public UserRepositoryImpl(EntityManager entityManager){
+    public UserRepositoryImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -106,7 +106,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         where += "limit :from, :limit";
 
         Output output = new Output();
-        output.setListResult(convertList(queryUser( params, getAll + queryStr + where)));
+        output.setListResult(convertList(queryUser(params, getAll + queryStr + where)));
         output.setPage(pageInt);
         output.setTotalItems(totalItem);
         output.setTotalPage((int) totalPage);
@@ -141,10 +141,13 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            query.setParameter(key, "%" + value + "%");
+            if (key.equals("id")) {
+                query.setParameter(key, value);
+            } else
+                query.setParameter(key, "%" + value + "%");
         }
         BigInteger counter = (BigInteger) query.getSingleResult();
-        return counter.intValue() ;
+        return counter.intValue();
     }
 
 }
