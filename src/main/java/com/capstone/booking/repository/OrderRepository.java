@@ -32,4 +32,11 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
     @Query(value="SELECT * FROM t_order o where o.redemption_date < :date and " +
             "o.status not in (SELECT os.status FROM t_order os where os.status = :status)", nativeQuery = true)
     List<Order> findAllByRedemptionDateBeforeAndStatus(@Param("date")Date date, @Param("status")String status);
+
+    @Query(value="SELECT count(o.id) FROM t_order o inner join t_order_item ot " +
+            "on o.id = ot.order_id inner join t_ticket t on t.order_item_id = ot.id " +
+            "where o.status like'EXPIRED' and o.id = :id", nativeQuery = true)
+    int countTicket(long id);
+
+    List<Order> findByStatus(String status);
 }

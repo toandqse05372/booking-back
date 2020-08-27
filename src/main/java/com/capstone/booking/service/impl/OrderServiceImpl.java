@@ -123,7 +123,9 @@ public class OrderServiceImpl implements OrderService {
                 token.setOrderId(saved.getId());
                 orderTokenRepository.save(token);
             }
-            return ResponseEntity.ok(orderConverter.toDTO(order));
+            OrderDTO dto = orderConverter.toDTO(order);
+            dto.setPlace(getPlaceLite(order.getPlaceId()));
+            return ResponseEntity.ok(dto);
         } catch (Exception e) {
             return new ResponseEntity("SPAM_REQUEST", HttpStatus.BAD_REQUEST);
         }
@@ -137,7 +139,9 @@ public class OrderServiceImpl implements OrderService {
         order.setRedemptionDate(returnToMidnight(orderDTO.getRedemptionDate()));
         order.setStatus(status.toString());
         orderRepository.save(order);
-        return ResponseEntity.ok(orderConverter.toDTO(order));
+        OrderDTO dto = orderConverter.toDTO(order);
+        dto.setPlace(getPlaceLite(order.getPlaceId()));
+        return ResponseEntity.ok(dto);
     }
 
     //delete order

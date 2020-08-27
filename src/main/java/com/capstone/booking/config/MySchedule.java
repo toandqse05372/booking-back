@@ -11,6 +11,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -49,12 +50,25 @@ public class MySchedule {
     @Autowired
     private EmailSenderService emailSenderService;
 
-    @Scheduled(cron = "5 0 0 * * *")
-    public void deleteExpiredToken(){
+    //delete unused data at 00:00 every day
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional
+    public void deleteUnUsed(){
         List<Token> tokenExpired = tokenRepository.findByTokenExpDateBefore(new Date());
         tokenRepository.deleteAll(tokenExpired);
+        List<Remaining> remainings = remainingRepository.findByRedemptionDateBefore(new Date());
+        remainingRepository.deleteAll(remainings);
+        List<Order> orders = orderRepository.findByStatus(OrderStatus.EXPIRED.toString());
+        for(Order order: orders){
+            if(orderRepository.countTicket(order.getId()) == 0){
+                orderItemRepository.deleteAllByOrder(order);
+                orderRepository.delete(order);
+            }
+        }
     }
-    @Scheduled(cron = "0 0 0 * * *")
+
+    //set expired order at 00:00 every day
+    @Scheduled(cron = "0 5 0 * * ?")
     public void setExpiredOrder(){
         List<Order> orderExpired = orderRepository.findAllByRedemptionDateBeforeAndStatus(new Date(), OrderStatus.EXPIRED.toString());
         List<Order> updateOrders = new ArrayList<>();
@@ -64,7 +78,7 @@ public class MySchedule {
                 mailMessage.setTo(order.getMail()); //user email
                 mailMessage.setSubject("Order expired");
                 mailMessage.setFrom(fromMail);
-                mailMessage.setText("Xin loi don hang cua ban chua duoc gui tra kip thoi do loi cua chung toi.");
+                mailMessage.setText("Xin loi don hang #"+order.getOrderCode()+" cua ban chua duoc gui tra kip thoi do loi cua chung toi.");
                 emailSenderService.sendEmail(mailMessage);
             }
             order.setStatus(OrderStatus.EXPIRED.toString());
@@ -73,8 +87,8 @@ public class MySchedule {
         orderRepository.saveAll(updateOrders);
     }
 
-    //make unpaid order be expired if after 2 hours user not paid for it every 15 minutes
-    @Scheduled(cron="0 0/50 * * * ?")
+    //make unpaid order be expired if after 2 hours user not paid for it every 5 minutes
+    @Scheduled(cron="0 0/5 * * * ?")
     public void expiredOrderToken(){
         List<OrderToken> orderTokens = orderTokenRepository.findExpOrderToken(new Date());
         for(OrderToken token: orderTokens){
@@ -96,17 +110,18 @@ public class MySchedule {
         orderTokenRepository.deleteAll(orderTokens);
     }
 
-    @Scheduled(cron="0 0/50 * * * ?")
+    //update total remaining code every 5 minutes
+    @Scheduled(cron="0 0/5 * * * ?")
     public void updateRemainingCode(){
-        Date today = returnToMidnight(new Date());
-        List<Remaining> remainings = remainingRepository.findByRedemptionDate(returnToMidnight(today));
+        List<Remaining> remainings = remainingRepository.findAll();
         for(Remaining remaining: remainings){
-            remaining.setTotal(codeRepository.countByVisitorTypeIdAndDate(remaining.getVisitorTypeId(), today)
-                    - orderItemRepository.findTotalBookedTicket(remaining.getVisitorTypeId(), today));
+            remaining.setTotal(codeRepository.countByVisitorTypeIdAndDate(remaining.getVisitorTypeId(), remaining.getRedemptionDate())
+                    - orderItemRepository.findTotalBookedTicket(remaining.getVisitorTypeId(), remaining.getRedemptionDate()));
         }
         remainingRepository.saveAll(remainings);
     }
 
+    //return date to midnight
     private Date returnToMidnight(Date redemptionDate) {
         Instant inst = redemptionDate.toInstant();
         LocalDate localDate = inst.atZone(ZoneId.systemDefault()).toLocalDate();

@@ -10,4 +10,6 @@ public interface RemainingRepository extends JpaRepository<Remaining, Long> {
     Remaining findByRedemptionDateAndVisitorTypeId(Date date, long id);
 
     List<Remaining> findByRedemptionDate(Date date);
+
+    List<Remaining> findByRedemptionDateBefore(Date date);
 }
