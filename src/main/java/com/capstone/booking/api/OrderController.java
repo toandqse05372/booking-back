@@ -42,7 +42,7 @@ public class OrderController {
     @PostMapping("/order")
     @PreAuthorize("hasAnyAuthority('OWN_ORDER_READ')")
     public ResponseEntity<?> create(@RequestBody OrderDTO model) {
-        return orderService.create(model, OrderStatus.UNPAID);
+        return orderService.create(model, OrderStatus.UNPAID, null);
     }
 
     //send ticket to customer api

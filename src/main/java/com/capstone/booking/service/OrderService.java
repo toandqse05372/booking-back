@@ -11,10 +11,10 @@ import java.net.URISyntaxException;
 
 public interface OrderService {
     //add
-    ResponseEntity<?> create(OrderDTO orderDTO, OrderStatus status);
+    ResponseEntity<?> create(OrderDTO orderDTO, OrderStatus status, String paymentIntentId);
 
     //add
-    ResponseEntity<?> update(OrderDTO orderDTO, OrderStatus status);
+    ResponseEntity<?> update(OrderDTO orderDTO, OrderStatus status, String paymentIntentId);
 
     //delete
     ResponseEntity<?> delete(long id);

@@ -30,11 +30,11 @@ public class PaymentController {
                                          @RequestPart(value = "action") String action) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         OrderDTO order = mapper.readValue(orderRequest, OrderDTO.class);
-        stripeService.chargeNewCard(stripetoken, order.getTotalPayment());
+        String paymentIntentId = stripeService.chargeNewCard(stripetoken, order.getTotalPayment());
         if(action.equals("new")){
-            orderService.create(order, OrderStatus.PAID);
+            orderService.create(order, OrderStatus.PAID, paymentIntentId);
         }else if (action.equals("existed")){
-            orderService.update(order, OrderStatus.PAID);
+            orderService.update(order, OrderStatus.PAID, paymentIntentId);
         }
         return ResponseEntity.ok().body("ok");
     }

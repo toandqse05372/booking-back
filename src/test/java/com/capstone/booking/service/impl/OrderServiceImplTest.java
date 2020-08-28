@@ -143,7 +143,7 @@ public class OrderServiceImplTest {
         when(mockOrderConverter.toDTO(order)).thenReturn(orderDTO);
 
         // Run the test
-        final ResponseEntity<?> result = orderServiceImplUnderTest.create(orderDTO, OrderStatus.PAID);
+        final ResponseEntity<?> result = orderServiceImplUnderTest.create(orderDTO, OrderStatus.PAID, "paymentIntentId");
 
         // Verify the results
         Assertions.assertEquals(200, result.getStatusCodeValue());

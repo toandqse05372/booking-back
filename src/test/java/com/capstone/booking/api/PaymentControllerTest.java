@@ -4,7 +4,6 @@ import com.capstone.booking.common.key.OrderStatus;
 import com.capstone.booking.entity.dto.OrderDTO;
 import com.capstone.booking.service.OrderService;
 import com.capstone.booking.service.impl.StripeService;
-import com.stripe.model.Charge;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -37,8 +36,8 @@ public class PaymentControllerTest {
     public void testPayForOrder() throws Exception {
         // Setup
         String model = "{\"ticketTypeId\":1,\"ticketTypeName\":\"Vé vào cổng\",\"userId\":1,\"totalPayment\":700000,\"purchaseDay\":\"2020-07-22T03:04:37.543Z\",\"redemptionDate\":\"2020-07-22T03:04:14.102Z\",\"orderItems\":[{\"visitorTypeId\":1,\"quantity\":1}]}";
-        when(mockStripeService.chargeNewCard("token", 0)).thenReturn(new Charge());
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).create(new OrderDTO(), OrderStatus.PAID);
+        when(mockStripeService.chargeNewCard("token", 0)).thenReturn("");
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).create(new OrderDTO(), OrderStatus.PAID, null);
 
         // Run the test
         final ResponseEntity<?> result = paymentControllerUnderTest.payForOrder( model, "stripetoken", "PAID");

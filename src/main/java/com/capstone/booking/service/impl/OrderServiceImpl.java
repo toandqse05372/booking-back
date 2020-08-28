@@ -16,7 +16,6 @@ import com.capstone.booking.service.OrderService;
 import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -26,7 +25,6 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
-import java.awt.print.Pageable;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.time.Instant;
@@ -74,6 +72,9 @@ public class OrderServiceImpl implements OrderService {
     private OrderTokenRepository orderTokenRepository;
 
     @Autowired
+    private PaymentIntentRepository paymentIntentRepository;
+
+    @Autowired
     private PdfPrinter pdfPrinter;
 
     @Autowired
@@ -84,12 +85,12 @@ public class OrderServiceImpl implements OrderService {
 
     //create order
     @Override
-    public ResponseEntity<?> create(OrderDTO orderDTO, OrderStatus status) {
+    public ResponseEntity<?> create(OrderDTO orderDTO, OrderStatus status, String paymentIntentId) {
         for (OrderItemDTO dto : orderDTO.getOrderItems()) {
             Remaining remaining = remainingRepository.findByRedemptionDateAndVisitorTypeId(returnToMidnight(orderDTO.getRedemptionDate()),
                     dto.getVisitorTypeId());
             if ((remaining.getTotal() - dto.getQuantity()) < 0) {
-                return new ResponseEntity("NOT_ENOUGH", HttpStatus.OK);
+                return new ResponseEntity("NOT_ENOUGH", HttpStatus.BAD_REQUEST);
             }
         }
         Order order = orderConverter.toOrder(orderDTO);
@@ -123,6 +124,7 @@ public class OrderServiceImpl implements OrderService {
                 token.setOrderId(saved.getId());
                 orderTokenRepository.save(token);
             }
+            createPaymentIntent(paymentIntentId, saved.getId());
             OrderDTO dto = orderConverter.toDTO(order);
             dto.setPlace(getPlaceLite(order.getPlaceId()));
             return ResponseEntity.ok(dto);
@@ -132,16 +134,26 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<?> update(OrderDTO orderDTO, OrderStatus status) {
+    public ResponseEntity<?> update(OrderDTO orderDTO, OrderStatus status, String paymentIntentId) {
         Order order = new Order();
         Order oldOrder = orderRepository.findById(orderDTO.getId()).get();
         order = orderConverter.toOrder(orderDTO, oldOrder);
         order.setRedemptionDate(returnToMidnight(orderDTO.getRedemptionDate()));
         order.setStatus(status.toString());
         orderRepository.save(order);
+        createPaymentIntent(paymentIntentId, order.getId());
         OrderDTO dto = orderConverter.toDTO(order);
         dto.setPlace(getPlaceLite(order.getPlaceId()));
         return ResponseEntity.ok(dto);
+    }
+
+    private void createPaymentIntent(String paymentIntentId, long oid){
+        if(paymentIntentId != null){
+            PaymentIntent paymentIntent = new PaymentIntent();
+            paymentIntent.setOid(oid);
+            paymentIntent.setPiId(paymentIntentId);
+            paymentIntentRepository.save(paymentIntent);
+        }
     }
 
     //delete order

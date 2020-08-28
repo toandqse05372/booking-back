@@ -68,7 +68,7 @@ public class OrderControllerTest {
         model.setOrderCode("orderCode");
         model.setTotalPayment(0);
 
-        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).create(model, OrderStatus.UNPAID);
+        doReturn(new ResponseEntity<>(null, HttpStatus.CONTINUE)).when(mockOrderService).create(model, OrderStatus.UNPAID, null);
 
         // Run the test
         final ResponseEntity<?> result = orderControllerUnderTest.create(model);
