@@ -84,7 +84,8 @@ public class MySchedule {
                 mailMessage.setTo(order.getMail()); //user email
                 mailMessage.setSubject("Order expired");
                 mailMessage.setFrom(fromMail);
-                mailMessage.setText("Xin loi don hang #" + order.getOrderCode() + " cua ban chua duoc gui tra kip thoi do loi cua chung toi. " +
+                mailMessage.setText("Xin loi don hang #" + order.getOrderCode()
+                        + " cua ban chua duoc gui tra kip thoi do loi cua chung toi. " +
                         "So tien cua ban se duoc hoan tra ngay lap tuc");
                 emailSenderService.sendEmail(mailMessage);
                 //refund

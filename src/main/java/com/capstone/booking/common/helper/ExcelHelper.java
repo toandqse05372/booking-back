@@ -102,7 +102,7 @@ public class ExcelHelper {
             while (rows.hasNext()) {
                 Row currentRow = rows.next();
                 // skip header
-                if (rowNumber == 0) {
+                if (rowNumber < 2) {
                     rowNumber++;
                     continue;
                 }
